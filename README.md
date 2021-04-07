@@ -1,6 +1,6 @@
-[![Stargazers][stars-shield]](https://github.com/Need2Watch/N2W_Back/stargazers)
-[![Issues][issues-shield]](https://github.com/Need2Watch/N2W_Back/issues)
-[![GPL3 License][license-shield]](https://github.com/Need2Watch/N2W_Back/blob/master/LICENSE)
+[![Stargazers][stars-shield]](https://github.com/AlexTheMagnus/orchestra-backend/stargazers)
+[![Issues][issues-shield]](https://github.com/AlexTheMagnus/orchestra-backend/issues)
+[![GPL3 License][license-shield]](https://github.com/AlexTheMagnus/orchestra-backend/blob/master/LICENSE)
 
 # Need2Watch Backend API
 
