@@ -1,0 +1,756 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "description": "Conduct your books' soundtraks",
+    "version": "1.0.0",
+    "title": "Orchestra REST API",
+    "contact": {
+      "email": "malejandrolule@gmail.com"
+    },
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  },
+  "servers": [
+    {
+      "url": "/"
+    }
+  ],
+  "tags": [
+    {
+      "name": "User",
+      "description": "REST API for requesting and returning users"
+    },
+    {
+      "name": "Movie",
+      "description": "REST API for requesting and returning movies"
+    }
+  ],
+  "paths": {
+    "/users": {
+      "post": {
+        "tags": ["User"],
+        "summary": "Creates a new user",
+        "requestBody": {
+          "description": "User Scheme",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/user-received"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/user-sent"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad syntax"
+          },
+          "404": {
+            "description": "Inexistent User"
+          }
+        }
+      }
+    },
+    "/users/{user_id}": {
+      "put": {
+        "tags": ["User"],
+        "summary": "Updates an existing user",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "description": "User ID",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          }
+        ],
+        "requestBody": {
+          "description": "User Scheme",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/user-received"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/user-sent"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad syntax"
+          },
+          "409": {
+            "description": "Already existing user"
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "tags": ["User"],
+        "summary": "Login an user",
+        "requestBody": {
+          "description": "Login Scheme",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/login"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/user-sent"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found"
+          },
+          "403": {
+            "description": "Incorrect password"
+          }
+        }
+      }
+    },
+    "/movies/{movie_id}": {
+      "get": {
+        "tags": ["Movie"],
+        "summary": "Returns the movie with the given id",
+        "parameters": [
+          {
+            "name": "movie_id",
+            "in": "path",
+            "description": "Movie ID from TheMovieDatabase API",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/movie"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Movie not found"
+          }
+        }
+      }
+    },
+    "/movies/{movie_id}/{user_id}": {
+      "get": {
+        "tags": ["Movie"],
+        "summary": "Returns the movie with the given id and for the given user",
+        "parameters": [
+          {
+            "name": "movie_id",
+            "in": "path",
+            "description": "Movie ID from TheMovieDatabase API",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "user_id",
+            "in": "path",
+            "description": "User ID",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/movie"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Movie not found"
+          }
+        }
+      }
+    },
+    "/movies/popular": {
+      "get": {
+        "tags": ["Movie"],
+        "summary": "Returns popular movies of the moment",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "schema": {
+                      "$ref": "#/components/schemas/movie"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Movies not found"
+          }
+        }
+      }
+    },
+    "/movies/popular/{user_id}": {
+      "get": {
+        "tags": ["Movie"],
+        "summary": "Returns popular movies of the moment for the given user",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "description": "User ID",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "schema": {
+                      "$ref": "#/components/schemas/movie"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Movies not found"
+          }
+        }
+      }
+    },
+    "/movies/top": {
+      "get": {
+        "tags": ["Movie"],
+        "summary": "Returns top rated movies of the moment",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "schema": {
+                      "$ref": "#/components/schemas/movie"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Movies not found"
+          }
+        }
+      }
+    },
+    "/movies/top/{user_id}": {
+      "get": {
+        "tags": ["Movie"],
+        "summary": "Returns top rated movies of the moment for the given user",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "description": "User ID",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "schema": {
+                      "$ref": "#/components/schemas/movie"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Movies not found"
+          }
+        }
+      }
+    },
+    "/movies/similar/{id}": {
+      "get": {
+        "tags": ["Movie"],
+        "summary": "Returns similar movies to the one with the given id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Movie ID from TheMovieDatabase API",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "schema": {
+                      "$ref": "#/components/schemas/movie"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Movies not found"
+          }
+        }
+      }
+    },
+    "/movies/similar/{movie_id}/{user_id}": {
+      "get": {
+        "tags": ["Movie"],
+        "summary": "Returns similar movies to the one with the given id for the given user",
+        "parameters": [
+          {
+            "name": "movie_id",
+            "in": "path",
+            "description": "Movie ID from TheMovieDatabase API",
+            "required": true,
+            "type": "integer"
+          },
+          {
+            "name": "user_id",
+            "in": "path",
+            "description": "User ID",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "schema": {
+                      "$ref": "#/components/schemas/movie"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Movies not found"
+          }
+        }
+      }
+    },
+    "/movies/following/{user_id}": {
+      "get": {
+        "tags": ["Movie"],
+        "summary": "Returns the followed movies by the user of the given id",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "description": "User ID",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "schema": {
+                      "$ref": "#/components/schemas/movie"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Movies not found"
+          }
+        }
+      }
+    },
+    "/movies/watched/{user_id}": {
+      "get": {
+        "tags": ["Movie"],
+        "summary": "Returns the watched movies by the user of the given id",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "description": "User ID",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "schema": {
+                      "$ref": "#/components/schemas/movie"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Movies not found"
+          }
+        }
+      }
+    },
+    "/movies/search": {
+      "post": {
+        "tags": ["Movie"],
+        "summary": "Searches for a movie by the name",
+        "requestBody": {
+          "description": "Movie Name and user",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/search"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/movie"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad syntax"
+          },
+          "404": {
+            "description": "Movies not found"
+          }
+        }
+      }
+    },
+    "/movies/follow": {
+      "post": {
+        "tags": ["Movie"],
+        "summary": "Follows a movie",
+        "requestBody": {
+          "description": "Movie Id and user Id",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/movie-user"
+              }
+            }
+          }
+        },
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "Ok"
+          }
+        }
+      }
+    },
+    "/movies/unfollow": {
+      "post": {
+        "tags": ["Movie"],
+        "summary": "Unfollows a movie",
+        "requestBody": {
+          "description": "Movie Id and user Id",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/movie-user"
+              }
+            }
+          }
+        },
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "Ok"
+          }
+        }
+      }
+    },
+    "/movies/watch": {
+      "post": {
+        "tags": ["Movie"],
+        "summary": "Watchs a movie",
+        "requestBody": {
+          "description": "Movie id and user Id",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/movie-user"
+              }
+            }
+          }
+        },
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "Ok"
+          }
+        }
+      }
+    },
+    "/movies/unwatch": {
+      "post": {
+        "tags": ["Movie"],
+        "summary": "Unwatchs a movie",
+        "requestBody": {
+          "description": "Movie id and user Id",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/movie-user"
+              }
+            }
+          }
+        },
+        "produces": ["application/json"],
+        "responses": {
+          "200": {
+            "description": "Ok"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "login": {
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string",
+            "format": "password"
+          }
+        }
+      },
+      "user-sent": {
+        "properties": {
+          "user_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "username": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string",
+            "format": "password"
+          },
+          "first_name": {
+            "type": "string"
+          },
+          "last_name": {
+            "type": "string"
+          },
+          "profile_picture": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          }
+        }
+      },
+      "user-received": {
+        "properties": {
+          "user_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "username": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string",
+            "format": "password"
+          },
+          "first_name": {
+            "type": "string"
+          },
+          "last_name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          }
+        }
+      },
+      "movie-list": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/movie"
+        }
+      },
+      "movie": {
+        "properties": {
+          "movie_id": {
+            "type": "integer"
+          },
+          "title": {
+            "type": "string"
+          },
+          "poster_url": {
+            "type": "string"
+          },
+          "rating": {
+            "type": "number",
+            "format": "float"
+          },
+          "genres": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "overview": {
+            "type": "string"
+          },
+          "following": {
+            "type": "boolean"
+          },
+          "watched": {
+            "type": "boolean"
+          }
+        }
+      },
+      "search": {
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "user_id": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      },
+      "movie-user": {
+        "properties": {
+          "user_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "movie_id": {
+            "type": "integer"
+          }
+        }
+      }
+    }
+  }
+}
