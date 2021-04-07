@@ -11,5 +11,3 @@
 1. Run `docker-compose up -d`
 
 [license-shield]: https://img.shields.io/github/license/Need2Watch/N2W_Back
-
-[]: /github/pipenv/locked/python-version/:user/:repo
