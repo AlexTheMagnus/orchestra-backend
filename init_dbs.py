@@ -19,29 +19,40 @@ def remove_existing_tables(engine):
 
 
 def create_user_table():
-    db.Table('users', metadata,
-             db.Column('user_id', db.String(36), nullable=False, primary_key=True),
+    db.Table('user', metadata,
+             db.Column('user_id', db.String(36),
+                       nullable=False, primary_key=True),
              db.Column('username', db.String(255), nullable=False),
-             db.Column('password', db.String(255), nullable=False),
-             db.Column('first_name', db.String(255), nullable=False),
-             db.Column('last_name', db.String(255), nullable=False),
-             db.Column('email', db.String(255), nullable=False),
-             db.Column('country', db.String(255), nullable=False),
-             db.Column('city', db.String(255), nullable=False),
+             db.Column('avatar', db.String(255), nullable=False)
              )
 
 
-def create_following_movies_table():
-    db.Table('followed_movies', metadata,
-             db.Column('user_id', db.String(36), nullable=False, primary_key=True),
-             db.Column('movie_id', db.Integer(), nullable=False, primary_key=True)
+def create_follow_table():
+    db.Table('follow', metadata,
+             db.Column('follower', db.String(36),
+                       nullable=False, db.ForeignKey("user.user_id"), primary_key=True),
+             db.Column('followed', db.String(36),
+                       nullable=False, db.ForeignKey("user.user_id"), primary_key=True)
              )
 
 
-def create_watched_movies_table():
-    db.Table('watched_movies', metadata,
-             db.Column('user_id', db.String(36), nullable=False, primary_key=True),
-             db.Column('movie_id', db.Integer(), nullable=False, primary_key=True)
+def create_soundtrack_table():
+    db.Table('soundtrack', metadata,
+             db.Column('soundtrack_id', db.String(36),
+                       nullable=False, primary_key=True),
+             db.Column('soundtrack_title', db.String(255), nullable=False),
+             db.Column('book_isbn', db.String(255), nullable=False),
+             db.Column('author', db.String(255), db.ForeignKey(
+                 "user.user_id"), nullable=False),
+             )
+
+
+def create_favorite_soundtrack_table():
+    db.Table('favorite_soundtrack', metadata,
+             db.Column('user_id', db.String(36),
+                       nullable=False, primary_key=True),
+             db.Column('soundtrack_id', db.Integer(),
+                       nullable=False, primary_key=True)
              )
 
 
