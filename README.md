@@ -10,4 +10,4 @@
 1. Inside the environment run `pip install -r requirements`
 1. Run `docker-compose up -d`
 
-[license-shield]: https://img.shields.io/github/license/Need2Watch/N2W_Back
+[license-shield]: https://img.shields.io/github/license/AlexTheMagnus/orchestra-backend
