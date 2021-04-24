@@ -1,8 +1,6 @@
-[![Stargazers][stars-shield]](https://github.com/Need2Watch/N2W_Back/stargazers)
-[![Issues][issues-shield]](https://github.com/Need2Watch/N2W_Back/issues)
-[![GPL3 License][license-shield]](https://github.com/Need2Watch/N2W_Back/blob/master/LICENSE)
+[![GPL3 License][license-shield]](https://github.com/AlexTheMagnus/orchestra-backend/blob/master/LICENSE)
 
-# Need2Watch Backend API
+# Orchestra Backend API
 
 ## Usage
 
@@ -11,3 +9,5 @@
 1. Activate it running `source venv/bin/activate`
 1. Inside the environment run `pip install -r requirements`
 1. Run `docker-compose up -d`
+
+[license-shield]: https://img.shields.io/github/license/Need2Watch/N2W_Back
