@@ -1,3 +1,6 @@
+from .not_a_valid_url_error import NotAValidUrlError
+
+
 class UserAvatar():
 
     def __init__(self, user_avatar: str):
@@ -14,4 +17,4 @@ class UserAvatar():
 
     def __validate_url_format(self, user_avatar: str):
         if not user_avatar.startswith('https://') and not user_avatar.startswith('http://'):
-            raise TypeError("user_avatar must be an url")
+            raise NotAValidUrlError(user_avatar)

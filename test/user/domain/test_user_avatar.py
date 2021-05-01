@@ -2,6 +2,7 @@ import pytest
 from faker import Faker
 
 from src.user.domain.user_avatar import UserAvatar
+from src.user.domain.not_a_valid_url_error import NotAValidUrlError
 
 fake = Faker()
 
@@ -15,5 +16,6 @@ class TestUserAvatar():
 
     def test_building_user_avatar_with_a_non_url_throws_an_error(self):
         user_avatar_url = fake.pystr()
-        with pytest.raises(Exception):
-            user_avatar == UserAvatar(user_avatar_url)
+
+        with pytest.raises(NotAValidUrlError):
+            UserAvatar.from_url(user_avatar_url)
