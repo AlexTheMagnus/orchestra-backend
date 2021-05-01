@@ -22,6 +22,7 @@ def create_user_table():
     db.Table('user', metadata,
              db.Column('user_id', db.String(36),
                        nullable=False, primary_key=True),
+             db.Column('email', db.String(36), nullable=False),
              db.Column('username', db.String(255), nullable=False),
              db.Column('avatar', db.String(255), nullable=False)
              )

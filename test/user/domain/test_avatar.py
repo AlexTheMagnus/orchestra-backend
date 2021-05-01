@@ -14,7 +14,7 @@ class TestAvatar():
         avatar = Avatar.from_url(avatar_url)
         assert avatar.value == avatar_url
 
-    def test_building_avatar_with_a_non_url_throws_an_error(self):
+    def test_building_avatar_with_a_non_valid_url_throws_an_error(self):
         avatar_url = fake.pystr()
 
         with pytest.raises(NotAValidUrlError):
