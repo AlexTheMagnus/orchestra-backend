@@ -1,8 +1,10 @@
-from uuid import UUID
-from ....src.soundtrack.domain.soundtrack_id import SoundtrackId
+import pytest
+import uuid
+from src.user.domain.soundtrack_id import SoundtrackId
+from src.user.domain.not_a_valid_soundtrack_id_error import NotAValidSoundtrackIdError
 
 
-class TestSoundtrackId(unittest.TestCase):
+class TestSoundtrackId():
 
     def test_from_string_constructor(self):
         str_soundtrack_id = str(uuid.uuid4())
@@ -11,5 +13,5 @@ class TestSoundtrackId(unittest.TestCase):
 
     def test_building_soundtrack_id_with_a_non_uuid4_throws_an_error(self):
         str_soundtrack_id = str(uuid.uuid1())
-        with pytest.raises(NotAValidSountrackIdError):
-            soundtrack_id = SoundtrackId(str_soundtrack_id)
+        with pytest.raises(NotAValidSoundtrackIdError):
+            soundtrack_id = SoundtrackId.from_string(str_soundtrack_id)
