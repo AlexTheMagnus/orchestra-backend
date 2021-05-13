@@ -1,7 +1,7 @@
 import os
 import sqlalchemy as db
 
-from src.domain.user_repository import UserRepository
+from src.user.domain.user_repository import UserRepository
 
 
 class UserMysqlRepository(UserRepository):
