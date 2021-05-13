@@ -1,32 +1,27 @@
+from typing import List
+
 from .user_id import UserId
-from .email import Email
-from .username import Username
-from .avatar import Avatar
+from .soundtrack_id import SoundtrackId
 
 
 class User:
 
-    def __init__(self, user_id: UserId, email: Email, username: Username, avatar: Avatar):
+    def __init__(self, user_id: UserId, favorites: List[SoundtrackId], likes: List[SoundtrackId]):
         self.__user_id: UserId = user_id
-        self.__email: Email = email
-        self.__username: Username = username
-        self.__avatar: Avatar = avatar
+        self.__favorites: List[SoundtrackId] = favorites
+        self.__likes: List[SoundtrackId] = likes
 
     @property
     def user_id(self):
         return self.__user_id
 
     @property
-    def email(self):
-        return self.__email
+    def favorites(self):
+        return self.__favorites
 
     @property
-    def username(self):
-        return self.__username
-
-    @property
-    def avatar(self):
-        return self.__avatar
+    def likes(self):
+        return self.__likes
 
     def get_id(self):
         return self.__user_id

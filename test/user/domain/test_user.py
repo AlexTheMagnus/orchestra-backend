@@ -12,23 +12,20 @@ class TestUser():
 
     def test_user_constructor(self):
         user_id = UserId.from_string(fake.pystr())
-        # TODO add user_builder to build favorites and likes filled with random sountrack_id
         favorites = []
         likes = []
 
-        user = User(user_id, email, username, avatar)
+        user = User(user_id, favorites, likes)
 
         assert user.user_id == user_id
-        assert user.email == email
-        assert user.username == username
-        assert user.avatar == avatar
+        assert user.favorites == favorites
+        assert user.likes == likes
 
     def test_get_id(self):
         user_id = UserId.from_string(fake.pystr())
-        email = Email.from_string(fake.email())
-        username = Username.from_string(fake.name())
-        avatar = Avatar.from_url("http://" + fake.pystr())
+        favorites = []
+        likes = []
 
-        user = User(user_id, email, username, avatar)
+        user = User(user_id, favorites, likes)
 
         assert user.get_id() == user_id
