@@ -10,6 +10,6 @@ class RegisterUser():
     def run(self, user: User):
 
         if self.__user_repository.find(user.user_id):
-            raise(AlreadyExistingUserError(user.email.value))
+            raise(AlreadyExistingUserError(user.user_id))
 
         self.__user_repository.save(user)
