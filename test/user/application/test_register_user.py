@@ -19,13 +19,16 @@ use_case: RegisterUser = RegisterUser(user_repository)
 user_id: UserId = UserId.from_string(fake.pystr())
 favorites: List[SoundtrackId] = []
 likes: List[SoundtrackId] = []
+soundtracks: List[SoundtrackId] = []
+following: List[UserId] = []
+followers: List[UserId] = []
 
 
 class TestRegisterUser():
 
     def test_new_user_is_registered(self):
-        user: User = UserBuilder().with_user_id(
-            user_id).with_favorites(favorites).with_likes(likes).build()
+        user: User = UserBuilder().with_user_id(user_id).with_favorites(favorites).with_likes(
+            likes).with_soundtracks(soundtracks).with_following(following).with_followers(followers).build()
 
         use_case.run(user)
 
@@ -33,10 +36,13 @@ class TestRegisterUser():
         assert found_user.user_id.value == user_id.value
         assert found_user.favorites == favorites
         assert found_user.likes == likes
+        assert found_user.soundtracks == soundtracks
+        assert found_user.following == following
+        assert found_user.followers == followers
 
     def test_already_existing_user_throws_an_error(self):
-        user: User = UserBuilder().with_user_id(
-            user_id).with_favorites([]).with_likes([]).build()
+        user: User = UserBuilder().with_user_id(user_id).with_favorites(favorites).with_likes(
+            likes).with_soundtracks(soundtracks).with_following(following).with_followers(followers).build()
 
         with pytest.raises(AlreadyExistingUserError):
             use_case.run(user)

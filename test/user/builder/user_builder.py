@@ -30,6 +30,18 @@ class UserBuilder():
         self.__likes = likes
         return self
 
+    def with_soundtracks(self, soundtracks: List[SoundtrackId]):
+        self.__soundtracks = soundtracks
+        return self
+
+    def with_following(self, following: List[UserId]):
+        self.__following = following
+        return self
+
+    def with_followers(self, followers: List[UserId]):
+        self.__followers = followers
+        return self
+
     def insert(self) -> User:
         user = self.build()
         user_repository = UserMysqlRepository()
@@ -40,7 +52,10 @@ class UserBuilder():
         return User(
             self.__user_id,
             self.__favorites,
-            self.__likes
+            self.__likes,
+            self.__soundtracks,
+            self.__following,
+            self.__followers
         )
 
     def build_dto(self) -> UserDTO:
