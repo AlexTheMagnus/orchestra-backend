@@ -13,7 +13,6 @@ class UserInMemoryRepository(UserRepository):
         self.__users.append(user)
 
     def find(self, user_id: UserId) -> Optional[User]:
-        print("user_id:", user_id)
 
         for user in self.__users:
             if user.user_id.value == user_id.value:
