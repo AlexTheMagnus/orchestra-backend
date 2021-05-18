@@ -1,10 +1,12 @@
+import pytest
 import pyisbn
+from src.soundtrack.domain.not_a_valid_isbn_13_error import NotAValidIsbn13Error
 
 
 class Isbn13():
 
     def __init__(self, isbn_13: str):
-        self.__validate_uuid_v4_format(isbn_13)
+        self.__validate_isbn_13_format(isbn_13)
         self.__value: str = isbn_13
 
     @staticmethod
@@ -15,6 +17,6 @@ class Isbn13():
     def value(self):
         return self.__value
 
-    def __validate_uuid_v4_format(self, str_isbn_13: str):
+    def __validate_isbn_13_format(self, str_isbn_13: str):
         if not pyisbn.validate(str_isbn_13):
-            raise(NotAValidIsbn13Error(uuid_soundtrack_id))
+            raise(NotAValidIsbn13Error(str_isbn_13))
