@@ -1,8 +1,8 @@
 import pytest
 import uuid
 
-from src.soundtrack.domain.chapter_id import ChapterId
-from src.soundtrack.domain.not_a_valid_chapter_id_error import NotAValidChapterIdError
+from src.soundtrack.domain.chapter.chapter_id import ChapterId
+from src.soundtrack.domain.chapter.not_a_valid_chapter_id_error import NotAValidChapterIdError
 
 
 class TestChapterId():
