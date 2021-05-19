@@ -1,7 +1,7 @@
 import pytest
 
 from src.soundtrack.domain.isbn_13 import Isbn13
-from src.soundtrack.domain.not_a_valid_isbn_13_error import NotAValidIsbn13Error
+from src.soundtrack.domain.exceptions.not_a_valid_isbn_13_error import NotAValidIsbn13Error
 
 
 class TestIsbn13():

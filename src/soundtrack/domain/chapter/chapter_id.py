@@ -1,6 +1,6 @@
 from uuid import UUID
 
-from src.soundtrack.domain.chapter.not_a_valid_chapter_id_error import NotAValidChapterIdError
+from src.soundtrack.domain.chapter.exceptions.not_a_valid_chapter_id_error import NotAValidChapterIdError
 
 
 class ChapterId():

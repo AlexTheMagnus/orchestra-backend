@@ -2,7 +2,7 @@ import pytest
 from faker import Faker
 
 from src.soundtrack.domain.soundtrack_title import SoundtrackTitle
-from src.soundtrack.domain.not_a_valid_soundtrack_title_error import NotAValidSoundtrackTitleError
+from src.soundtrack.domain.exceptions.not_a_valid_soundtrack_title_error import NotAValidSoundtrackTitleError
 
 fake = Faker()
 

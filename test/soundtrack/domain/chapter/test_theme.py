@@ -2,7 +2,7 @@ import pytest
 from faker import Faker
 
 from src.soundtrack.domain.chapter.theme import Theme
-from src.soundtrack.domain.chapter.not_a_valid_theme_url_error import NotAValidThemeUrlError
+from src.soundtrack.domain.chapter.exceptions.not_a_valid_theme_url_error import NotAValidThemeUrlError
 
 fake = Faker()
 
