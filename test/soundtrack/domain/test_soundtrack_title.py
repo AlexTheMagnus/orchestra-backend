@@ -7,7 +7,7 @@ from src.soundtrack.domain.not_a_valid_soundtrack_title_error import NotAValidSo
 fake = Faker()
 
 
-class SountrackTitle():
+class TestSountrackTitle():
 
     def test_from_string_constructor(self):
         str_soundtrack_title = fake.pystr()
@@ -15,8 +15,7 @@ class SountrackTitle():
         assert soundtrack_title.value == str_soundtrack_title
 
     def test_building_soundtrack_title_with_an_extra_spaced_string(self):
-        str_soundtrack_title = SoundtrackTitle.from_string(
-            "  extraSpacedSountrackTitle   ")
+        str_soundtrack_title = "  extraSpacedSountrackTitle   "
         soundtrack_title = SoundtrackTitle.from_string(str_soundtrack_title)
         assert soundtrack_title.value == "extraSpacedSountrackTitle"
 
