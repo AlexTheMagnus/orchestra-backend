@@ -1,4 +1,5 @@
 from uuid import UUID
+
 from src.soundtrack.domain.not_a_valid_soundtrack_id_error import NotAValidSoundtrackIdError
 
 
