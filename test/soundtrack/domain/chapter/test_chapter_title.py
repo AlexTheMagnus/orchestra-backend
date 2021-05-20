@@ -19,10 +19,12 @@ class TestChapterTitle():
         chapter_title = ChapterTitle.from_string(str_chapter_title)
         assert chapter_title.value == "extraSpacedChapterTitle"
 
-    def test_building_chapter_title_with_an_empty_string_throws_an_error(self):
-        with pytest.raises(NotAValidChapterTitleError):
-            chapter_title = ChapterTitle.from_string("")
+    def test_building_chapter_title_with_an_empty_string(self):
+        empty_chapter_title = ""
+        chapter_title = ChapterTitle.from_string(empty_chapter_title)
+        assert chapter_title.value == ""
 
-    def test_building_chapter_title_with_string_filled_with_spaces_throws_an_error(self):
-        with pytest.raises(NotAValidChapterTitleError):
-            chapter_title = ChapterTitle.from_string("   ")
+    def test_building_chapter_title_with_string_filled_with_spaces(self):
+        empty_chapter_title = "   "
+        chapter_title = ChapterTitle.from_string(empty_chapter_title)
+        assert chapter_title.value == ""
