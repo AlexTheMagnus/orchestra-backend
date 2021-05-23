@@ -6,7 +6,8 @@ from src.soundtrack.domain.chapter.theme import Theme
 
 class Chapter:
 
-    def __init__(self, chapter_id, chapter_number, theme, chapter_title):
+    def __init__(self, chapter_id: ChapterId, chapter_number: ChapterNumber,
+                 theme: Theme, chapter_title: ChapterTitle):
         self.__chapter_id: ChapterId = chapter_id
         self.__chapter_number: ChapterNumber = chapter_number
         self.__theme: Theme = theme
