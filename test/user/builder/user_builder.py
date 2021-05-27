@@ -6,7 +6,6 @@ from src.user.infrastructure.user_mapper import UserMapper
 from src.user.domain.user_id import UserId
 from src.user.domain.soundtrack_id import SoundtrackId
 from src.user.domain.user import User
-from src.user.domain.user_repository import UserRepository
 from src.user.infrastructure.user_dto import UserDTO
 
 fake = Faker()
