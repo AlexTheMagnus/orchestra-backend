@@ -12,9 +12,10 @@ class SoundtrackMapper:
         return Soundtrack(
             soundtrack_id=SoundtrackId.from_string(
                 soundtrack_dto['soundtrack_id']),
-            username=soundtrack_dto['username'],
-            user_id=UserId.from_string(soundtrack_dto['user_id']),
-            password=Password.from_string(soundtrack_dto['password'])
+            book=Isbn13.from_string(
+                soundtrack_dto['book']),
+            author=UserId.from_string(soundtrack_dto['author']),
+            chapters=from_string(soundtrack_dto['chapters'])
         )
 
     @staticmethod

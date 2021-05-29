@@ -1,11 +1,6 @@
 from typing import TypedDict
 
-
-class ChapterDTO(TypedDict):
-    chapter_id: str
-    chapter_number: int
-    theme: str
-    chapter_title: str
+from src.soundtrack.infrastructure.chapter.chapter_dto import ChapterDTO
 
 
 class SoundtrackDTO(TypedDict):
