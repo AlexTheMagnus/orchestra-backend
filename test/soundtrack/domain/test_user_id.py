@@ -1,7 +1,7 @@
 import pytest
 from faker import Faker
 
-from src.user.domain.user_id import UserId
+from src.soundtrack.domain.user_id import UserId
 
 fake = Faker()
 
