@@ -1,13 +1,13 @@
 import uuid
 from faker import Faker
 
-from src.soundtrack.infrastructure.soundtrack_mysql_repository import UserMysqlRepository
-from src.soundtrack.infrastructure.soundtrack_mapper import UserMapper
+# from src.soundtrack.infrastructure.soundtrack_mysql_repository import UserMysqlRepository
+from src.soundtrack.infrastructure.soundtrack_mapper import SoundtrackMapper
 from src.soundtrack.domain.soundtrack_id import SoundtrackId
 from src.soundtrack.domain.isbn_13 import Isbn13
 from src.soundtrack.domain.user_id import UserId
 from src.soundtrack.domain.chapter.chapter import Chapter
-from src.soundtrack.domain.Soundtrack import Soundtrack
+from src.soundtrack.domain.soundtrack import Soundtrack
 from src.soundtrack.infrastructure.soundtrack_dto import SoundtrackDTO
 
 fake = Faker()
@@ -37,11 +37,11 @@ class SoundtrackBuilder():
         self.__chapters = chapters
         return self
 
-    def insert(self) -> Soundtrack:
-        soundtrack = self.build()
-        soundtrack_repository = SoundtrackMysqlRepository()
-        soundtrack_repository.save(soundtrack)
-        return soundtrack
+    # def insert(self) -> Soundtrack:
+    #     soundtrack = self.build()
+    #     soundtrack_repository = SoundtrackMysqlRepository()
+    #     soundtrack_repository.save(soundtrack)
+    #     return soundtrack
 
     def build(self) -> Soundtrack:
         return Soundtrack(
