@@ -14,17 +14,17 @@ metadata = db.MetaData()
 
 
 def remove_existing_tables(engine):
-    sql = 'DROP TABLE IF EXISTS users;DROP TABLE IF EXISTS watched_movies;DROP TABLE IF EXISTS followed_movies;'
+    sql = 'DROP TABLE IF EXISTS user;DROP TABLE IF EXISTS follow;DROP TABLE IF EXISTS soundtrack;DROP TABLE IF EXISTS favorite;DROP TABLE IF EXISTS like;DROP TABLE IF EXISTS chapter;'
     engine.execute(sql)
 
 
 def create_follow_table():
     db.Table('follow', metadata,
              db.Column('follower', db.String(36),
-                       db.ForeignKey("user_id"), nullable=False, primary_key=True),
-             db.Column('followed', db.String(36),
-                       db.ForeignKey("user_id"), nullable=False, primary_key=True)
-             )
+
+                       db.ForeignKey("user.user_id"), nullable=False, primary_key=True),
+             db.Column('following', db.String(36),
+                       db.ForeignKey("user.user_id"), nullable=False, primary_key=True)
 
 
 def create_soundtrack_table():
