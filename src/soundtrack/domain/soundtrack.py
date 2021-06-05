@@ -7,10 +7,11 @@ from src.soundtrack.domain.chapter.chapter import Chapter
 
 class Soundtrack():
 
-    def __init__(self, soundtrack_id: SoundtrackId, book: Isbn13,
+    def __init__(self, soundtrack_id: SoundtrackId, book: Isbn13, soundtrack_title: SoundtrackTitle,
                  author: UserId, chapters: list[Chapter]):
         self.__soundtrack_id: SoundtrackId = soundtrack_id
         self.__book: Isbn13 = book
+        self.__soundtrack_tile = soundtrack_title
         self.__author: UserId = author
         self.__chapters: list[Chapter] = chapters
 
@@ -21,6 +22,10 @@ class Soundtrack():
     @property
     def book(self):
         return self.__book
+
+    @property
+    def title(self):
+        return self.__title
 
     @property
     def author(self):

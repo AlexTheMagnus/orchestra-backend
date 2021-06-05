@@ -21,10 +21,10 @@ def remove_existing_tables(engine):
 def create_follow_table():
     db.Table('follow', metadata,
              db.Column('follower', db.String(36),
-
                        db.ForeignKey("user.user_id"), nullable=False, primary_key=True),
              db.Column('following', db.String(36),
                        db.ForeignKey("user.user_id"), nullable=False, primary_key=True)
+             )
 
 
 def create_soundtrack_table():
@@ -32,8 +32,8 @@ def create_soundtrack_table():
              db.Column('soundtrack_id', db.String(36),
                        nullable=False, primary_key=True),
              db.Column('soundtrack_title', db.String(255), nullable=False),
-             db.Column('isbn', db.String(255), nullable=False),
-             db.Column('user_id', db.String(36), nullable=False)
+             db.Column('book', db.String(255), nullable=False),
+             db.Column('author', db.String(36), nullable=False)
              )
 
 

@@ -2,7 +2,8 @@ import os
 import sqlalchemy as db
 
 from src.soundtrack.domain.soundtrack_repository import SoundtrackRepository
-from src.soundtrack.domain.soundtrack_id import SoundtrackId
+from src.soundtrack.domain.soundtrack import Soundtrack
+from src.soundtrack.domain.user_id import UserId
 
 
 class SoundtrackMysqlRepository(SoundtrackRepository):
@@ -11,19 +12,24 @@ class SoundtrackMysqlRepository(SoundtrackRepository):
         self.__db_engine = db.create_engine(os.getenv('DB_ENGINE'))
         self.__db_connection = self.__db_engine.connect()
         self.__db_metadata = db.MetaData()
-        self.__users = db.Table(
-            "users", self.__db_metadata, autoload=True, autoload_with=self.__db_engine)
+        self.__soundtrack = db.Table(
+            "soundtrack", self.__db_metadata, autoload=True, autoload_with=self.__db_engine)
+        self.__chapter = db.Table(
+            "chapter", self.__db_metadata, autoload=True, autoload_with=self.__db_engine)
 
-    def save(self, user: User):
-        query = db.insert(self.__users).values(
-            user_id=user.user_id.value,
-            username=user.username,
-            password=user.password.value,
-            first_name=user.first_name,
-            last_name=user.last_name,
-            email=user.email,
-            country=user.country,
-            city=user.city
+    def save(self, soundtrack: Soundtrack, author_id: UserId):
+        query = db.insert(self.__soundtrack).values(
+            soundtrack_id=soundtrack.soundtrack_id.value,
+            book=soundtrack.book.value,
+            soundtrack_title=soundtrack.soundtrack_title.value,
+            author=author_id
+        )
+
+        # TODO: for each chapter -> query
+        query = db.insert(self.__chapter).values(
+            chapter_id=author_id,
+            soundtrack_id=soundtrack.soundtrack_id.value
+            # ...
         )
 
         self.__db_connection.execute(query)
