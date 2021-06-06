@@ -61,9 +61,9 @@ def create_chapter_table():
                        nullable=False, primary_key=True),
              db.Column('soundtrack_id', db.String(36), db.ForeignKey(
                  "soundtrack.soundtrack_id"), nullable=False),
-             db.Column('theme_id', db.String(36), nullable=False),
-             db.Column('chapter_title', db.String(255), nullable=True),
-             db.Column('number', db.Integer(), nullable=False)
+             db.Column('number', db.Integer(), nullable=False),
+             db.Column('theme', db.String(36), nullable=False),
+             db.Column('chapter_title', db.String(255), nullable=True)
              )
 
 
