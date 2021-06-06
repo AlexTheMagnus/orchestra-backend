@@ -11,7 +11,7 @@ class Soundtrack():
                  author: UserId, chapters: list[Chapter]):
         self.__soundtrack_id: SoundtrackId = soundtrack_id
         self.__book: Isbn13 = book
-        self.__soundtrack_tile = soundtrack_title
+        self.__soundtrack_title = soundtrack_title
         self.__author: UserId = author
         self.__chapters: list[Chapter] = chapters
 
@@ -24,8 +24,8 @@ class Soundtrack():
         return self.__book
 
     @property
-    def title(self):
-        return self.__title
+    def soundtrack_title(self):
+        return self.__soundtrack_title
 
     @property
     def author(self):

@@ -13,6 +13,7 @@ class TestSoundtrackMapper:
 
         assert soundtrack_dto['soundtrack_id'] == soundtrack.soundtrack_id.value
         assert soundtrack_dto['book'] == soundtrack.book.value
+        assert soundtrack_dto['soundtrack_title'] == soundtrack.soundtrack_title.value
         assert soundtrack_dto['author'] == soundtrack.author.value
         assert soundtrack_dto['chapters'] == soundtrack.chapters
 
@@ -23,5 +24,6 @@ class TestSoundtrackMapper:
 
         assert soundtrack_dto['soundtrack_id'] == soundtrack.soundtrack_id.value
         assert soundtrack_dto['book'] == soundtrack.book.value
+        assert soundtrack_dto['soundtrack_title'] == soundtrack.soundtrack_title.value
         assert soundtrack_dto['author'] == soundtrack.author.value
         assert soundtrack_dto['chapters'] == soundtrack.chapters
