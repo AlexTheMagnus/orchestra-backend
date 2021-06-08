@@ -43,13 +43,6 @@ class SoundtrackBuilder():
         self.__chapters = chapters
         return self
 
-    # TODO: implement (if needed) or remove it
-    # def insert(self) -> Soundtrack:
-    #     soundtrack = self.build()
-    #     soundtrack_repository = SoundtrackMysqlRepository()
-    #     soundtrack_repository.save(soundtrack)
-    #     return soundtrack
-
     def build(self) -> Soundtrack:
         return Soundtrack(
             self.__soundtrack_id,

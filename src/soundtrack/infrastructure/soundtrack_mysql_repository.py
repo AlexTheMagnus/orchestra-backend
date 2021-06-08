@@ -1,5 +1,6 @@
 import os
 import sqlalchemy as db
+from typing import Optional
 
 from src.soundtrack.domain.soundtrack_repository import SoundtrackRepository
 from src.soundtrack.domain.soundtrack import Soundtrack
@@ -13,6 +14,7 @@ from src.soundtrack.domain.chapter.chapter import Chapter
 class SoundtrackMysqlRepository(SoundtrackRepository):
 
     def __init__(self):
+        print(os.getenv('DB_ENGINE'))
         self.__db_engine = db.create_engine(os.getenv('DB_ENGINE'))
         self.__db_connection = self.__db_engine.connect()
         self.__db_metadata = db.MetaData()
@@ -50,6 +52,10 @@ class SoundtrackMysqlRepository(SoundtrackRepository):
             return None
 
         return self.__getSoundtrackFromResult(resultSet[0])
+
+    def clean(self):
+        query = db.delete(self.__soundtrack)
+        self.__db_connection.execute(query)
 
     def __getSoundtrackFromResult(self, result: tuple) -> Soundtrack:
         return Soundtrack(
