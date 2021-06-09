@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
-from src.soundtrack.domain.soundtrack import Soundtrack
-from src.soundtrack.domain.soundtrack_id import SoundtrackId
+from .soundtrack import Soundtrack
+from .soundtrack_id import SoundtrackId
 
 
 class SoundtrackRepository(ABC):

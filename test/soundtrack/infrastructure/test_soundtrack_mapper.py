@@ -1,7 +1,9 @@
+import pytest
+
 from src.soundtrack.domain.soundtrack import Soundtrack
 from src.soundtrack.infrastructure.soundtrack_mapper import SoundtrackMapper
 from src.soundtrack.infrastructure.soundtrack_dto import SoundtrackDTO
-from test.soundtrack.builder.soundtrack_builder import SoundtrackBuilder
+from ..builder.soundtrack_builder import SoundtrackBuilder
 
 
 class TestSoundtrackMapper:

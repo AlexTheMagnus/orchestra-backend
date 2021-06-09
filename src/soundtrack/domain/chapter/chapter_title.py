@@ -1,4 +1,4 @@
-from src.soundtrack.domain.chapter.exceptions.not_a_valid_chapter_title_error import NotAValidChapterTitleError
+from .exceptions.not_a_valid_chapter_title_error import NotAValidChapterTitleError
 
 
 class ChapterTitle():

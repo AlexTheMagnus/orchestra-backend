@@ -1,10 +1,10 @@
-from src.soundtrack.domain.soundtrack_repository import SoundtrackRepository
-from src.soundtrack.domain.soundtrack import Soundtrack
-from src.soundtrack.domain.soundtrack_id import SoundtrackId
-from src.soundtrack.domain.isbn_13 import Isbn13
-from src.soundtrack.domain.user_id import UserId
-from src.soundtrack.domain.chapter.chapter import Chapter
-from src.soundtrack.domain.exceptions.already_existing_soundtrack_error import AlreadyExistingSoundtrackError
+from ..domain.soundtrack_repository import SoundtrackRepository
+from ..domain.soundtrack import Soundtrack
+from ..domain.soundtrack_id import SoundtrackId
+from ..domain.isbn_13 import Isbn13
+from ..domain.user_id import UserId
+from ..domain.chapter.chapter import Chapter
+from ..domain.exceptions.already_existing_soundtrack_error import AlreadyExistingSoundtrackError
 
 
 class CreateSoundtrack():

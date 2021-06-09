@@ -10,7 +10,7 @@ from src.soundtrack.domain.soundtrack_title import SoundtrackTitle
 from src.soundtrack.domain.user_id import UserId
 from src.soundtrack.domain.chapter.chapter import Chapter
 from src.soundtrack.domain.soundtrack import Soundtrack
-from test.soundtrack.builder.soundtrack_builder import SoundtrackBuilder
+from ..builder.soundtrack_builder import SoundtrackBuilder
 from src.soundtrack.domain.exceptions.already_existing_soundtrack_error import AlreadyExistingSoundtrackError
 
 fake = Faker()

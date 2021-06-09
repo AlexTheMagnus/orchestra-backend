@@ -1,6 +1,6 @@
 import pytest
 import pyisbn
-from src.soundtrack.domain.exceptions.not_a_valid_isbn_13_error import NotAValidIsbn13Error
+from .exceptions.not_a_valid_isbn_13_error import NotAValidIsbn13Error
 
 
 class Isbn13():

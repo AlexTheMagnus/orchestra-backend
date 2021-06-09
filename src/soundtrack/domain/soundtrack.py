@@ -1,8 +1,8 @@
-from src.soundtrack.domain.soundtrack_id import SoundtrackId
-from src.soundtrack.domain.isbn_13 import Isbn13
-from src.soundtrack.domain.soundtrack_title import SoundtrackTitle
-from src.soundtrack.domain.user_id import UserId
-from src.soundtrack.domain.chapter.chapter import Chapter
+from .soundtrack_id import SoundtrackId
+from .isbn_13 import Isbn13
+from .soundtrack_title import SoundtrackTitle
+from .user_id import UserId
+from .chapter.chapter import Chapter
 
 
 class Soundtrack():

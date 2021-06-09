@@ -1,4 +1,4 @@
-from src.soundtrack.domain.chapter.exceptions.not_a_valid_theme_url_error import NotAValidThemeUrlError
+from .exceptions.not_a_valid_theme_url_error import NotAValidThemeUrlError
 
 
 class Theme():

@@ -1,10 +1,10 @@
-from src.soundtrack.domain.soundtrack_id import SoundtrackId
-from src.soundtrack.domain.isbn_13 import Isbn13
-from src.soundtrack.domain.soundtrack_title import SoundtrackTitle
-from src.soundtrack.domain.user_id import UserId
-from src.soundtrack.domain.chapter.chapter import Chapter
-from src.soundtrack.domain.soundtrack import Soundtrack
-from src.soundtrack.infrastructure.soundtrack_dto import SoundtrackDTO
+from ..domain.soundtrack_id import SoundtrackId
+from ..domain.isbn_13 import Isbn13
+from ..domain.soundtrack_title import SoundtrackTitle
+from ..domain.user_id import UserId
+from ..domain.chapter.chapter import Chapter
+from ..domain.soundtrack import Soundtrack
+from ..infrastructure.soundtrack_dto import SoundtrackDTO
 
 
 class SoundtrackMapper:

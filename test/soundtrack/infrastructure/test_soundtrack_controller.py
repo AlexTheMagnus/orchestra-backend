@@ -1,8 +1,9 @@
+import pytest
 import json
 import uuid
 
 from src.soundtrack.infrastructure.soundtrack_mysql_repository import SoundtrackMysqlRepository
-from test.soundtrack.builder.soundtrack_builder import SoundtrackBuilder
+from ..builder.soundtrack_builder import SoundtrackBuilder
 
 
 def teardown_module():

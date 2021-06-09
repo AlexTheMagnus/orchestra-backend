@@ -1,9 +1,9 @@
-from src.soundtrack.domain.chapter.chapter_id import ChapterId
-from src.soundtrack.domain.chapter.chapter_number import ChapterNumber
-from src.soundtrack.domain.chapter.chapter_title import ChapterTitle
-from src.soundtrack.domain.chapter.theme import Theme
-from src.soundtrack.domain.chapter.chapter import Chapter
-from src.soundtrack.infrastructure.chapter.chapter_dto import ChapterDTO
+from ...domain.chapter.chapter_id import ChapterId
+from ...domain.chapter.chapter_number import ChapterNumber
+from ...domain.chapter.chapter_title import ChapterTitle
+from ...domain.chapter.theme import Theme
+from ...domain.chapter.chapter import Chapter
+from ...infrastructure.chapter.chapter_dto import ChapterDTO
 
 
 class ChapterMapper:

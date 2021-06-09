@@ -1,6 +1,6 @@
 from typing import TypedDict
 
-from src.soundtrack.infrastructure.chapter.chapter_dto import ChapterDTO
+from ..infrastructure.chapter.chapter_dto import ChapterDTO
 
 
 class SoundtrackDTO(TypedDict):
