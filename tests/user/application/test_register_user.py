@@ -2,8 +2,8 @@ import pytest
 from faker import Faker
 from typing import List
 
-from test.user.infrastructure.user_in_memory_repository import UserInMemoryRepository
-from test.user.builder.user_builder import UserBuilder
+from tests.user.infrastructure.user_in_memory_repository import UserInMemoryRepository
+from tests.user.builder.user_builder import UserBuilder
 from src.user.application.register_user import RegisterUser
 from src.user.domain.soundtrack_id import SoundtrackId
 from src.user.domain.user_id import UserId

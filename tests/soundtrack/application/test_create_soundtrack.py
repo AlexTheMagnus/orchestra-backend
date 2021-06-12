@@ -1,8 +1,9 @@
 import pytest
 import uuid
 from faker import Faker
+from typing import List
 
-from test.soundtrack.infrastructure.soundtrack_in_memory_repository import SoundtrackInMemoryRepository
+from ..infrastructure.soundtrack_in_memory_repository import SoundtrackInMemoryRepository
 from src.soundtrack.application.create_soundtrack import CreateSoundtrack
 from src.soundtrack.domain.soundtrack_id import SoundtrackId
 from src.soundtrack.domain.isbn_13 import Isbn13
@@ -21,7 +22,7 @@ soundtrack_id: SoundtrackId = SoundtrackId.from_string(str(uuid.uuid4()))
 book: Isbn13 = Isbn13.from_string("978-2-1550-9533-9")
 soundtrack_title = SoundtrackTitle.from_string(fake.pystr())
 author: UserId = UserId.from_string(fake.pystr())
-chapters: list[Chapter] = []
+chapters: List[Chapter] = []
 
 
 class TestCreateSoundtrack():

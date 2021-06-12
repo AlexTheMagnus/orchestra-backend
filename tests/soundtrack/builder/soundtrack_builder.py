@@ -1,5 +1,6 @@
 import uuid
 from faker import Faker
+from typing import List
 
 # from src.soundtrack.infrastructure.soundtrack_mysql_repository import UserMysqlRepository
 from src.soundtrack.infrastructure.soundtrack_mapper import SoundtrackMapper
@@ -21,7 +22,7 @@ class SoundtrackBuilder():
         self.__book: Isbn13 = Isbn13.from_string("978-2-1550-9533-9")
         self.__soundtrack_title = SoundtrackTitle.from_string(fake.pystr())
         self.__author: UserId = UserId.from_string(str(uuid.uuid4()))
-        self.__chapters: list[Chapter] = []
+        self.__chapters: List[Chapter] = []
 
     def with_soundtrack_id(self, soundtrack_id: SoundtrackId):
         self.__soundtrack_id = soundtrack_id
@@ -39,7 +40,7 @@ class SoundtrackBuilder():
         self.__author = author
         return self
 
-    def with_chapters(self, chapters: list[Chapter]):
+    def with_chapters(self, chapters: List[Chapter]):
         self.__chapters = chapters
         return self
 

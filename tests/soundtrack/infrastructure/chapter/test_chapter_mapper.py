@@ -1,7 +1,7 @@
 from src.soundtrack.domain.chapter.chapter import Chapter
 from src.soundtrack.infrastructure.chapter.chapter_mapper import ChapterMapper
 from src.soundtrack.infrastructure.chapter.chapter_dto import ChapterDTO
-from test.soundtrack.builder.chapter_builder import ChapterBuilder
+from ...builder.chapter_builder import ChapterBuilder
 
 
 class TestChapterMapper:

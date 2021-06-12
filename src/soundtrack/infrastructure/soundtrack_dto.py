@@ -1,4 +1,4 @@
-from typing import TypedDict
+from typing import TypedDict, List
 
 from ..infrastructure.chapter.chapter_dto import ChapterDTO
 
@@ -8,4 +8,4 @@ class SoundtrackDTO(TypedDict):
     book: str
     soundtrack_title: str
     author: str
-    chapters: list[ChapterDTO]
+    chapters: List[ChapterDTO]
