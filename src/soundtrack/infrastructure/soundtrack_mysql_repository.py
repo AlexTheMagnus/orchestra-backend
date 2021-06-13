@@ -14,7 +14,6 @@ from ..domain.chapter.chapter import Chapter
 class SoundtrackMysqlRepository(SoundtrackRepository):
 
     def __init__(self):
-        print(os.getenv('DB_ENGINE'))
         self.__db_engine = db.create_engine(os.getenv('DB_ENGINE'))
         self.__db_connection = self.__db_engine.connect()
         self.__db_metadata = db.MetaData()
@@ -55,6 +54,8 @@ class SoundtrackMysqlRepository(SoundtrackRepository):
 
     def clean(self):
         query = db.delete(self.__soundtrack)
+        self.__db_connection.execute(query)
+        query = db.delete(self.__chapter)
         self.__db_connection.execute(query)
 
     def __getSoundtrackFromResult(self, result: tuple) -> Soundtrack:
