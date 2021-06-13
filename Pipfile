@@ -4,7 +4,7 @@ verify_ssl = true
 name = "pypi"
 
 [scripts]
-test = "DB_ENGINE=mysql://root:root@127.0.0.1:3306/orchestra-test pytest"
+test = "pytest"
 
 [packages]
 appdirs = "==1.4.3"
