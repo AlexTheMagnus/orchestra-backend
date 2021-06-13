@@ -6,6 +6,7 @@ from faker import Faker
 
 from orchestra import app
 from src.soundtrack.infrastructure.soundtrack_mysql_repository import SoundtrackMysqlRepository
+from src.soundtrack.domain.soundtrack_id import SoundtrackId
 from ..builder.soundtrack_builder import SoundtrackBuilder
 
 fake = Faker()
@@ -17,9 +18,9 @@ def teardown_module():
 
 class TestSoundtrackPostController():
     def test_should_create_and_save_a_soundtrack_with_the_passed_parameters(self):
-        soundtrack_id = str(uuid.uuid4())
+        soundtrack_id = SoundtrackId.from_string(str(uuid.uuid4()))
         soundtracks_post_request_params = get_soundtrack_post_request_params_with_id(
-            soundtrack_id)
+            soundtrack_id.value)
 
         response = app.test_client().post(
             '/soundtracks',
@@ -40,14 +41,14 @@ class TestSoundtrackPostController():
         assert saved_soundtrack.chapters == soundtracks_post_request_params["chapters"]
 
     def test_should_return_409_when_creating_a_soundtrack_with_an_already_registered_soundtrack_id(self):
-        soundtrack_id = str(uuid.uuid4())
+        soundtrack_id = SoundtrackId.from_string(str(uuid.uuid4()))
         soundtrack = SoundtrackBuilder().with_soundtrack_id(soundtrack_id).build()
 
         soundtrack_repository = SoundtrackMysqlRepository()
         soundtrack_repository.save(soundtrack)
 
         soundtracks_post_request_params = get_soundtrack_post_request_params_with_id(
-            soundtrack_id)
+            soundtrack_id.value)
 
         response = app.test_client().post(
             '/users',
