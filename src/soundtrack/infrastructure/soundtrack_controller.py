@@ -1,3 +1,40 @@
-from flask import Blueprint
+from flask import Blueprint, abort, request
+from typing import List
+
+from .soundtrack_mysql_repository import SoundtrackMysqlRepository
+from ..application.create_soundtrack import CreateSoundtrack
+from ..domain.soundtrack import Soundtrack
+from ..domain.soundtrack_id import SoundtrackId
+from ..domain.isbn_13 import Isbn13
+from ..domain.soundtrack_title import SoundtrackTitle
+from ..domain.user_id import UserId
+from ..domain.exceptions.already_existing_soundtrack_error import AlreadyExistingSoundtrackError
+from .validators.soundtrack_post_validator import SoundtracksPostValidator
 
 soundtracks = Blueprint("soundtracks", __name__, url_prefix="/soundtracks")
+
+
+@soundtracks.route('', methods=["POST"])
+def create_soundtrack():
+    soundtrack_repository = SoundtrackMysqlRepository()
+
+    if not SoundtracksPostValidator().validate(request.json):
+        abort(400)
+
+    sountrack = Soundtrack(
+        SoundtrackId.from_string(request.json['soundtrack_id']),
+        Isbn13.from_string(request.json['book']),
+        SoundtrackTitle.from_string(request.json['soundtrack_title']),
+        UserId.from_string(request.json['author']),
+        List(request.json['book'])
+    )
+
+    try:
+        CreateSoundtrack(soundtrack_repository).run(sountrack)
+    except Exception as error:
+        if isinstance(error, AlreadyExistingUserError):
+            abort(409)
+        else:
+            abort(500)
+
+    return '200'
