@@ -31,8 +31,8 @@ def create_soundtrack_table():
     db.Table('soundtrack', metadata,
              db.Column('soundtrack_id', db.String(36),
                        nullable=False, primary_key=True),
-             db.Column('soundtrack_title', db.String(255), nullable=False),
              db.Column('book', db.String(255), nullable=False),
+             db.Column('soundtrack_title', db.String(255), nullable=False),
              db.Column('author', db.String(36), nullable=False)
              )
 

@@ -10,6 +10,8 @@
 
 ## Test
 
+Note: It's necessary to have executed `pyhton3 init_dbs.py inside the pipenv shell`
+
 1. In the .env file, change the DB_ENGINE env variable to match the DB_ENGINE_TEST env variable.
 1. To execute the test run `pipenv run test` inside the orchestra-backend root folder.
 1. To use the production database, change back the DB_ENGINE value.

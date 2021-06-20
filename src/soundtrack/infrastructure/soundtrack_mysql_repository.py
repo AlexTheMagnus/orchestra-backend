@@ -29,6 +29,7 @@ class SoundtrackMysqlRepository(SoundtrackRepository):
             soundtrack_title=soundtrack.soundtrack_title.value,
             author=soundtrack.author.value
         )
+        self.__db_connection.execute(query)
 
         for chapter in soundtrack.chapters:
             query = db.insert(self.__chapter).values(
@@ -38,8 +39,7 @@ class SoundtrackMysqlRepository(SoundtrackRepository):
                 theme=chapter.theme.value,
                 chapter_title=chapter.chapter_title.value
             )
-
-        self.__db_connection.execute(query)
+            self.__db_connection.execute(query)
 
     def find(self, soundtrack_id: SoundtrackId) -> Optional[Soundtrack]:
         query = db.select([self.__soundtrack]).where(

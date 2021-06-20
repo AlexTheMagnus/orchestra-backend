@@ -8,6 +8,7 @@ from ..domain.soundtrack_id import SoundtrackId
 from ..domain.isbn_13 import Isbn13
 from ..domain.soundtrack_title import SoundtrackTitle
 from ..domain.user_id import UserId
+from ..domain.chapter.chapter import Chapter
 from ..domain.exceptions.already_existing_soundtrack_error import AlreadyExistingSoundtrackError
 from .validators.soundtrack_post_validator import SoundtracksPostValidator
 
@@ -21,18 +22,21 @@ def create_soundtrack():
     if not SoundtracksPostValidator().validate(request.json):
         abort(400)
 
+    chapters = List[Chapter]
+
     sountrack = Soundtrack(
-        SoundtrackId.from_string(request.json['soundtrack_id']),
-        Isbn13.from_string(request.json['book']),
-        SoundtrackTitle.from_string(request.json['soundtrack_title']),
-        UserId.from_string(request.json['author']),
-        List(request.json['book'])
+        soundtrack_id=SoundtrackId.from_string(request.json['soundtrack_id']),
+        book=Isbn13.from_string(request.json['book']),
+        soundtrack_title=SoundtrackTitle.from_string(
+            request.json['soundtrack_title']),
+        author=UserId.from_string(request.json['author']),
+        chapters=request.json['book']
     )
 
     try:
         CreateSoundtrack(soundtrack_repository).run(sountrack)
     except Exception as error:
-        if isinstance(error, AlreadyExistingUserError):
+        if isinstance(error, AlreadyExistingSoundtrackError):
             abort(409)
         else:
             abort(500)
