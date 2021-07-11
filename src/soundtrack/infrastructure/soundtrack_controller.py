@@ -36,6 +36,7 @@ def create_soundtrack():
     try:
         CreateSoundtrack(soundtrack_repository).run(soundtrack)
     except Exception as error:
+        print("ERROR:", error)
         if isinstance(error, AlreadyExistingSoundtrackError):
             abort(409)
         else:

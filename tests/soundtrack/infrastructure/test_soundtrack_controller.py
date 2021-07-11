@@ -10,6 +10,7 @@ from src.soundtrack.domain.soundtrack_id import SoundtrackId
 from ..builder.soundtrack_builder import SoundtrackBuilder
 
 fake = Faker()
+soundtrack_repository = SoundtrackMysqlRepository()
 
 
 def teardown_module():
@@ -28,7 +29,6 @@ class TestSoundtrackPostController():
             content_type='application/json'
         )
 
-        soundtrack_repository = SoundtrackMysqlRepository()
         saved_soundtrack = soundtrack_repository.find(soundtrack_id)
         assert response.status_code == 200
         assert saved_soundtrack != None
@@ -43,15 +43,13 @@ class TestSoundtrackPostController():
     def test_should_return_409_when_creating_a_soundtrack_with_an_already_registered_soundtrack_id(self):
         soundtrack_id = SoundtrackId.from_string(str(uuid.uuid4()))
         soundtrack = SoundtrackBuilder().with_soundtrack_id(soundtrack_id).build()
-
-        soundtrack_repository = SoundtrackMysqlRepository()
         soundtrack_repository.save(soundtrack)
 
         soundtracks_post_request_params = get_soundtrack_post_request_params_with_id(
             soundtrack_id.value)
 
         response = app.test_client().post(
-            '/users',
+            '/soundtracks',
             data=json.dumps(soundtracks_post_request_params),
             content_type='application/json'
         )
