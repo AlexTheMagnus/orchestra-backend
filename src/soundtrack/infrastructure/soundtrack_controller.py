@@ -30,13 +30,12 @@ def create_soundtrack():
         soundtrack_title=SoundtrackTitle.from_string(
             request.json['soundtrack_title']),
         author=UserId.from_string(request.json['author']),
-        chapters=request.json['chapters']
+        chapters=[]
     )
 
     try:
         CreateSoundtrack(soundtrack_repository).run(soundtrack)
     except Exception as error:
-        print("ERROR:", error)
         if isinstance(error, AlreadyExistingSoundtrackError):
             abort(409)
         else:
