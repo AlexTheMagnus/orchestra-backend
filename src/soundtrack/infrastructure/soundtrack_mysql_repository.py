@@ -31,15 +31,15 @@ class SoundtrackMysqlRepository(SoundtrackRepository):
         )
         self.__db_connection.execute(query)
 
-        for chapter in soundtrack.chapters:
-            query = db.insert(self.__chapter).values(
-                chapter_id=chapter.chapter_id.value,
-                soundtrack_id=soundtrack.soundtrack_id.value,
-                chapter_number=chapter.chapter_number.value,
-                theme=chapter.theme.value,
-                chapter_title=chapter.chapter_title.value
-            )
-            self.__db_connection.execute(query)
+        # TODO: ADD TO CHAPTER_REPOSITORY.save
+        #     query = db.insert(self.__chapter).values(
+        #         chapter_id=chapter.chapter_id.value,
+        #         soundtrack_id=soundtrack.soundtrack_id.value,
+        #         chapter_number=chapter.chapter_number.value,
+        #         theme=chapter.theme.value,
+        #         chapter_title=chapter.chapter_title.value
+        #     )
+        #     self.__db_connection.execute(query)
 
     def find(self, soundtrack_id: SoundtrackId) -> Optional[Soundtrack]:
         query = db.select([self.__soundtrack]).where(
