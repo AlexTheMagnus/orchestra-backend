@@ -20,5 +20,4 @@ class SoundtracksPostValidator:
         self.__validator = Validator()
 
     def validate(self, soundtrack: dict):
-        print(soundtrack)
         return self.__validator.validate(soundtrack, self.__schema)

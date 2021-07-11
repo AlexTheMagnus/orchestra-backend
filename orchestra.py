@@ -12,7 +12,6 @@ CORS(app)
 def index():
     return 'Orchestra, conduct your books\' soundtracks'
 
-
 # Swagger
 SWAGGER_URL = ''
 API_URL = '/static/swagger.json'

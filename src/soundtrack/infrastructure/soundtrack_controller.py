@@ -24,17 +24,17 @@ def create_soundtrack():
 
     chapters = List[Chapter]
 
-    sountrack = Soundtrack(
+    soundtrack = Soundtrack(
         soundtrack_id=SoundtrackId.from_string(request.json['soundtrack_id']),
         book=Isbn13.from_string(request.json['book']),
         soundtrack_title=SoundtrackTitle.from_string(
             request.json['soundtrack_title']),
         author=UserId.from_string(request.json['author']),
-        chapters=request.json['book']
+        chapters=request.json['chapters']
     )
 
     try:
-        CreateSoundtrack(soundtrack_repository).run(sountrack)
+        CreateSoundtrack(soundtrack_repository).run(soundtrack)
     except Exception as error:
         if isinstance(error, AlreadyExistingSoundtrackError):
             abort(409)
