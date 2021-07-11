@@ -1,7 +1,7 @@
-from src.soundtrack.domain.chapter.chapter_id import ChapterId
-from src.soundtrack.domain.chapter.chapter_title import ChapterTitle
-from src.soundtrack.domain.chapter.chapter_number import ChapterNumber
-from src.soundtrack.domain.chapter.theme import Theme
+from .chapter_title import ChapterTitle
+from .chapter_id import ChapterId
+from .chapter_number import ChapterNumber
+from .theme import Theme
 
 
 class Chapter:

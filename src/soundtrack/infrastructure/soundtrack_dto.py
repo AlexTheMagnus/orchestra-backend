@@ -1,10 +1,11 @@
-from typing import TypedDict
+from typing import TypedDict, List
 
-from src.soundtrack.infrastructure.chapter.chapter_dto import ChapterDTO
+from ..infrastructure.chapter.chapter_dto import ChapterDTO
 
 
 class SoundtrackDTO(TypedDict):
-    user_id: str
+    soundtrack_id: str
     book: str
+    soundtrack_title: str
     author: str
-    chapters: list[ChapterDTO]
+    chapters: List[ChapterDTO]

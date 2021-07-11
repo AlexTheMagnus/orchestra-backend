@@ -1,4 +1,4 @@
-from src.soundtrack.domain.chapter.exceptions.not_a_valid_chapter_number_error import NotAValidChapterNumberError
+from .exceptions.not_a_valid_chapter_number_error import NotAValidChapterNumberError
 
 
 class ChapterNumber():
