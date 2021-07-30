@@ -2,7 +2,7 @@ from flask import Flask
 from flask_swagger_ui import get_swaggerui_blueprint
 from flask_cors import CORS
 
-from src.soundtrack.infrastructure.soundtrack_controller import soundtracks
+from .src.soundtrack.infrastructure.soundtrack_controller import soundtracks
 
 app = Flask(__name__)
 CORS(app)
