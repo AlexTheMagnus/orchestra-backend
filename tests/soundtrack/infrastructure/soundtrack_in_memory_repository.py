@@ -16,6 +16,7 @@ class SoundtrackInMemoryRepository(SoundtrackRepository):
         for soundtrack in self.__soundtracks:
             if soundtrack.soundtrack_id.value == soundtrack_id.value:
                 return soundtrack
+
         return None
 
     def find_by_author(self, author: UserId):
@@ -24,4 +25,5 @@ class SoundtrackInMemoryRepository(SoundtrackRepository):
         for soundtrack in self.__soundtracks:
             if soundtrack.author.value == author.value:
                 found_soundtracks.append(soundtrack)
+                
         return found_soundtracks
