@@ -69,23 +69,16 @@ def get_soundtrack_post_request_params_with_id(soundtrack_id: str):
 class TestSoundtrackGetController():
     def test_should_return_the_user_soundtracks(self):
         author: UserId = UserId.from_string(fake.pystr())
-        soundtracks_get_request_params = get_soundtrack_get_request_params_with_id(author.value)
 
         for x in range(3):
             soundtrack: Soundtrack = SoundtrackBuilder().with_author(author).build()
             soundtrack_repository.save(soundtrack)
 
         response = app.test_client().get(
-            '/soundtracks/user/{0}',
-            data=json.dumps(soundtracks_get_request_params),
+            '/soundtracks/user/{0}'.format(author.value),
             content_type='application/json'
         )
 
         assert response.status_code == 200
         data = json.loads(response.get_data(as_text=True))
         assert len(data["soundtracks_list"]) == 3
-
-def get_soundtrack_get_request_params_with_id(author: str):
-    return {
-        "author": author
-    }

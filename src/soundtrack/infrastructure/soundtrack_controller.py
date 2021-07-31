@@ -14,7 +14,6 @@ from ..domain.chapter.chapter import Chapter
 from ..domain.exceptions.already_existing_soundtrack_error import AlreadyExistingSoundtrackError
 from .from_soundtrack_to_dict import FromSoundtrackToDict
 from .validators.soundtrack_post_validator import SoundtracksPostValidator
-from .validators.soundtracks_user_get_validator import SoundtracksUserGetValidator
 
 soundtracks = Blueprint("soundtracks", __name__, url_prefix="/soundtracks")
 
@@ -48,14 +47,11 @@ def create_soundtrack():
     return '200'
 
 
-@soundtracks.route('/user/<string:author>', methods=["GET"])
-def get_user_soundtracks(author: str):
+@soundtracks.route('/user/<string:str_author>', methods=["GET"])
+def get_user_soundtracks(str_author: str):
     soundtrack_repository = SoundtrackMysqlRepository()
 
-    if not SoundtracksUserGetValidator().validate(request.json):
-        abort(400)
-
-    author = UserId.from_string(request.json['author'])
+    author = UserId.from_string(str_author)
 
     try:
         soundtracks_list = GetUserSoundtracks(soundtrack_repository).run(author)
