@@ -1,7 +1,7 @@
 import uuid
 from faker import Faker
 
-from src.soundtrack.infrastructure.validators.soundtrack_post_validator import SoundtracksPostValidator
+from src.soundtrack.infrastructure.validators.soundtracks_post_validator import SoundtracksPostValidator
 
 fake = Faker()
 
