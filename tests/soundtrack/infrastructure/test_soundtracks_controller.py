@@ -1,7 +1,6 @@
 import pytest
 import json
 import uuid
-
 from faker import Faker
 
 from orchestra import app
@@ -17,7 +16,7 @@ def teardown_module():
     SoundtrackMysqlRepository().clean()
 
 
-class TestSoundtrackPostController():
+class TestSoundtracksPostController():
     def test_should_create_and_save_a_soundtrack_with_the_passed_parameters(self):
         soundtrack_id = SoundtrackId.from_string(str(uuid.uuid4()))
         soundtracks_post_request_params = get_soundtrack_post_request_params_with_id(
