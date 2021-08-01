@@ -5,6 +5,7 @@ from faker import Faker
 from orchestra import app
 from src.user.infrastructure.user_mysql_repository import UserMysqlRepository
 from src.user.domain.user_id import UserId
+from ..builder.user_builder import UserBuilder
 
 fake = Faker()
 user_repository = UserMysqlRepository()
@@ -36,3 +37,19 @@ def get_user_post_request_params_with_id(user_id: UserId):
         "username": fake.name(),
         "user_avatar": "https://" + fake.pystr()
     }
+
+class TestUserGetController():
+    def test_should_return_the_user_info(self):
+        user: User = UserBuilder().build()
+        user_repository.save(user)
+
+        response = app.test_client().get(
+            '/users/{0}'.format(user.user_id.value),
+            content_type='application/json'
+        )
+
+        assert response.status_code == 200
+        data = json.loads(response.get_data(as_text=True))
+        assert data["user_id"] == user.user_id.value
+        assert data["username"] == user.username.value
+        assert data["user_avatar"] == user.user_avatar.value
