@@ -1,7 +1,7 @@
-from typing import TypedDict, List
+from typing import TypedDict
 
 
 class UserDTO(TypedDict):
     user_id: str
-    favorites: List[str]
-    likes: List[str]
+    username: str
+    user_avatar: str
