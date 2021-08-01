@@ -13,7 +13,7 @@ class TestUser():
 
     def test_user_constructor(self):
         user_id = UserId.from_string(fake.pystr())
-        username = Username.from_string(fake.pystr())
+        username = Username.from_string(fake.name())
         user_avatar = UserAvatar.from_url("https://" + fake.pystr())
 
         user = User(user_id, username, user_avatar)

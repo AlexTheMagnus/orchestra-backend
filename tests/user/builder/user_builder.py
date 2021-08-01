@@ -1,10 +1,9 @@
 from faker import Faker
-from typing import List
 
-from src.user.infrastructure.user_mysql_repository import UserMysqlRepository
 from src.user.infrastructure.user_mapper import UserMapper
 from src.user.domain.user_id import UserId
-from src.user.domain.soundtrack_id import SoundtrackId
+from src.user.domain.username import Username
+from src.user.domain.user_avatar import UserAvatar
 from src.user.domain.user import User
 from src.user.infrastructure.user_dto import UserDTO
 
@@ -13,48 +12,27 @@ fake = Faker()
 
 class UserBuilder():
     def __init__(self):
-        self.__user_id: UserId = fake.pystr()
-        self.__favorites: List[SoundtrackId] = []
-        self.__likes: List[SoundtrackId] = []
+        self.__user_id: UserId = UserId.from_string(fake.pystr())
+        self.__username: Username = Username.from_string(fake.name())
+        self.__user_avatar: UserAvatar = UserAvatar.from_url("https://" + fake.pystr())
 
     def with_user_id(self, user_id: UserId):
         self.__user_id = user_id
         return self
 
-    def with_favorites(self, favorites: List[SoundtrackId]):
-        self.__favorites = favorites
+    def with_username(self, username: Username):
+        self.__username = username
         return self
 
-    def with_likes(self, likes: List[SoundtrackId]):
-        self.__likes = likes
+    def with_user_avatar(self, user_avatar: UserAvatar):
+        self.__user_avatar = user_avatar
         return self
-
-    def with_soundtracks(self, soundtracks: List[SoundtrackId]):
-        self.__soundtracks = soundtracks
-        return self
-
-    def with_following(self, following: List[UserId]):
-        self.__following = following
-        return self
-
-    def with_followers(self, followers: List[UserId]):
-        self.__followers = followers
-        return self
-
-    def insert(self) -> User:
-        user = self.build()
-        user_repository = UserMysqlRepository()
-        user_repository.save(user)
-        return user
 
     def build(self) -> User:
         return User(
             self.__user_id,
-            self.__favorites,
-            self.__likes,
-            self.__soundtracks,
-            self.__following,
-            self.__followers
+            self.__username,
+            self.__user_avatar,
         )
 
     def build_dto(self) -> UserDTO:

@@ -1,6 +1,6 @@
 from src.user.domain.user_repository import UserRepository
 from src.user.domain.user import User
-from src.user.domain.already_existing_user_error import AlreadyExistingUserError
+from src.user.domain.exceptions.already_existing_user_error import AlreadyExistingUserError
 
 
 class RegisterUser():
