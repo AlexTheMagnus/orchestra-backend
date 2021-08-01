@@ -13,7 +13,7 @@ from ..domain.user_id import UserId
 from ..domain.chapter.chapter import Chapter
 from ..domain.exceptions.already_existing_soundtrack_error import AlreadyExistingSoundtrackError
 from .from_soundtrack_to_dict import FromSoundtrackToDict
-from .validators.soundtrack_post_validator import SoundtracksPostValidator
+from .validators.soundtracks_post_validator import SoundtracksPostValidator
 
 soundtracks = Blueprint("soundtracks", __name__, url_prefix="/soundtracks")
 
