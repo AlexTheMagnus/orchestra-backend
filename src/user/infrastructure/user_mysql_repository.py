@@ -1,5 +1,6 @@
 import os
 import sqlalchemy as db
+from typing import Optional
 
 from src.user.domain.user_repository import UserRepository
 from ..domain.user import User
@@ -41,3 +42,7 @@ class UserMysqlRepository(UserRepository):
             username=Username.from_string(result[1]),
             user_avatar=UserAvatar.from_url(result[2])
         )
+
+    def clean(self):
+        query = db.delete(self.__users)
+        self.__db_connection.execute(query)
