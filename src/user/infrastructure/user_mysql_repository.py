@@ -2,7 +2,7 @@ import os
 import sqlalchemy as db
 from typing import Optional
 
-from src.user.domain.user_repository import UserRepository
+from ..domain.user_repository import UserRepository
 from ..domain.user import User
 from ..domain.user_id import UserId
 from ..domain.username import Username

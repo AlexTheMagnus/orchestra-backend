@@ -1,4 +1,4 @@
-from src.user.domain.user_id import UserId
+from ..user_id import UserId
 
 
 class AlreadyExistingUserError(Exception):
