@@ -7,6 +7,7 @@ from ..domain.user_avatar import UserAvatar
 from ..domain.user import User
 from ..application.register_user import RegisterUser
 from ..application.get_user_info import GetUserInfo
+from ..domain.exceptions.already_existing_user_error import AlreadyExistingUserError
 from .from_user_to_dict import FromUserToDict
 from .validators.users_post_validator import UsersPostValidator
 
