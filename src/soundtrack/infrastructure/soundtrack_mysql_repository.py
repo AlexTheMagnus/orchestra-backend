@@ -1,6 +1,6 @@
 import os
 import sqlalchemy as db
-from typing import Optional
+from typing import List, Optional
 
 from ..domain.soundtrack_repository import SoundtrackRepository
 from ..domain.soundtrack import Soundtrack
@@ -19,8 +19,6 @@ class SoundtrackMysqlRepository(SoundtrackRepository):
         self.__db_metadata = db.MetaData()
         self.__soundtrack = db.Table(
             "soundtrack", self.__db_metadata, autoload=True, autoload_with=self.__db_engine)
-        self.__chapter = db.Table(
-            "chapter", self.__db_metadata, autoload=True, autoload_with=self.__db_engine)
 
     def save(self, soundtrack: Soundtrack):
         query = db.insert(self.__soundtrack).values(
@@ -31,7 +29,7 @@ class SoundtrackMysqlRepository(SoundtrackRepository):
         )
         self.__db_connection.execute(query)
 
-        # TODO: ADD TO CHAPTER_REPOSITORY.save
+        # TODO: CREATE FILE CHAPTER_REPOSITORY.save AND ADD THE FOLLOWING METHOD
         #     query = db.insert(self.__chapter).values(
         #         chapter_id=chapter.chapter_id.value,
         #         soundtrack_id=soundtrack.soundtrack_id.value,
@@ -52,10 +50,19 @@ class SoundtrackMysqlRepository(SoundtrackRepository):
 
         return self.__getSoundtrackFromResult(resultSet[0])
 
+    def find_by_author(self, author: UserId):
+        query = db.select([self.__soundtrack]).where(
+            self.__soundtrack.columns.author == author.value)
+        resultProxy = self.__db_connection.execute(query)
+
+        resultSet = resultProxy.fetchall()
+        if not resultSet:
+            return []
+
+        return self.__getSoundtracksListFromResult(resultSet)
+
     def clean(self):
         query = db.delete(self.__soundtrack)
-        self.__db_connection.execute(query)
-        query = db.delete(self.__chapter)
         self.__db_connection.execute(query)
 
     def __getSoundtrackFromResult(self, result: tuple) -> Soundtrack:
@@ -66,3 +73,12 @@ class SoundtrackMysqlRepository(SoundtrackRepository):
             author=UserId.from_string(result[3]),
             chapters=[]
         )
+
+    def __getSoundtracksListFromResult(self, resultSet: [tuple]) -> List[Soundtrack]:
+        soundtracks_list: List[Soundtrack] = []
+
+        for result in resultSet:
+            soundtrack = self.__getSoundtrackFromResult(result)
+            soundtracks_list.append(soundtrack)
+
+        return soundtracks_list

@@ -6,6 +6,7 @@ from faker import Faker
 from orchestra import app
 from src.soundtrack.infrastructure.soundtrack_mysql_repository import SoundtrackMysqlRepository
 from src.soundtrack.domain.soundtrack_id import SoundtrackId
+from src.soundtrack.domain.user_id import UserId
 from ..builder.soundtrack_builder import SoundtrackBuilder
 
 fake = Faker()
@@ -62,3 +63,21 @@ def get_soundtrack_post_request_params_with_id(soundtrack_id: str):
         "soundtrack_title": fake.pystr(),
         "author": str(uuid.uuid4())
     }
+
+
+class TestSoundtrackGetController():
+    def test_should_return_the_user_soundtracks(self):
+        author: UserId = UserId.from_string(fake.pystr())
+
+        for x in range(3):
+            soundtrack: Soundtrack = SoundtrackBuilder().with_author(author).build()
+            soundtrack_repository.save(soundtrack)
+
+        response = app.test_client().get(
+            '/soundtracks/user/{0}'.format(author.value),
+            content_type='application/json'
+        )
+
+        assert response.status_code == 200
+        data = json.loads(response.get_data(as_text=True))
+        assert len(data["soundtracks_list"]) == 3
