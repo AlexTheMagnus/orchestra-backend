@@ -2,8 +2,8 @@ from flask import Flask
 from flask_swagger_ui import get_swaggerui_blueprint
 from flask_cors import CORS
 
-from .src.soundtrack.infrastructure.soundtracks_controller import soundtracks
-from .src.user.infrastructure.users_controller import users
+from src.soundtrack.infrastructure.soundtracks_controller import soundtracks
+from src.user.infrastructure.users_controller import users
 
 app = Flask(__name__)
 CORS(app)

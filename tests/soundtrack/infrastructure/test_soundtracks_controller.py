@@ -6,6 +6,7 @@ from faker import Faker
 from orchestra import app
 from src.soundtrack.infrastructure.soundtrack_mysql_repository import SoundtrackMysqlRepository
 from src.soundtrack.domain.soundtrack_id import SoundtrackId
+from src.soundtrack.domain.soundtrack import Soundtrack
 from src.soundtrack.domain.user_id import UserId
 from ..builder.soundtrack_builder import SoundtrackBuilder
 
@@ -81,3 +82,30 @@ class TestSoundtrackGetController():
         assert response.status_code == 200
         data = json.loads(response.get_data(as_text=True))
         assert len(data["soundtracks_list"]) == 3
+
+    def test_should_return_a_soundtrack_by_id(self):
+        soundtrack_id: SoundtrackId = SoundtrackId.from_string(str(uuid.uuid4()))
+        soundtrack: Soundtrack = SoundtrackBuilder().with_soundtrack_id(soundtrack_id).build()
+        soundtrack_repository.save(soundtrack)
+
+        response = app.test_client().get(
+            '/soundtracks/{0}'.format(soundtrack_id.value),
+            content_type='application/json'
+        )
+
+        assert response.status_code == 200
+        data = json.loads(response.get_data(as_text=True))
+        assert data['soundtrack_id'] == soundtrack.soundtrack_id.value
+        assert data['book'] == soundtrack.book.value
+        assert data['soundtrack_title'] == soundtrack.soundtrack_title.value
+        assert data['author'] == soundtrack.author.value
+
+    def test_should_return_404_when_asking_for_an_unexisting_soundtrack_id(self):
+        str_soundtrack_id: string = str(uuid.uuid4())
+
+        response = app.test_client().get(
+            '/soundtracks/{0}'.format(str_soundtrack_id),
+            content_type='application/json'
+        )
+
+        assert response.status_code == 404
