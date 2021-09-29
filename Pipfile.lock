@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "0c97f9ddb1d203c69a406f6e6a4fa5ff612d7b581af305dbbc12ed0ea0e81551"
+            "sha256": "60487824461cdc10d7152762e1b1ee2df51b70b62b7edadf753673947ba651bd"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -548,12 +548,11 @@
         },
         "requests": {
             "hashes": [
-                "sha256:43999036bfa82904b6af1d99e4882b560e5e2c68e5c4b0aa03b655f3d7d73fee",
-                "sha256:5d2d0ffbb515f39417009a46c14256291061ac01ba8f875b90cad137de83beb4",
-                "sha256:b3f43d496c6daba4493e7c431722aeb7dbc6288f52a6e04e7b6023b0247817e6"
+                "sha256:7f1a0b932f4a60a1a65caa4263921bb7d9ee911957e0ae4a23a6dd08185ad5f8",
+                "sha256:e786fa28d8c9154e6a4de5d46a1d921b8749f8b74e28bde23768e5e16eece998"
             ],
             "index": "pypi",
-            "version": "==2.23.0"
+            "version": "==2.25.0"
         },
         "retrying": {
             "hashes": [
@@ -569,6 +568,15 @@
             ],
             "index": "pypi",
             "version": "==1.15.0"
+        },
+        "spotipy": {
+            "hashes": [
+                "sha256:766f9ef96d61851d7884c4553f2de2527c3af01df603985f6987543bb28e3ff5",
+                "sha256:904f6e813dba837758e9510c1bee51d7ca217f169246625a13e693733dc33543",
+                "sha256:dd6de229351bb6cf4d9bc169c5e183288da795f5a8265968dd98e95c037f9e7a"
+            ],
+            "index": "pypi",
+            "version": "==2.19.0"
         },
         "sqlalchemy": {
             "hashes": [
@@ -666,11 +674,11 @@
         },
         "urllib3": {
             "hashes": [
-                "sha256:3018294ebefce6572a474f0604c2021e33b3fd8006ecd11d62107a5d2a963527",
-                "sha256:88206b0eb87e6d677d424843ac5209e3fb9d0190d0ee169599165ec25e9d9115"
+                "sha256:4849f132941d68144df0a3785ccc4fe423430ba5db0108d045c8cadbc90f517a",
+                "sha256:bad31cb622ceee0ab46c4c884cf61957def0ff2e644de0a7a093678844c9ccac"
             ],
             "index": "pypi",
-            "version": "==1.25.9"
+            "version": "==1.26.0"
         },
         "webencodings": {
             "hashes": [
