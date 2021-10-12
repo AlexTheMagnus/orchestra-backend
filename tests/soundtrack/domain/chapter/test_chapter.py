@@ -16,8 +16,7 @@ class TestChapter():
     def test_chapter_constructor(self):
         chapter_id = ChapterId.from_string(str(uuid.uuid4()))
         chapter_number = ChapterNumber.from_integer(fake.random_number(2))
-        theme = Theme.from_url(
-            "https://open.spotify.com/track/" + fake.pystr())
+        theme = Theme.from_string(fake.pystr())
         chapter_title = ChapterTitle.from_string(fake.pystr())
 
         chapter = Chapter(chapter_id, chapter_number, theme, chapter_title)

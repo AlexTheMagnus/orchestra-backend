@@ -71,7 +71,7 @@ def create_chapter_table():
                  "soundtrack.soundtrack_id"), nullable=False),
              db.Column('number', db.Integer(), nullable=False),
              db.Column('theme', db.String(255), nullable=False),
-             db.Column('chapter_title', db.String(255), nullable=True)
+             db.Column('chapter_title', db.String(255), nullable=False)
              )
 
 

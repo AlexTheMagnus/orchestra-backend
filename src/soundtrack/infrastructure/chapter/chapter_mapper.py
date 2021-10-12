@@ -14,7 +14,7 @@ class ChapterMapper:
                 chapter_dto['chapter_id']),
             chapter_number=ChapterNumber.from_integer(
                 chapter_dto['chapter_number']),
-            theme=Theme.from_url(chapter_dto['theme']),
+            theme=Theme.from_string(chapter_dto['theme']),
             chapter_title=ChapterTitle.from_string(
                 chapter_dto['chapter_title'])
         )

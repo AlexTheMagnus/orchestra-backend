@@ -19,8 +19,7 @@ class ChapterBuilder():
             str(uuid.uuid4()))
         self.__chapter_number: ChapterNumber = ChapterNumber.from_integer(
             fake.random_number(2))
-        self.__theme: Theme = Theme.from_url(
-            "https://open.spotify.com/track/" + fake.pystr())
+        self.__theme: Theme = Theme.from_string(fake.pystr())
         self.__chapter_title: ChapterTitle = ChapterTitle.from_string(
             fake.pystr())
 
