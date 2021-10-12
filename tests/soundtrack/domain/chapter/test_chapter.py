@@ -3,6 +3,7 @@ import uuid
 from faker import Faker
 
 from src.soundtrack.domain.chapter.chapter_id import ChapterId
+from src.soundtrack.domain.soundtrack_id import SoundtrackId
 from src.soundtrack.domain.chapter.chapter_title import ChapterTitle
 from src.soundtrack.domain.chapter.chapter_number import ChapterNumber
 from src.soundtrack.domain.chapter.theme import Theme
@@ -15,13 +16,15 @@ class TestChapter():
 
     def test_chapter_constructor(self):
         chapter_id = ChapterId.from_string(str(uuid.uuid4()))
+        soundtrack_id = SoundtrackId.from_string(str(uuid.uuid4()))
         chapter_number = ChapterNumber.from_integer(fake.random_number(2))
         theme = Theme.from_string(fake.pystr())
         chapter_title = ChapterTitle.from_string(fake.pystr())
 
-        chapter = Chapter(chapter_id, chapter_number, theme, chapter_title)
+        chapter = Chapter(chapter_id, soundtrack_id, chapter_number, theme, chapter_title)
 
         assert chapter.chapter_id.value == chapter_id.value
+        assert chapter.soundtrack_id.value == soundtrack_id.value
         assert chapter.chapter_number.value == chapter_number.value
         assert chapter.theme.value == theme.value
         assert chapter.chapter_title.value == chapter_title.value

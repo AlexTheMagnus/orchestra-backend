@@ -12,6 +12,7 @@ class TestChapterMapper:
         chapter: Chapter = ChapterMapper().from_dto_to_aggregate(chapter_dto)
 
         assert chapter_dto['chapter_id'] == chapter.chapter_id.value
+        assert chapter_dto['soundtrack_id'] == chapter.soundtrack_id.value
         assert chapter_dto['chapter_number'] == chapter.chapter_number.value
         assert chapter_dto['theme'] == chapter.theme.value
         assert chapter_dto['chapter_title'] == chapter.chapter_title.value
@@ -22,6 +23,7 @@ class TestChapterMapper:
         chapter_dto: ChapterDTO = ChapterMapper().from_aggregate_to_dto(chapter)
 
         assert chapter_dto['chapter_id'] == chapter.chapter_id.value
+        assert chapter_dto['soundtrack_id'] == chapter.soundtrack_id.value
         assert chapter_dto['chapter_number'] == chapter.chapter_number.value
         assert chapter_dto['theme'] == chapter.theme.value
         assert chapter_dto['chapter_title'] == chapter.chapter_title.value
