@@ -1,4 +1,3 @@
-import pytest
 import json
 import uuid
 from faker import Faker
@@ -13,15 +12,13 @@ from ..builder.soundtrack_builder import SoundtrackBuilder
 fake = Faker()
 soundtrack_repository = SoundtrackMysqlRepository()
 
-
 def teardown_module():
     SoundtrackMysqlRepository().clean()
-
 
 class TestSoundtracksPostController():
     def test_should_create_and_save_a_soundtrack_with_the_passed_parameters(self):
         soundtrack_id = SoundtrackId.from_string(str(uuid.uuid4()))
-        soundtracks_post_request_params = get_soundtrack_post_request_params_with_id(
+        soundtracks_post_request_params = get_soundtracks_post_request_params_with_id(
             soundtrack_id.value)
 
         response = app.test_client().post(
@@ -45,7 +42,7 @@ class TestSoundtracksPostController():
         soundtrack = SoundtrackBuilder().with_soundtrack_id(soundtrack_id).build()
         soundtrack_repository.save(soundtrack)
 
-        soundtracks_post_request_params = get_soundtrack_post_request_params_with_id(
+        soundtracks_post_request_params = get_soundtracks_post_request_params_with_id(
             soundtrack_id.value)
 
         response = app.test_client().post(
@@ -57,7 +54,7 @@ class TestSoundtracksPostController():
         assert response.status_code == 409
 
 
-def get_soundtrack_post_request_params_with_id(soundtrack_id: str):
+def get_soundtracks_post_request_params_with_id(soundtrack_id: str):
     return {
         "soundtrack_id": soundtrack_id,
         "book": "978-2-1550-9533-9",

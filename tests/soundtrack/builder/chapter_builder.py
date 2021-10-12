@@ -25,6 +25,11 @@ class ChapterBuilder():
         self.__theme: Theme = Theme.from_string(fake.pystr())
         self.__chapter_title: ChapterTitle = ChapterTitle.from_string(
             fake.pystr())
+            
+    def with_soundtrack_id(self, soundtrack_id: SoundtrackId):
+        self.__soundtrack_id = soundtrack_id
+        return self
+
 
     def build(self) -> Chapter:
         return Chapter(
