@@ -1,12 +1,12 @@
 import pytest
 from faker import Faker
 
-from ..infrastructure.chapter.chapter_in_memory_repository import ChapterInMemoryRepository
-from ..infrastructure.soundtrack_in_memory_repository import SoundtrackInMemoryRepository
+from ...infrastructure.chapter.chapter_in_memory_repository import ChapterInMemoryRepository
+from ...infrastructure.soundtrack_in_memory_repository import SoundtrackInMemoryRepository
 from src.soundtrack.application.chapter.add_chapter import AddChapter
 from src.soundtrack.domain.soundtrack import Soundtrack
-from ..builder.soundtrack_builder import SoundtrackBuilder
-from ..builder.chapter_builder import ChapterBuilder
+from ...builder.soundtrack_builder import SoundtrackBuilder
+from ...builder.chapter_builder import ChapterBuilder
 from src.soundtrack.domain.chapter.chapter import Chapter
 from src.soundtrack.domain.chapter.exceptions.already_existing_chapter_error import AlreadyExistingChapterError
 from src.soundtrack.domain.exceptions.unexisting_soundtrack_error import UnexistingSoundtrackError
