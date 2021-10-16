@@ -1,4 +1,3 @@
-import pytest
 import uuid
 from faker import Faker
 from typing import List

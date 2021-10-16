@@ -20,6 +20,7 @@ class SoundtrackMysqlRepository(SoundtrackRepository):
         self.__soundtrack = db.Table(
             "soundtrack", self.__db_metadata, autoload=True, autoload_with=self.__db_engine)
 
+
     def save(self, soundtrack: Soundtrack):
         query = db.insert(self.__soundtrack).values(
             soundtrack_id=soundtrack.soundtrack_id.value,
@@ -40,6 +41,7 @@ class SoundtrackMysqlRepository(SoundtrackRepository):
 
         return self.__getSoundtrackFromResult(resultSet[0])
 
+
     def find_by_author(self, author: UserId):
         query = db.select([self.__soundtrack]).where(
             self.__soundtrack.columns.author == author.value)
@@ -51,9 +53,11 @@ class SoundtrackMysqlRepository(SoundtrackRepository):
 
         return self.__getSoundtracksListFromResult(resultSet)
 
+
     def clean(self):
         query = db.delete(self.__soundtrack)
         self.__db_connection.execute(query)
+
 
     def __getSoundtrackFromResult(self, result: tuple) -> Soundtrack:
         return Soundtrack(
@@ -63,6 +67,7 @@ class SoundtrackMysqlRepository(SoundtrackRepository):
             author=UserId.from_string(result[3]),
             chapters=[]
         )
+
 
     def __getSoundtracksListFromResult(self, resultSet: [tuple]) -> List[Soundtrack]:
         soundtracks_list: List[Soundtrack] = []

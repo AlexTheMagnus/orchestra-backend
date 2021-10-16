@@ -5,7 +5,7 @@ class ChapterNumber():
 
     def __init__(self, chapter_number: int):
         self.__validate_not_a_negative_number(chapter_number)
-        self.__value: str = chapter_number
+        self.__value: int = chapter_number
 
     @staticmethod
     def from_integer(chapter_number: int):
@@ -15,6 +15,6 @@ class ChapterNumber():
     def value(self):
         return self.__value
 
-    def __validate_not_a_negative_number(self, chapter_number: str):
+    def __validate_not_a_negative_number(self, chapter_number: int):
         if chapter_number < 0:
             raise(NotAValidChapterNumberError(chapter_number))

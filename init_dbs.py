@@ -12,11 +12,9 @@ engines = {
 
 metadata = db.MetaData()
 
-
 def remove_existing_tables(engine):
     sql = 'DROP TABLE IF EXISTS chapter;DROP TABLE IF EXISTS likes;DROP TABLE IF EXISTS favorite;DROP TABLE IF EXISTS soundtrack;DROP TABLE IF EXISTS follow;DROP TABLE IF EXISTS user;'
     engine.execute(sql)
-
 
 def create_user_table():
     db.Table('user', metadata,
@@ -33,7 +31,6 @@ def create_follow_table():
              db.Column('following', db.String(36), db.ForeignKey("user.user_id"), 
                        nullable=False, primary_key=True)
              )
-
 
 def create_soundtrack_table():
     db.Table('soundtrack', metadata,
@@ -52,7 +49,6 @@ def create_favorite_table():
                        nullable=False, primary_key=True)
              )
 
-
 # This table is called "likes" instead of "like" because "like" is a reserved word
 def create_likes_table():
     db.Table('likes', metadata,
@@ -61,7 +57,6 @@ def create_likes_table():
              db.Column('soundtrack_id', db.String(36), db.ForeignKey(
                  "soundtrack.soundtrack_id"), nullable=False, primary_key=True)
              )
-
 
 def create_chapter_table():
     db.Table('chapter', metadata,
@@ -73,7 +68,6 @@ def create_chapter_table():
              db.Column('theme', db.String(255), nullable=False),
              db.Column('chapter_title', db.String(255), nullable=False)
              )
-
 
 if __name__ == "__main__":
     for engine in engines.values():

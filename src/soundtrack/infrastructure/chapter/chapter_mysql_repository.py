@@ -1,6 +1,6 @@
 import os
 import sqlalchemy as db
-from typing import Optional
+from typing import Optional, List
 
 from ...domain.chapter.chapter_repository import ChapterRepository
 from ...domain.chapter.chapter import Chapter
@@ -21,6 +21,7 @@ class ChapterMysqlRepository(ChapterRepository):
         self.__chapter = db.Table(
             "chapter", self.__db_metadata, autoload=True, autoload_with=self.__db_engine)
 
+
     def save(self, chapter: Chapter):
         query = db.insert(self.__chapter).values(
             chapter_id=chapter.chapter_id.value,
@@ -30,6 +31,7 @@ class ChapterMysqlRepository(ChapterRepository):
             chapter_title=chapter.chapter_title.value
         )
         self.__db_connection.execute(query)
+
 
     def find(self, chapter_id: ChapterId) -> Optional[Chapter]:
         query = db.select([self.__chapter]).where(
@@ -42,9 +44,23 @@ class ChapterMysqlRepository(ChapterRepository):
 
         return self.__getChapterFromResult(resultSet[0])
     
+
+    def find_by_soundtrack(self, soundtrack_id: SoundtrackId) -> List[Chapter]:
+        query = db.select([self.__chapter]).where(
+            self.__chapter.columns.soundtrack_id == soundtrack_id.value)
+        resultProxy = self.__db_connection.execute(query)
+
+        resultSet = resultProxy.fetchall()
+        if not resultSet:
+            return []
+
+        return self.__getChaptersListFromResult(resultSet)
+
+
     def clean(self):
         query = db.delete(self.__chapter)
         self.__db_connection.execute(query)
+
 
     def __getChapterFromResult(self, result: tuple) -> Soundtrack:
         return Chapter(
@@ -54,3 +70,12 @@ class ChapterMysqlRepository(ChapterRepository):
             theme=Theme.from_string(result[3]),
             chapter_title=ChapterTitle.from_string(result[4])
         )
+
+    def __getChaptersListFromResult(self, resultSet: [tuple]) -> List[Chapter]:
+        chapters_list: List[Chapter] = []
+
+        for result in resultSet:
+            chapter = self.__getChapterFromResult(result)
+            chapters_list.append(chapter)
+
+        return chapters_list
