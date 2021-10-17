@@ -1,4 +1,3 @@
-import uuid
 from typing import List
 
 from src.soundtrack.domain.chapter.chapter import Chapter
@@ -11,6 +10,7 @@ from ...builder.chapter_builder import ChapterBuilder
 
 soundtrack: Soundtrack = SoundtrackBuilder().build()
 soundtrack_without_chapters: Soundtrack = SoundtrackBuilder().build()
+unexisting_soundtrack: Soundtrack = SoundtrackBuilder().build()
 soundtrack_repository = SoundtrackMysqlRepository()
 soundtrack_repository.save(soundtrack)
 soundtrack_repository.save(soundtrack_without_chapters)
@@ -27,6 +27,10 @@ class TestGetSoundtrackChapters():
         found_chapters: List[Chapters] = use_case.run(soundtrack.soundtrack_id)
         assert len(found_chapters) == 5
 
-    def test_soundtrack_without_chapters_return_no_chapters(self):
+    def test_soundtrack_without_chapters_returns_no_chapters(self):
         found_chapters: List[Soundtrack] = use_case.run(soundtrack_without_chapters.soundtrack_id)
+        assert len(found_chapters) == 0
+
+    def test_unexisting_soundtrack_returns_no_chapters(self):
+        found_chapters: List[Soundtrack] = use_case.run(unexisting_soundtrack.soundtrack_id)
         assert len(found_chapters) == 0
