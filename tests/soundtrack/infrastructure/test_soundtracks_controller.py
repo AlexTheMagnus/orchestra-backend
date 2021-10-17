@@ -4,6 +4,7 @@ from faker import Faker
 
 from orchestra import app
 from src.soundtrack.infrastructure.soundtrack_mysql_repository import SoundtrackMysqlRepository
+from src.soundtrack.infrastructure.chapter.chapter_mysql_repository import ChapterMysqlRepository
 from src.soundtrack.domain.soundtrack_id import SoundtrackId
 from src.soundtrack.domain.soundtrack import Soundtrack
 from src.soundtrack.domain.user_id import UserId
@@ -11,9 +12,11 @@ from ..builder.soundtrack_builder import SoundtrackBuilder
 
 fake = Faker()
 soundtrack_repository = SoundtrackMysqlRepository()
+chapter_repository = ChapterMysqlRepository()
 
 def teardown_module():
-    SoundtrackMysqlRepository().clean()
+    chapter_repository.clean()
+    soundtrack_repository.clean()
 
 class TestSoundtracksPostController():
     def test_should_create_and_save_a_soundtrack_with_the_passed_parameters(self):
