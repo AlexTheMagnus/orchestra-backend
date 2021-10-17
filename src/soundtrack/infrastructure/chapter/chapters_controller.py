@@ -12,6 +12,8 @@ from ...domain.chapter.chapter_title import ChapterTitle
 from ...application.chapter.add_chapter import AddChapter
 from ...domain.chapter.exceptions.already_existing_chapter_error import AlreadyExistingChapterError
 from ...domain.exceptions.unexisting_soundtrack_error import UnexistingSoundtrackError
+from ...application.chapter.get_soundtrack_chapters import GetSoundtrackChapters
+from .from_chapter_to_dict import FromChapterToDict
 
 chapters = Blueprint("chapters", __name__, url_prefix="/chapters")
 
@@ -43,3 +45,16 @@ def add_chapter():
             abort(500)
 
     return '200'
+
+
+@chapters.route('/soundtrack/<string:str_soundtrack_id>', methods=["GET"])
+def get_soundtrack_chapters(str_soundtrack_id: str):
+    chapter_repository = ChapterMysqlRepository()
+    soundtrack_id = SoundtrackId.from_string(str_soundtrack_id)
+
+    try:
+        chapters_list = GetSoundtrackChapters(chapter_repository).run(soundtrack_id)
+    except Exception as error:
+        abort(500)
+
+    return jsonify(FromChapterToDict.with_chapters_list(chapters_list)), '200'

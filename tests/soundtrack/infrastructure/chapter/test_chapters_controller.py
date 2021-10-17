@@ -79,3 +79,22 @@ def get_chapters_post_request_params_with_ids(chapter_id: str, soundtrack_id: st
         "theme": fake.pystr(),
         "chapter_title": fake.pystr()
     }
+
+
+class TestChaptersGetController():
+    def test_should_return_the_soundtrack_chapters(self):
+        soundtrack: Soundtrack = SoundtrackBuilder().build()
+        soundtrack_repository.save(soundtrack)
+
+        for x in range(2):
+            chapter: Chapter = ChapterBuilder().with_soundtrack_id(soundtrack.soundtrack_id).build()
+            chapter_repository.save(chapter)
+
+        response = app.test_client().get(
+            '/chapters/soundtrack/{0}'.format(soundtrack.soundtrack_id.value),
+            content_type='application/json'
+        )
+
+        assert response.status_code == 200
+        data = json.loads(response.get_data(as_text=True))
+        assert len(data["chapters_list"]) == 2

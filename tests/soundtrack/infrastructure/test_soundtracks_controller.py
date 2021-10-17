@@ -66,9 +66,9 @@ def get_soundtracks_post_request_params_with_id(soundtrack_id: str):
     }
 
 
-class TestSoundtrackGetController():
+class TestSoundtracksGetController():
     def test_should_return_the_user_soundtracks(self):
-        author: UserId = UserId.from_string(fake.pystr())
+        author: UserId = UserId.from_string(str(uuid.uuid4()))
 
         for x in range(3):
             soundtrack: Soundtrack = SoundtrackBuilder().with_author(author).build()

@@ -61,6 +61,7 @@ def get_user_soundtracks(str_author: str):
 
     return jsonify(FromSoundtrackToDict.with_soundtracks_list(soundtracks_list)), '200'
 
+
 @soundtracks.route('/<string:str_soundtrack_id>', methods=["GET"])
 def get_soundtrack_by_id(str_soundtrack_id: str):
     soundtrack_repository = SoundtrackMysqlRepository()
