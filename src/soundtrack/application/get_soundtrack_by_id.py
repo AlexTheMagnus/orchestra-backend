@@ -10,6 +10,6 @@ class GetSoundtrackById():
 
         found_soundtrack = self.__soundtrack_repository.find(soundtrack_id)
         if found_soundtrack == None:
-            raise(UnexistingSoundtrackError(soundtrack_id))
+            raise(UnexistingSoundtrackError(soundtrack_id.value))
 
         return found_soundtrack

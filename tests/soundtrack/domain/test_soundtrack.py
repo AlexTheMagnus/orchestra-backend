@@ -22,9 +22,9 @@ class TestSoundtrack():
             fake.pystr())
         author: UserId = UserId.from_string(fake.pystr())
         chapter1: Chapter = Chapter(
-            str(uuid.uuid4()), 1, "https: // open.spotify.com/track/" + fake.pystr(), "")
+            str(uuid.uuid4()), str(uuid.uuid4()), 1, fake.pystr(), "")
         chapter2: Chapter = Chapter(
-            str(uuid.uuid4()), 2, "https: // open.spotify.com/track/" + fake.pystr(), "")
+            str(uuid.uuid4()), str(uuid.uuid4()), 2, fake.pystr(), "")
         chapters: list[Chapter] = [chapter1, chapter2]
 
         soundtrack = Soundtrack(soundtrack_id, book,

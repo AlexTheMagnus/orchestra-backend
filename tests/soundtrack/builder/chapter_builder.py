@@ -2,6 +2,7 @@ import uuid
 from faker import Faker
 
 from src.soundtrack.domain.chapter.chapter_id import ChapterId
+from src.soundtrack.domain.soundtrack_id import SoundtrackId
 from src.soundtrack.domain.chapter.chapter_number import ChapterNumber
 from src.soundtrack.domain.chapter.theme import Theme
 from src.soundtrack.domain.chapter.chapter_title import ChapterTitle
@@ -17,16 +18,23 @@ class ChapterBuilder():
     def __init__(self):
         self.__chapter_id: ChapterId = ChapterId.from_string(
             str(uuid.uuid4()))
+        self.__soundtrack_id: SoundtrackId = SoundtrackId.from_string(
+            str(uuid.uuid4()))
         self.__chapter_number: ChapterNumber = ChapterNumber.from_integer(
             fake.random_number(2))
-        self.__theme: Theme = Theme.from_url(
-            "https://open.spotify.com/track/" + fake.pystr())
+        self.__theme: Theme = Theme.from_string(fake.pystr())
         self.__chapter_title: ChapterTitle = ChapterTitle.from_string(
             fake.pystr())
+            
+    def with_soundtrack_id(self, soundtrack_id: SoundtrackId):
+        self.__soundtrack_id = soundtrack_id
+        return self
+
 
     def build(self) -> Chapter:
         return Chapter(
             self.__chapter_id,
+            self.__soundtrack_id,
             self.__chapter_number,
             self.__theme,
             self.__chapter_title

@@ -1,10 +1,10 @@
-import pytest
 import json
 import uuid
 from faker import Faker
 
 from orchestra import app
 from src.soundtrack.infrastructure.soundtrack_mysql_repository import SoundtrackMysqlRepository
+from src.soundtrack.infrastructure.chapter.chapter_mysql_repository import ChapterMysqlRepository
 from src.soundtrack.domain.soundtrack_id import SoundtrackId
 from src.soundtrack.domain.soundtrack import Soundtrack
 from src.soundtrack.domain.user_id import UserId
@@ -12,16 +12,16 @@ from ..builder.soundtrack_builder import SoundtrackBuilder
 
 fake = Faker()
 soundtrack_repository = SoundtrackMysqlRepository()
-
+chapter_repository = ChapterMysqlRepository()
 
 def teardown_module():
-    SoundtrackMysqlRepository().clean()
-
+    chapter_repository.clean()
+    soundtrack_repository.clean()
 
 class TestSoundtracksPostController():
     def test_should_create_and_save_a_soundtrack_with_the_passed_parameters(self):
         soundtrack_id = SoundtrackId.from_string(str(uuid.uuid4()))
-        soundtracks_post_request_params = get_soundtrack_post_request_params_with_id(
+        soundtracks_post_request_params = get_soundtracks_post_request_params_with_id(
             soundtrack_id.value)
 
         response = app.test_client().post(
@@ -45,7 +45,7 @@ class TestSoundtracksPostController():
         soundtrack = SoundtrackBuilder().with_soundtrack_id(soundtrack_id).build()
         soundtrack_repository.save(soundtrack)
 
-        soundtracks_post_request_params = get_soundtrack_post_request_params_with_id(
+        soundtracks_post_request_params = get_soundtracks_post_request_params_with_id(
             soundtrack_id.value)
 
         response = app.test_client().post(
@@ -57,7 +57,7 @@ class TestSoundtracksPostController():
         assert response.status_code == 409
 
 
-def get_soundtrack_post_request_params_with_id(soundtrack_id: str):
+def get_soundtracks_post_request_params_with_id(soundtrack_id: str):
     return {
         "soundtrack_id": soundtrack_id,
         "book": "978-2-1550-9533-9",
@@ -66,9 +66,9 @@ def get_soundtrack_post_request_params_with_id(soundtrack_id: str):
     }
 
 
-class TestSoundtrackGetController():
+class TestSoundtracksGetController():
     def test_should_return_the_user_soundtracks(self):
-        author: UserId = UserId.from_string(fake.pystr())
+        author: UserId = UserId.from_string(str(uuid.uuid4()))
 
         for x in range(3):
             soundtrack: Soundtrack = SoundtrackBuilder().with_author(author).build()

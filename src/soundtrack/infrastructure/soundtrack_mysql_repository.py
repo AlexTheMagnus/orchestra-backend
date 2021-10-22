@@ -20,6 +20,7 @@ class SoundtrackMysqlRepository(SoundtrackRepository):
         self.__soundtrack = db.Table(
             "soundtrack", self.__db_metadata, autoload=True, autoload_with=self.__db_engine)
 
+
     def save(self, soundtrack: Soundtrack):
         query = db.insert(self.__soundtrack).values(
             soundtrack_id=soundtrack.soundtrack_id.value,
@@ -28,16 +29,6 @@ class SoundtrackMysqlRepository(SoundtrackRepository):
             author=soundtrack.author.value
         )
         self.__db_connection.execute(query)
-
-        # TODO: CREATE FILE CHAPTER_REPOSITORY.save AND ADD THE FOLLOWING METHOD
-        #     query = db.insert(self.__chapter).values(
-        #         chapter_id=chapter.chapter_id.value,
-        #         soundtrack_id=soundtrack.soundtrack_id.value,
-        #         chapter_number=chapter.chapter_number.value,
-        #         theme=chapter.theme.value,
-        #         chapter_title=chapter.chapter_title.value
-        #     )
-        #     self.__db_connection.execute(query)
 
     def find(self, soundtrack_id: SoundtrackId) -> Optional[Soundtrack]:
         query = db.select([self.__soundtrack]).where(
@@ -50,6 +41,7 @@ class SoundtrackMysqlRepository(SoundtrackRepository):
 
         return self.__getSoundtrackFromResult(resultSet[0])
 
+
     def find_by_author(self, author: UserId):
         query = db.select([self.__soundtrack]).where(
             self.__soundtrack.columns.author == author.value)
@@ -61,9 +53,11 @@ class SoundtrackMysqlRepository(SoundtrackRepository):
 
         return self.__getSoundtracksListFromResult(resultSet)
 
+
     def clean(self):
         query = db.delete(self.__soundtrack)
         self.__db_connection.execute(query)
+
 
     def __getSoundtrackFromResult(self, result: tuple) -> Soundtrack:
         return Soundtrack(
@@ -73,6 +67,7 @@ class SoundtrackMysqlRepository(SoundtrackRepository):
             author=UserId.from_string(result[3]),
             chapters=[]
         )
+
 
     def __getSoundtracksListFromResult(self, resultSet: [tuple]) -> List[Soundtrack]:
         soundtracks_list: List[Soundtrack] = []

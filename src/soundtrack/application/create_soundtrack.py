@@ -14,6 +14,6 @@ class CreateSoundtrack():
     def run(self, soundtrack: Soundtrack):
 
         if self.__soundtrack_repository.find(soundtrack.soundtrack_id):
-            raise(AlreadyExistingSoundtrackError(soundtrack.soundtrack_id))
+            raise(AlreadyExistingSoundtrackError(soundtrack.soundtrack_id.value))
 
         self.__soundtrack_repository.save(soundtrack)
