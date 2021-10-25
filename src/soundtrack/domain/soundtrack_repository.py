@@ -16,3 +16,6 @@ class SoundtrackRepository(ABC):
 
     def find_by_author(self, author: UserId) -> List[Soundtrack]:
         pass
+
+    def update(self, soundtrack: Soundtrack):
+        pass

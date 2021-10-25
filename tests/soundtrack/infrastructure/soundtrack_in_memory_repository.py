@@ -27,3 +27,9 @@ class SoundtrackInMemoryRepository(SoundtrackRepository):
                 found_soundtracks.append(soundtrack)
                 
         return found_soundtracks
+
+    def update(self, soundtrack_to_update: Soundtrack):
+        for soundtrack in self.__soundtracks:
+            if soundtrack.soundtrack_id.value == soundtrack_to_update.soundtrack_id.value:
+                self.__soundtracks.remove(soundtrack)
+        self.__soundtracks.append(soundtrack_to_update)
