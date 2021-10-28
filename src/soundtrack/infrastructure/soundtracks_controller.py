@@ -6,6 +6,7 @@ from .soundtrack_mysql_repository import SoundtrackMysqlRepository
 from ..application.create_soundtrack import CreateSoundtrack
 from ..application.get_user_soundtracks import GetUserSoundtracks
 from ..application.get_soundtrack_by_id import GetSoundtrackById
+from ..application.update_soundtrack import UpdateSoundtrack
 from ..domain.soundtrack import Soundtrack
 from ..domain.soundtrack_id import SoundtrackId
 from ..domain.isbn_13 import Isbn13
@@ -16,6 +17,7 @@ from ..domain.exceptions.already_existing_soundtrack_error import AlreadyExistin
 from ..domain.exceptions.unexisting_soundtrack_error import UnexistingSoundtrackError
 from .from_soundtrack_to_dict import FromSoundtrackToDict
 from .validators.soundtracks_post_validator import SoundtracksPostValidator
+from .validators.soundtracks_put_validator import SoundtracksPutValidator
 
 soundtracks = Blueprint("soundtracks", __name__, url_prefix="/soundtracks")
 
@@ -76,3 +78,33 @@ def get_soundtrack_by_id(str_soundtrack_id: str):
             abort(500)
 
     return jsonify(FromSoundtrackToDict.with_soundtrack(soundtrack)), '200'
+
+
+@soundtracks.route('/update/<string:str_soundtrack_id>', methods=["PUT"])
+def update_soundtrack(str_soundtrack_id: str):
+    if not SoundtracksPutValidator().validate(request.json):
+        abort(400)
+
+    soundtrack_repository = SoundtrackMysqlRepository()
+    soundtrack_id = SoundtrackId.from_string(str_soundtrack_id)
+    if ('book' in request.json):
+        book = Isbn13.from_string(request.json['book'])
+    else:
+        book = None
+
+    if ('soundtrack_title' in request.json):
+        soundtrack_title = SoundtrackTitle.from_string(request.json['soundtrack_title'])
+    else:
+        soundtrack_title = None
+
+    try:
+        UpdateSoundtrack(soundtrack_repository).run(soundtrack_id,
+         {'soundtrack_title': soundtrack_title,  'book': book})
+    except Exception as error:
+        if isinstance(error, UnexistingSoundtrackError):
+            abort(404)
+        else:
+            print(error)
+            abort(500)
+
+    return '200'
