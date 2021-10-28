@@ -19,7 +19,7 @@ class SoundtrackInMemoryRepository(SoundtrackRepository):
 
         return None
 
-    def find_by_author(self, author: UserId):
+    def find_by_author(self, author: UserId) -> Optional[Soundtrack]:
         found_soundtracks: List[Soundtrack] = []
 
         for soundtrack in self.__soundtracks:
@@ -33,3 +33,7 @@ class SoundtrackInMemoryRepository(SoundtrackRepository):
             if soundtrack.soundtrack_id.value == soundtrack_to_update.soundtrack_id.value:
                 self.__soundtracks.remove(soundtrack)
         self.__soundtracks.append(soundtrack_to_update)
+
+    def delete(self, soundtrack_id: SoundtrackId):
+        self.__soundtracks = [soundtrack for soundtrack in self.__soundtracks if soundtrack.soundtrack_id != soundtrack_id]
+                    

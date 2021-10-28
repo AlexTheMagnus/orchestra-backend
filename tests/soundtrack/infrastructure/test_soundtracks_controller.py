@@ -171,7 +171,7 @@ class TestSoundtracksPutController():
                 "soundtrack_title"]
             assert saved_soundtrack.author.value == soundtrack.author.value
 
-    def test_should_return_404_when_the_soundtrack_to_be_updated_does_not_exist(self):
+    def test_should_return_404_when_updating_an_unexisting_soundtrack(self):
         non_existing_soundtrack_id = SoundtrackId.from_string(str(uuid.uuid4()))
         soundtracks_put_request_params = get_soundtracks_put_request_params_with_id()
 
@@ -188,3 +188,33 @@ def get_soundtracks_put_request_params_with_id():
         "book": "0-6103-1972-8",
         "soundtrack_title": fake.pystr()
     }
+
+
+class TestSoundtracksDeleteController():
+    def test_should_delete_a_soundtrack_by_id(self):
+            soundtrack: Soundtrack = SoundtrackBuilder().build()
+            non_deleted_soundtrack: Soundtrack = SoundtrackBuilder().build()
+            soundtrack_repository.save(soundtrack)
+            soundtrack_repository.save(non_deleted_soundtrack)
+
+            response = app.test_client().delete(
+                '/soundtracks/delete/{0}'.format(soundtrack.soundtrack_id.value),
+                content_type='application/json'
+            )
+            
+            assert response.status_code == 204
+
+            saved_soundtrack = soundtrack_repository.find(soundtrack.soundtrack_id)
+            assert saved_soundtrack == None
+            saved_non_deleted_soundtrack = soundtrack_repository.find(non_deleted_soundtrack.soundtrack_id)
+            assert saved_non_deleted_soundtrack != None
+
+    def test_should_return_404_when_deleting_an_unexisting_soundtrack(self):
+            non_existing_soundtrack_id = SoundtrackId.from_string(str(uuid.uuid4()))
+
+            response = app.test_client().delete(
+                '/soundtracks/delete/{0}'.format(non_existing_soundtrack_id.value),
+                content_type='application/json'
+            )
+            
+            assert response.status_code == 404

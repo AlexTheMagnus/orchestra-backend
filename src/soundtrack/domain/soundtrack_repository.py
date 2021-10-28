@@ -19,3 +19,6 @@ class SoundtrackRepository(ABC):
 
     def update(self, soundtrack: Soundtrack):
         pass
+
+    def delete(self, soundtrack_id: SoundtrackId):
+        pass

@@ -7,6 +7,7 @@ from ..application.create_soundtrack import CreateSoundtrack
 from ..application.get_user_soundtracks import GetUserSoundtracks
 from ..application.get_soundtrack_by_id import GetSoundtrackById
 from ..application.update_soundtrack import UpdateSoundtrack
+from ..application.delete_soundtrack import DeleteSoundtrack
 from ..domain.soundtrack import Soundtrack
 from ..domain.soundtrack_id import SoundtrackId
 from ..domain.isbn_13 import Isbn13
@@ -104,7 +105,22 @@ def update_soundtrack(str_soundtrack_id: str):
         if isinstance(error, UnexistingSoundtrackError):
             abort(404)
         else:
-            print(error)
             abort(500)
 
     return '200'
+
+
+@soundtracks.route('/delete/<string:str_soundtrack_id>', methods=["DELETE"])
+def delete_soundtrack(str_soundtrack_id: str):
+    soundtrack_repository = SoundtrackMysqlRepository()
+    soundtrack_id = SoundtrackId.from_string(str_soundtrack_id)
+    
+    try:
+        DeleteSoundtrack(soundtrack_repository).run(soundtrack_id)
+    except Exception as error:
+        if isinstance(error, UnexistingSoundtrackError):
+            abort(404)
+        else:
+                abort(500)
+
+    return ('', 204)

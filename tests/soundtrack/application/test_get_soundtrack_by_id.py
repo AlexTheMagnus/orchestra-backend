@@ -24,7 +24,7 @@ class TestGetSoundtrackById():
         assert found_soundtrack.soundtrack_title == soundtrack.soundtrack_title
         assert found_soundtrack.author == soundtrack.author
 
-    def test_unexisting_soundtrack_id_return_no_soundtrack(self):
+    def test_unexisting_soundtrack_id_returns_no_soundtrack(self):
         unregistered_soundtrack_id: SoundtrackId = SoundtrackId(str(uuid.uuid4()))
 
         with pytest.raises(UnexistingSoundtrackError):
