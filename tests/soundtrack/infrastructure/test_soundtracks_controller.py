@@ -9,6 +9,7 @@ from src.soundtrack.domain.soundtrack_id import SoundtrackId
 from src.soundtrack.domain.soundtrack import Soundtrack
 from src.soundtrack.domain.user_id import UserId
 from ..builder.soundtrack_builder import SoundtrackBuilder
+from ..builder.chapter_builder import ChapterBuilder
 
 fake = Faker()
 soundtrack_repository = SoundtrackMysqlRepository()

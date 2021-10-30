@@ -16,3 +16,6 @@ class ChapterRepository(ABC):
 
     def find_by_soundtrack(self, soundtrack_id: SoundtrackId) -> List[Chapter]:
         pass
+    
+    def delete(self, chapter_id: ChapterId):
+        pass

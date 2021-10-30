@@ -3,6 +3,7 @@ from flask import Blueprint, abort, jsonify, request
 from typing import List
 
 from .soundtrack_mysql_repository import SoundtrackMysqlRepository
+from .chapter.chapter_mysql_repository import ChapterMysqlRepository
 from ..application.create_soundtrack import CreateSoundtrack
 from ..application.get_user_soundtracks import GetUserSoundtracks
 from ..application.get_soundtrack_by_id import GetSoundtrackById
@@ -113,10 +114,11 @@ def update_soundtrack(str_soundtrack_id: str):
 @soundtracks.route('/delete/<string:str_soundtrack_id>', methods=["DELETE"])
 def delete_soundtrack(str_soundtrack_id: str):
     soundtrack_repository = SoundtrackMysqlRepository()
+    chapter_repository = ChapterMysqlRepository()
     soundtrack_id = SoundtrackId.from_string(str_soundtrack_id)
     
     try:
-        DeleteSoundtrack(soundtrack_repository).run(soundtrack_id)
+        DeleteSoundtrack(soundtrack_repository, chapter_repository).run(soundtrack_id)
     except Exception as error:
         if isinstance(error, UnexistingSoundtrackError):
             abort(404)
