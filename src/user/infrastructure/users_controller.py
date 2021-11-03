@@ -57,7 +57,6 @@ def get_user_info(str_user_id: str):
     try:
         user = GetUserInfo(user_repository).run(user_id)
     except Exception as error:
-        print(error)
         abort(500)
 
     return jsonify(FromUserToDict.with_user(user)), '200'

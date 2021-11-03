@@ -42,7 +42,7 @@ class SoundtrackMysqlRepository(SoundtrackRepository):
         return self.__getSoundtrackFromResult(resultSet[0])
 
 
-    def find_by_author(self, author: UserId):
+    def find_by_author(self, author: UserId) -> Optional[List[Soundtrack]]:
         query = db.select([self.__soundtrack]).where(
             self.__soundtrack.columns.author == author.value)
         resultProxy = self.__db_connection.execute(query)
@@ -52,6 +52,23 @@ class SoundtrackMysqlRepository(SoundtrackRepository):
             return []
 
         return self.__getSoundtracksListFromResult(resultSet)
+
+
+    def update(self, soundtrack_to_update: Soundtrack):
+        query = db.update(self.__soundtrack).values(
+            soundtrack_id=soundtrack_to_update.soundtrack_id.value,
+            book=soundtrack_to_update.book.value,
+            soundtrack_title=soundtrack_to_update.soundtrack_title.value,
+            author=soundtrack_to_update.author.value
+        ).where(self.__soundtrack.columns.soundtrack_id == soundtrack_to_update.soundtrack_id.value)
+
+        self.__db_connection.execute(query)
+
+
+    def delete(self, soundtrack_id: SoundtrackId):
+        query = db.delete(self.__soundtrack
+        ).where(self.__soundtrack.columns.soundtrack_id == soundtrack_id.value)
+        self.__db_connection.execute(query)
 
 
     def clean(self):
@@ -77,3 +94,5 @@ class SoundtrackMysqlRepository(SoundtrackRepository):
             soundtracks_list.append(soundtrack)
 
         return soundtracks_list
+
+    

@@ -57,6 +57,12 @@ class ChapterMysqlRepository(ChapterRepository):
         return self.__getChaptersListFromResult(resultSet)
 
 
+    def delete(self, chapter_id: ChapterId):
+        query = db.delete(self.__chapter
+        ).where(self.__chapter.columns.chapter_id == chapter_id.value)
+        self.__db_connection.execute(query)
+
+
     def clean(self):
         query = db.delete(self.__chapter)
         self.__db_connection.execute(query)

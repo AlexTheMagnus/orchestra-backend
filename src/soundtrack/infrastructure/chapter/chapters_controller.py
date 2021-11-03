@@ -41,7 +41,6 @@ def add_chapter():
         if isinstance(error, UnexistingSoundtrackError):
             abort(404)
         else:
-            print(error)
             abort(500)
 
     return '200'

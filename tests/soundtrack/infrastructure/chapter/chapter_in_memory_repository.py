@@ -27,3 +27,6 @@ class ChapterInMemoryRepository(ChapterRepository):
                 found_chapters.append(chapter)
                 
         return found_chapters
+
+    def delete(self, chapter_id: ChapterId):
+        self.__chapters = [chapter for chapter in self.__chapters if chapter.chapter_id != chapter_id]
