@@ -29,8 +29,8 @@ class TestSoundtracksPostValidator():
         soundtrack_to_save = {
             "soundtrack_id": fake.pystr(),
             "book": str(uuid.uuid4()),
-            "soundtrack_title": 25,
-            "author": 123,
+            "soundtrack_title": fake.random_number(2),
+            "author": fake.random_number(2),
         }
 
         assert SoundtracksPostValidator().validate(soundtrack_to_save) == False

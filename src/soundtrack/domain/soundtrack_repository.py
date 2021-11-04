@@ -22,3 +22,9 @@ class SoundtrackRepository(ABC):
 
     def delete(self, soundtrack_id: SoundtrackId):
         pass
+
+    def save_like(self, user_id: UserId, soundtrack_id: SoundtrackId):
+        pass
+
+    def get_likes(self, soundtrack_id: SoundtrackId) -> List[UserId]:
+        pass

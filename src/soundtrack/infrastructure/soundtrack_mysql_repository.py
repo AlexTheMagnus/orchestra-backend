@@ -19,6 +19,8 @@ class SoundtrackMysqlRepository(SoundtrackRepository):
         self.__db_metadata = db.MetaData()
         self.__soundtrack = db.Table(
             "soundtrack", self.__db_metadata, autoload=True, autoload_with=self.__db_engine)
+        self.__likes = db.Table(
+            "likes", self.__db_metadata, autoload=True, autoload_with=self.__db_engine)
 
 
     def save(self, soundtrack: Soundtrack):
@@ -42,7 +44,7 @@ class SoundtrackMysqlRepository(SoundtrackRepository):
         return self.__getSoundtrackFromResult(resultSet[0])
 
 
-    def find_by_author(self, author: UserId) -> Optional[List[Soundtrack]]:
+    def find_by_author(self, author: UserId) -> List[Soundtrack]:
         query = db.select([self.__soundtrack]).where(
             self.__soundtrack.columns.author == author.value)
         resultProxy = self.__db_connection.execute(query)
@@ -71,6 +73,26 @@ class SoundtrackMysqlRepository(SoundtrackRepository):
         self.__db_connection.execute(query)
 
 
+    def save_like(self, user_id: UserId, soundtrack_id: SoundtrackId):
+        query = db.insert(self.__likes).values(
+            user_id=user_id.value,
+            soundtrack_id=soundtrack_id.value
+        )
+        self.__db_connection.execute(query)
+
+
+    def get_likes(self, soundtrack_id: SoundtrackId) -> List[UserId]:
+        query = db.select([self.__likes]
+        ).where(self.__likes.columns.soundtrack_id == soundtrack_id.value)
+        resultProxy = self.__db_connection.execute(query)
+
+        resultSet = resultProxy.fetchall()
+        if not resultSet:
+            return []
+
+        return self.__getLikesListFromResult(resultSet)
+
+
     def clean(self):
         query = db.delete(self.__soundtrack)
         self.__db_connection.execute(query)
@@ -96,3 +118,11 @@ class SoundtrackMysqlRepository(SoundtrackRepository):
         return soundtracks_list
 
     
+    def __getLikesListFromResult(self, resultSet: [tuple]) -> List[UserId]:
+        likes_list: List[UserId] = []
+
+        for result in resultSet:
+            like = UserId.from_string(result[0])
+            likes_list.append(like)
+
+        return likes_list

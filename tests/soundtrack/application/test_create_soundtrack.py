@@ -1,18 +1,18 @@
-import pytest
-import uuid
 from faker import Faker
 from typing import List
+import pytest
+import uuid
 
-from ..infrastructure.soundtrack_in_memory_repository import SoundtrackInMemoryRepository
 from src.soundtrack.application.create_soundtrack import CreateSoundtrack
-from src.soundtrack.domain.soundtrack_id import SoundtrackId
+from src.soundtrack.domain.chapter.chapter import Chapter
+from src.soundtrack.domain.exceptions.already_existing_soundtrack_error import AlreadyExistingSoundtrackError
 from src.soundtrack.domain.isbn_13 import Isbn13
+from src.soundtrack.domain.soundtrack import Soundtrack
+from src.soundtrack.domain.soundtrack_id import SoundtrackId
 from src.soundtrack.domain.soundtrack_title import SoundtrackTitle
 from src.soundtrack.domain.user_id import UserId
-from src.soundtrack.domain.chapter.chapter import Chapter
-from src.soundtrack.domain.soundtrack import Soundtrack
 from ..builder.soundtrack_builder import SoundtrackBuilder
-from src.soundtrack.domain.exceptions.already_existing_soundtrack_error import AlreadyExistingSoundtrackError
+from ..infrastructure.soundtrack_in_memory_repository import SoundtrackInMemoryRepository
 
 fake = Faker()
 

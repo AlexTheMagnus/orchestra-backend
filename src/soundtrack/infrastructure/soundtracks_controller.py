@@ -17,9 +17,11 @@ from ..domain.user_id import UserId
 from ..domain.chapter.chapter import Chapter
 from ..domain.exceptions.already_existing_soundtrack_error import AlreadyExistingSoundtrackError
 from ..domain.exceptions.unexisting_soundtrack_error import UnexistingSoundtrackError
+from ..domain.exceptions.already_liked_soundtrack_error import AlreadyLikedSoundtrackError
 from .from_soundtrack_to_dict import FromSoundtrackToDict
 from .validators.soundtracks_post_validator import SoundtracksPostValidator
 from .validators.soundtracks_put_validator import SoundtracksPutValidator
+from .validators.soundtracks_like_post_validator import SoundtracksLikePostValidator
 
 soundtracks = Blueprint("soundtracks", __name__, url_prefix="/soundtracks")
 
@@ -30,8 +32,6 @@ def create_soundtrack():
 
     if not SoundtracksPostValidator().validate(request.json):
         abort(400)
-
-    chapters = List[Chapter]
 
     soundtrack = Soundtrack(
         soundtrack_id=SoundtrackId.from_string(request.json['soundtrack_id']),
@@ -123,6 +123,27 @@ def delete_soundtrack(str_soundtrack_id: str):
         if isinstance(error, UnexistingSoundtrackError):
             abort(404)
         else:
-                abort(500)
+            abort(500)
 
     return ('', 204)
+
+
+@soundtracks.route('/like', methods=["POST"])
+def like_soundtrack():
+    soundtrack_repository = SoundtrackMysqlRepository()
+
+    if not SoundtracksLikePostValidator().validate(request.json):
+        abort(400)
+    
+    user_id = UserId.from_string(request.json['user_id'])
+    soundtrack_id = SoundtrackId.from_string(request.json['soundtrack_id'])
+
+    try:
+        LikeSoundtrack(soundtrack_repository).run(user_id, soundtrack_id)
+    except Exception as error:
+        if isinstance(error, AlreadyLikedSoundtrackError):
+            abort(409)
+        else:
+            abort(500)
+
+    return 200
