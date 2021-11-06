@@ -1,27 +1,28 @@
 from flask import Blueprint, abort, jsonify, request
-
 from typing import List
 
-from .soundtrack_mysql_repository import SoundtrackMysqlRepository
-from .chapter.chapter_mysql_repository import ChapterMysqlRepository
 from ..application.create_soundtrack import CreateSoundtrack
-from ..application.get_user_soundtracks import GetUserSoundtracks
-from ..application.get_soundtrack_by_id import GetSoundtrackById
-from ..application.update_soundtrack import UpdateSoundtrack
 from ..application.delete_soundtrack import DeleteSoundtrack
-from ..domain.soundtrack import Soundtrack
-from ..domain.soundtrack_id import SoundtrackId
-from ..domain.isbn_13 import Isbn13
-from ..domain.soundtrack_title import SoundtrackTitle
-from ..domain.user_id import UserId
+from ..application.get_soundtrack_by_id import GetSoundtrackById
+from ..application.get_user_soundtracks import GetUserSoundtracks
+from ..application.like_soundtrack import LikeSoundtrack
+from ..application.update_soundtrack import UpdateSoundtrack
 from ..domain.chapter.chapter import Chapter
 from ..domain.exceptions.already_existing_soundtrack_error import AlreadyExistingSoundtrackError
-from ..domain.exceptions.unexisting_soundtrack_error import UnexistingSoundtrackError
 from ..domain.exceptions.already_liked_soundtrack_error import AlreadyLikedSoundtrackError
+from ..domain.exceptions.unexisting_soundtrack_error import UnexistingSoundtrackError
+from ..domain.exceptions.unexisting_soundtrack_error import UnexistingSoundtrackError
+from ..domain.isbn_13 import Isbn13
+from ..domain.soundtrack import Soundtrack
+from ..domain.soundtrack_id import SoundtrackId
+from ..domain.soundtrack_title import SoundtrackTitle
+from ..domain.user_id import UserId
+from .chapter.chapter_mysql_repository import ChapterMysqlRepository
 from .from_soundtrack_to_dict import FromSoundtrackToDict
+from .soundtrack_mysql_repository import SoundtrackMysqlRepository
+from .validators.soundtracks_like_post_validator import SoundtracksLikePostValidator
 from .validators.soundtracks_post_validator import SoundtracksPostValidator
 from .validators.soundtracks_put_validator import SoundtracksPutValidator
-from .validators.soundtracks_like_post_validator import SoundtracksLikePostValidator
 
 soundtracks = Blueprint("soundtracks", __name__, url_prefix="/soundtracks")
 
@@ -141,9 +142,11 @@ def like_soundtrack():
     try:
         LikeSoundtrack(soundtrack_repository).run(user_id, soundtrack_id)
     except Exception as error:
+        if isinstance(error, UnexistingSoundtrackError):
+            abort(404)
         if isinstance(error, AlreadyLikedSoundtrackError):
             abort(409)
         else:
             abort(500)
 
-    return 200
+    return '200'

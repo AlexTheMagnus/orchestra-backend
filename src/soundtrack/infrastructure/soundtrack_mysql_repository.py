@@ -94,6 +94,8 @@ class SoundtrackMysqlRepository(SoundtrackRepository):
 
 
     def clean(self):
+        query = db.delete(self.__likes)
+        self.__db_connection.execute(query)
         query = db.delete(self.__soundtrack)
         self.__db_connection.execute(query)
 

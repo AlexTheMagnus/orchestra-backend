@@ -53,8 +53,7 @@ def create_favorite_table():
 # This table is called "likes" instead of "like" because "like" is a reserved word
 def create_likes_table():
     db.Table('likes', metadata,
-             db.Column('user_id', db.String(36), db.ForeignKey(
-                 "user.user_id"), nullable=False, primary_key=True),
+             db.Column('user_id', db.String(36), nullable=False, primary_key=True),
              db.Column('soundtrack_id', db.String(36), db.ForeignKey(
                  "soundtrack.soundtrack_id"), nullable=False, primary_key=True)
              )

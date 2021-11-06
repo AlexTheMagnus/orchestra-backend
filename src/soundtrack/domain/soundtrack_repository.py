@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import List
+from typing import List, Optional
 
 from .soundtrack import Soundtrack
 from .soundtrack_id import SoundtrackId
@@ -11,7 +11,7 @@ class SoundtrackRepository(ABC):
     def save(self, soundtrack: Soundtrack):
         pass
 
-    def find(self, soundtrack_id: SoundtrackId) -> Soundtrack:
+    def find(self, soundtrack_id: SoundtrackId) -> Optional[Soundtrack]:
         pass
 
     def find_by_author(self, author: UserId) -> List[Soundtrack]:
