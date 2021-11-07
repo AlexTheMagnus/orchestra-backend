@@ -75,19 +75,23 @@ class TestSoundtracksLikePostController():
 
 class TestSoundtracksLikeGetController():
     def test_should_return_the_users_who_liked_a_soundtrack(self):
-        user_id = UserId.from_string(str(uuid.uuid4()))
         soundtrack: Soundtrack = SoundtrackBuilder().build()
         soundtrack_repository.save(soundtrack)
-        soundtrack_repository.save_like(user_id, soundtrack.soundtrack_id)
+        users: List[UserId] = []
+
+        for x in range(3):
+            users.append(UserId.from_string(str(uuid.uuid4())))
+            soundtrack_repository.save_like(users[x], soundtrack.soundtrack_id)
 
         response = app.test_client().get(
-            '/soundtracks/{0}/likes'.format(soundtrack.soundtrack_id.value)
-            data=json.dumps(soundtracks_like_post_request_params),
+            '/soundtracks/{0}/likes'.format(soundtrack.soundtrack_id.value),
             content_type='application/json'
         )
 
         saved_likes: List[UserId] = soundtrack_repository.get_likes(soundtrack.soundtrack_id)
         assert response.status_code == 200
         assert saved_likes != None
-        assert len(saved_likes) == 1
-        assert saved_likes[0].value == soundtracks_like_post_request_params["user_id"]
+        assert len(saved_likes) == 3
+        str_users = [user.value for user in users]
+        str_saved_likes = [like.value for like in saved_likes]
+        assert set(str_users) == set(str_saved_likes)

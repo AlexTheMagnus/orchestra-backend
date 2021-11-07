@@ -4,6 +4,7 @@ from typing import List
 from ..application.create_soundtrack import CreateSoundtrack
 from ..application.delete_soundtrack import DeleteSoundtrack
 from ..application.get_soundtrack_by_id import GetSoundtrackById
+from ..application.get_soundtrack_likes import GetSoundtrackLikes
 from ..application.get_user_soundtracks import GetUserSoundtracks
 from ..application.like_soundtrack import LikeSoundtrack
 from ..application.update_soundtrack import UpdateSoundtrack
@@ -150,3 +151,20 @@ def like_soundtrack():
             abort(500)
 
     return '200'
+
+
+@soundtracks.route('/<string:str_soundtrack_id>/likes', methods=["GET"])
+def get_soundtrack_likes(str_soundtrack_id: str):
+    soundtrack_repository = SoundtrackMysqlRepository()
+    soundtrack_id = SoundtrackId.from_string(str_soundtrack_id)
+
+    try:
+        likes_list = GetSoundtrackLikes(soundtrack_repository).run(soundtrack_id)
+    except Exception as error:
+        abort(500)
+
+    likes_list_dict = { "likes_list": [] }
+    for like in likes_list:
+        likes_list_dict["likes_list"].append(like.value)
+
+    return jsonify(likes_list_dict), '200'
