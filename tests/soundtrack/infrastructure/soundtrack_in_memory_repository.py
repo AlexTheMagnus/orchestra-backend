@@ -71,3 +71,9 @@ class SoundtrackInMemoryRepository(SoundtrackRepository):
                 found_likes.append(like.user_id)
                 
         return found_likes
+
+
+    def delete_like(self, user_id: UserId, soundtrack_id: SoundtrackId):
+        print(self.__likes)
+        self.__likes = [like for like in self.__likes if ((like.soundtrack_id.value != soundtrack_id.value) or (like.user_id.value != user_id.value))]
+        print(self.__likes)

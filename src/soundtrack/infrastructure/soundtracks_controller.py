@@ -7,10 +7,12 @@ from ..application.get_soundtrack_by_id import GetSoundtrackById
 from ..application.get_soundtrack_likes import GetSoundtrackLikes
 from ..application.get_user_soundtracks import GetUserSoundtracks
 from ..application.like_soundtrack import LikeSoundtrack
+from ..application.unlike_soundtrack import UnlikeSoundtrack
 from ..application.update_soundtrack import UpdateSoundtrack
 from ..domain.chapter.chapter import Chapter
 from ..domain.exceptions.already_existing_soundtrack_error import AlreadyExistingSoundtrackError
 from ..domain.exceptions.already_liked_soundtrack_error import AlreadyLikedSoundtrackError
+from ..domain.exceptions.unexisting_like_error import UnexistingLikeError
 from ..domain.exceptions.unexisting_soundtrack_error import UnexistingSoundtrackError
 from ..domain.exceptions.unexisting_soundtrack_error import UnexistingSoundtrackError
 from ..domain.isbn_13 import Isbn13
@@ -168,3 +170,21 @@ def get_soundtrack_likes(str_soundtrack_id: str):
         likes_list_dict["likes_list"].append(like.value)
 
     return jsonify(likes_list_dict), '200'
+
+
+@soundtracks.route('/<string:str_soundtrack_id>/unlike/<string:str_user_id>', methods=["DELETE"])
+def unlike_soundtrack(str_soundtrack_id: str, str_user_id: str):
+    soundtrack_repository = SoundtrackMysqlRepository()
+    user_id = UserId.from_string(str_user_id)
+    soundtrack_id = SoundtrackId.from_string(str_soundtrack_id)
+    
+    try:
+        UnlikeSoundtrack(soundtrack_repository).run(user_id, soundtrack_id)
+    except Exception as error:
+        print(error)
+        if isinstance(error, UnexistingLikeError):
+            abort(404)
+        else:
+            abort(500)
+
+    return ('', 204)

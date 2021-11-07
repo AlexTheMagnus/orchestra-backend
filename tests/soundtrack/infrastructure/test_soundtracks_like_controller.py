@@ -95,3 +95,33 @@ class TestSoundtracksLikeGetController():
         str_users = [user.value for user in users]
         str_saved_likes = [like.value for like in saved_likes]
         assert set(str_users) == set(str_saved_likes)
+
+
+class TestSoundtracksLikeDeleteController():
+    def test_should_unlike_a_soundtrack(self):
+        user_id = UserId.from_string(str(uuid.uuid4()))
+        soundtrack: Soundtrack = SoundtrackBuilder().build()
+        soundtrack_repository.save(soundtrack)
+        soundtrack_repository.save_like(user_id, soundtrack.soundtrack_id)
+
+        response = app.test_client().delete(
+            '/soundtracks/{0}/unlike/{1}'.format(soundtrack.soundtrack_id.value, user_id.value),
+            content_type='application/json'
+        )
+
+        assert response.status_code == 204
+
+        saved_likes: List[UserId] = soundtrack_repository.get_likes(soundtrack.soundtrack_id)
+        assert saved_likes == []
+
+    def test_should_return_404_when_unliking_an_unexisting_like(self):
+        user_id = UserId.from_string(str(uuid.uuid4()))
+        soundtrack: Soundtrack = SoundtrackBuilder().build()
+        soundtrack_repository.save(soundtrack)
+
+        response = app.test_client().delete(
+            '/soundtracks/{0}/unlike/{1}'.format(soundtrack.soundtrack_id.value, user_id.value),
+            content_type='application/json'
+        )
+
+        assert response.status_code == 404

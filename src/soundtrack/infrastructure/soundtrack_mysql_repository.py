@@ -93,6 +93,12 @@ class SoundtrackMysqlRepository(SoundtrackRepository):
         return self.__getLikesListFromResult(resultSet)
 
 
+    def delete_like(self, user_id: UserId, soundtrack_id: SoundtrackId):
+        query = db.delete(self.__likes
+        ).where(self.__likes.columns.soundtrack_id == soundtrack_id.value and self.__likes.columns.user_id == user_id.value)
+        self.__db_connection.execute(query)        
+
+
     def clean(self):
         query = db.delete(self.__likes)
         self.__db_connection.execute(query)
