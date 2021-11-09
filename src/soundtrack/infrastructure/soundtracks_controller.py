@@ -1,23 +1,29 @@
 from flask import Blueprint, abort, jsonify, request
-
 from typing import List
 
-from .soundtrack_mysql_repository import SoundtrackMysqlRepository
-from .chapter.chapter_mysql_repository import ChapterMysqlRepository
 from ..application.create_soundtrack import CreateSoundtrack
-from ..application.get_user_soundtracks import GetUserSoundtracks
-from ..application.get_soundtrack_by_id import GetSoundtrackById
-from ..application.update_soundtrack import UpdateSoundtrack
 from ..application.delete_soundtrack import DeleteSoundtrack
-from ..domain.soundtrack import Soundtrack
-from ..domain.soundtrack_id import SoundtrackId
-from ..domain.isbn_13 import Isbn13
-from ..domain.soundtrack_title import SoundtrackTitle
-from ..domain.user_id import UserId
+from ..application.get_soundtrack_by_id import GetSoundtrackById
+from ..application.get_soundtrack_likes import GetSoundtrackLikes
+from ..application.get_user_soundtracks import GetUserSoundtracks
+from ..application.like_soundtrack import LikeSoundtrack
+from ..application.unlike_soundtrack import UnlikeSoundtrack
+from ..application.update_soundtrack import UpdateSoundtrack
 from ..domain.chapter.chapter import Chapter
 from ..domain.exceptions.already_existing_soundtrack_error import AlreadyExistingSoundtrackError
+from ..domain.exceptions.already_liked_soundtrack_error import AlreadyLikedSoundtrackError
+from ..domain.exceptions.unexisting_like_error import UnexistingLikeError
 from ..domain.exceptions.unexisting_soundtrack_error import UnexistingSoundtrackError
+from ..domain.exceptions.unexisting_soundtrack_error import UnexistingSoundtrackError
+from ..domain.isbn_13 import Isbn13
+from ..domain.soundtrack import Soundtrack
+from ..domain.soundtrack_id import SoundtrackId
+from ..domain.soundtrack_title import SoundtrackTitle
+from ..domain.user_id import UserId
+from .chapter.chapter_mysql_repository import ChapterMysqlRepository
 from .from_soundtrack_to_dict import FromSoundtrackToDict
+from .soundtrack_mysql_repository import SoundtrackMysqlRepository
+from .validators.soundtracks_like_post_validator import SoundtracksLikePostValidator
 from .validators.soundtracks_post_validator import SoundtracksPostValidator
 from .validators.soundtracks_put_validator import SoundtracksPutValidator
 
@@ -30,8 +36,6 @@ def create_soundtrack():
 
     if not SoundtracksPostValidator().validate(request.json):
         abort(400)
-
-    chapters = List[Chapter]
 
     soundtrack = Soundtrack(
         soundtrack_id=SoundtrackId.from_string(request.json['soundtrack_id']),
@@ -123,6 +127,64 @@ def delete_soundtrack(str_soundtrack_id: str):
         if isinstance(error, UnexistingSoundtrackError):
             abort(404)
         else:
-                abort(500)
+            abort(500)
+
+    return ('', 204)
+
+
+@soundtracks.route('/like', methods=["POST"])
+def like_soundtrack():
+    soundtrack_repository = SoundtrackMysqlRepository()
+
+    if not SoundtracksLikePostValidator().validate(request.json):
+        abort(400)
+    
+    user_id = UserId.from_string(request.json['user_id'])
+    soundtrack_id = SoundtrackId.from_string(request.json['soundtrack_id'])
+
+    try:
+        LikeSoundtrack(soundtrack_repository).run(user_id, soundtrack_id)
+    except Exception as error:
+        if isinstance(error, UnexistingSoundtrackError):
+            abort(404)
+        if isinstance(error, AlreadyLikedSoundtrackError):
+            abort(409)
+        else:
+            abort(500)
+
+    return '200'
+
+
+@soundtracks.route('/<string:str_soundtrack_id>/likes', methods=["GET"])
+def get_soundtrack_likes(str_soundtrack_id: str):
+    soundtrack_repository = SoundtrackMysqlRepository()
+    soundtrack_id = SoundtrackId.from_string(str_soundtrack_id)
+
+    try:
+        likes_list = GetSoundtrackLikes(soundtrack_repository).run(soundtrack_id)
+    except Exception as error:
+        abort(500)
+
+    likes_list_dict = { "likes_list": [] }
+    for like in likes_list:
+        likes_list_dict["likes_list"].append(like.value)
+
+    return jsonify(likes_list_dict), '200'
+
+
+@soundtracks.route('/<string:str_soundtrack_id>/unlike/<string:str_user_id>', methods=["DELETE"])
+def unlike_soundtrack(str_soundtrack_id: str, str_user_id: str):
+    soundtrack_repository = SoundtrackMysqlRepository()
+    user_id = UserId.from_string(str_user_id)
+    soundtrack_id = SoundtrackId.from_string(str_soundtrack_id)
+    
+    try:
+        UnlikeSoundtrack(soundtrack_repository).run(user_id, soundtrack_id)
+    except Exception as error:
+        print(error)
+        if isinstance(error, UnexistingLikeError):
+            abort(404)
+        else:
+            abort(500)
 
     return ('', 204)
