@@ -1,21 +1,28 @@
 from flask import Blueprint, abort, jsonify, request
+from spotipy import oauth2, client
 import os
 import spotipy
-from spotipy import oauth2
-from spotipy import client
 
-from .user_mysql_repository import UserMysqlRepository
+from ..application.add_soundtrack_to_favorites import AddSoundtrackToFavorites
+from ..application.get_user_info import GetUserInfo
+from ..application.register_user import RegisterUser
+from ..domain.exceptions.already_existing_user_error import AlreadyExistingUserError
+from ..domain.exceptions.soundtrack_already_added_to_favorites_error import SoundtrackAlreadyAddedToFavoritesError
+from ..domain.exceptions.unexisting_soundtrack_error import UnexistingSoundtrackError
+from ..domain.exceptions.unexisting_user_error import UnexistingUserError
+from ..domain.soundtrack_id import SoundtrackId
+from ..domain.user import User
+from ..domain.user_avatar import UserAvatar
 from ..domain.user_id import UserId
 from ..domain.username import Username
-from ..domain.user_avatar import UserAvatar
-from ..domain.user import User
-from ..application.register_user import RegisterUser
-from ..application.get_user_info import GetUserInfo
-from ..domain.exceptions.already_existing_user_error import AlreadyExistingUserError
 from .from_user_to_dict import FromUserToDict
+from .soundtrack_mysql_reporter import SoundtrackMysqlReporter
+from .user_mysql_repository import UserMysqlRepository
+from .validators.users_favorite_post_validator import UsersFavoritePostValidator
 from .validators.users_post_validator import UsersPostValidator
 
 users = Blueprint("users", __name__, url_prefix="/users")
+
 
 @users.route('', methods=["POST"])
 def user_access():
@@ -49,6 +56,7 @@ def user_access():
     
     return jsonify(dictResponse), '200'
 
+
 @users.route('/<string:str_user_id>', methods=["GET"])
 def get_user_info(str_user_id: str):
     user_repository = UserMysqlRepository()
@@ -60,3 +68,30 @@ def get_user_info(str_user_id: str):
         abort(500)
 
     return jsonify(FromUserToDict.with_user(user)), '200'
+
+
+@users.route('/favorite', methods=["POST"])
+def add_soundtrack_to_favorites():
+    user_repository = UserMysqlRepository()
+    soundtrack_reporter = SoundtrackMysqlReporter()
+
+    if not UsersFavoritePostValidator().validate(request.json):
+        abort(400)
+    
+    user_id = UserId.from_string(request.json['user_id'])
+    soundtrack_id = SoundtrackId.from_string(request.json['soundtrack_id'])
+
+    try:
+        AddSoundtrackToFavorites(user_repository, soundtrack_reporter).run(user_id, soundtrack_id)
+    except Exception as error:
+        if isinstance(error, UnexistingSoundtrackError):
+            abort(404)
+        if isinstance(error, UnexistingUserError):
+            abort(404)
+        if isinstance(error, SoundtrackAlreadyAddedToFavoritesError):
+            abort(409)
+        else:
+            print(error)
+            abort(500)
+
+    return '200'

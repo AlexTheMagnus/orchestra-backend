@@ -181,7 +181,6 @@ def unlike_soundtrack(str_soundtrack_id: str, str_user_id: str):
     try:
         UnlikeSoundtrack(soundtrack_repository).run(user_id, soundtrack_id)
     except Exception as error:
-        print(error)
         if isinstance(error, UnexistingLikeError):
             abort(404)
         else:

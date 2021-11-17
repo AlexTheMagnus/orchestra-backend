@@ -1,18 +1,19 @@
 from faker import Faker
+import uuid
 
-from src.user.infrastructure.user_mapper import UserMapper
+from src.user.domain.user import User
+from src.user.domain.user_avatar import UserAvatar
 from src.user.domain.user_id import UserId
 from src.user.domain.username import Username
-from src.user.domain.user_avatar import UserAvatar
-from src.user.domain.user import User
 from src.user.infrastructure.user_dto import UserDTO
+from src.user.infrastructure.user_mapper import UserMapper
 
 fake = Faker()
 
 
 class UserBuilder():
     def __init__(self):
-        self.__user_id: UserId = UserId.from_string(fake.pystr())
+        self.__user_id: UserId = UserId.from_string(uuid.uuid4())
         self.__username: Username = Username.from_string(fake.name())
         self.__user_avatar: UserAvatar = UserAvatar.from_url("https://" + fake.pystr())
 
