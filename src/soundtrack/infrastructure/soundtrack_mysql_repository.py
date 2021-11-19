@@ -32,6 +32,7 @@ class SoundtrackMysqlRepository(SoundtrackRepository):
         )
         self.__db_connection.execute(query)
 
+
     def find(self, soundtrack_id: SoundtrackId) -> Optional[Soundtrack]:
         query = db.select([self.__soundtrack]).where(
             self.__soundtrack.columns.soundtrack_id == soundtrack_id.value)
@@ -41,7 +42,7 @@ class SoundtrackMysqlRepository(SoundtrackRepository):
         if not resultSet:
             return None
 
-        return self.__getSoundtrackFromResult(resultSet[0])
+        return self.__get_soundtrack_from_result(resultSet[0])
 
 
     def find_by_author(self, author: UserId) -> List[Soundtrack]:
@@ -53,7 +54,7 @@ class SoundtrackMysqlRepository(SoundtrackRepository):
         if not resultSet:
             return []
 
-        return self.__getSoundtracksListFromResult(resultSet)
+        return self.__get_soundtracks_list_from_result(resultSet)
 
 
     def update(self, soundtrack_to_update: Soundtrack):
@@ -90,7 +91,7 @@ class SoundtrackMysqlRepository(SoundtrackRepository):
         if not resultSet:
             return []
 
-        return self.__getLikesListFromResult(resultSet)
+        return self.__get_likes_list_from_result(resultSet)
 
 
     def delete_like(self, user_id: UserId, soundtrack_id: SoundtrackId):
@@ -106,7 +107,7 @@ class SoundtrackMysqlRepository(SoundtrackRepository):
         self.__db_connection.execute(query)
 
 
-    def __getSoundtrackFromResult(self, result: tuple) -> Soundtrack:
+    def __get_soundtrack_from_result(self, result: tuple) -> Soundtrack:
         return Soundtrack(
             soundtrack_id=SoundtrackId.from_string(result[0]),
             book=Isbn13.from_string(result[1]),
@@ -116,17 +117,17 @@ class SoundtrackMysqlRepository(SoundtrackRepository):
         )
 
 
-    def __getSoundtracksListFromResult(self, resultSet: [tuple]) -> List[Soundtrack]:
+    def __get_soundtracks_list_from_result(self, resultSet: [tuple]) -> List[Soundtrack]:
         soundtracks_list: List[Soundtrack] = []
 
         for result in resultSet:
-            soundtrack = self.__getSoundtrackFromResult(result)
+            soundtrack = self.__get_soundtrack_from_result(result)
             soundtracks_list.append(soundtrack)
 
         return soundtracks_list
 
     
-    def __getLikesListFromResult(self, resultSet: [tuple]) -> List[UserId]:
+    def __get_likes_list_from_result(self, resultSet: [tuple]) -> List[UserId]:
         likes_list: List[UserId] = []
 
         for result in resultSet:

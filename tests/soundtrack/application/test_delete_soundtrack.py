@@ -1,18 +1,20 @@
-import uuid
 import pytest
+import uuid
 
+from ..builder.chapter_builder import ChapterBuilder
+from ..builder.soundtrack_builder import SoundtrackBuilder
+from ..infrastructure.chapter.chapter_in_memory_repository import ChapterInMemoryRepository
+from ..infrastructure.favorite_in_memory_repository import FavoriteInMemoryRepository
+from ..infrastructure.soundtrack_in_memory_repository import SoundtrackInMemoryRepository
+from src.soundtrack.application.delete_soundtrack import DeleteSoundtrack
 from src.soundtrack.domain.exceptions.unexisting_soundtrack_error import UnexistingSoundtrackError
 from src.soundtrack.domain.soundtrack import Soundtrack
 from src.soundtrack.domain.soundtrack_id import SoundtrackId
-from src.soundtrack.application.delete_soundtrack import DeleteSoundtrack
-from ..builder.soundtrack_builder import SoundtrackBuilder
-from ..builder.chapter_builder import ChapterBuilder
-from ..infrastructure.soundtrack_in_memory_repository import SoundtrackInMemoryRepository
-from ..infrastructure.chapter.chapter_in_memory_repository import ChapterInMemoryRepository
 
 soundtrack_repository = SoundtrackInMemoryRepository()
 chapter_repository = ChapterInMemoryRepository()
-use_case: DeleteSoundtrack = DeleteSoundtrack(soundtrack_repository, chapter_repository)
+favorite_repository = FavoriteInMemoryRepository()
+use_case: DeleteSoundtrack = DeleteSoundtrack(soundtrack_repository, chapter_repository, favorite_repository)
 
 class TestDeleteSoundtrackById():
     def test_soundtrack_is_deleted(self):

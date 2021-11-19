@@ -1,3 +1,4 @@
+import pytest
 import uuid
 
 from ..builder.user_builder import UserBuilder

@@ -11,11 +11,14 @@ class UserRepository(ABC):
     def save(self, user: User):
         pass
 
+    @abstractmethod
     def find(self, user_id: UserId) -> User:
         pass
 
-    def get_favorites(self, user_id: UserId) -> List[SoundtrackId]:
+    @abstractmethod
+    def save_favorite(self, user_id: UserId, soundtrack_id: SoundtrackId):
         pass
 
-    def save_favorite(self, user_id: UserId, soundtrack_id: SoundtrackId):
+    @abstractmethod
+    def get_favorites(self, user_id: UserId) -> List[SoundtrackId]:
         pass

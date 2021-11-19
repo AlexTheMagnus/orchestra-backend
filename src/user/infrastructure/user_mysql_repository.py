@@ -42,6 +42,13 @@ class UserMysqlRepository(UserRepository):
         return self.__getUserFromResult(resultSet[0])
 
 
+    def save_favorite(self, user_id: UserId, soundtrack_id: SoundtrackId):
+        query = db.insert(self.__favorites).values(
+            user_id=user_id.value, soundtrack_id=soundtrack_id.value
+        )
+        self.__db_connection.execute(query)
+
+
     def get_favorites(self, user_id: UserId) -> List[SoundtrackId]:
         query = db.select([self.__favorites]
         ).where(self.__favorites.columns.user_id == user_id.value)
@@ -52,13 +59,6 @@ class UserMysqlRepository(UserRepository):
             return []
 
         return self.__getFavoritesListFromResult(resultSet)
-
-
-    def save_favorite(self, user_id: UserId, soundtrack_id: SoundtrackId):
-        query = db.insert(self.__favorites).values(
-            user_id=user_id.value, soundtrack_id=soundtrack_id.value
-        )
-        self.__db_connection.execute(query)
 
 
     def __getUserFromResult(self, result: tuple) -> User:

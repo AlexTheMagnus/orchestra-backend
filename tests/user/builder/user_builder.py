@@ -13,7 +13,7 @@ fake = Faker()
 
 class UserBuilder():
     def __init__(self):
-        self.__user_id: UserId = UserId.from_string(uuid.uuid4())
+        self.__user_id: UserId = UserId.from_string(str(uuid.uuid4()))
         self.__username: Username = Username.from_string(fake.name())
         self.__user_avatar: UserAvatar = UserAvatar.from_url("https://" + fake.pystr())
 

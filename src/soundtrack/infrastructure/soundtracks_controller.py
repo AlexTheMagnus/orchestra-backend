@@ -21,6 +21,7 @@ from ..domain.soundtrack_id import SoundtrackId
 from ..domain.soundtrack_title import SoundtrackTitle
 from ..domain.user_id import UserId
 from .chapter.chapter_mysql_repository import ChapterMysqlRepository
+from .favorite_mysql_repository import FavoriteMysqlRepository
 from .from_soundtrack_to_dict import FromSoundtrackToDict
 from .soundtrack_mysql_repository import SoundtrackMysqlRepository
 from .validators.soundtracks_like_post_validator import SoundtracksLikePostValidator
@@ -119,10 +120,11 @@ def update_soundtrack(str_soundtrack_id: str):
 def delete_soundtrack(str_soundtrack_id: str):
     soundtrack_repository = SoundtrackMysqlRepository()
     chapter_repository = ChapterMysqlRepository()
+    favorite_repository = FavoriteMysqlRepository()
     soundtrack_id = SoundtrackId.from_string(str_soundtrack_id)
     
     try:
-        DeleteSoundtrack(soundtrack_repository, chapter_repository).run(soundtrack_id)
+        DeleteSoundtrack(soundtrack_repository, chapter_repository, favorite_repository).run(soundtrack_id)
     except Exception as error:
         if isinstance(error, UnexistingSoundtrackError):
             abort(404)
