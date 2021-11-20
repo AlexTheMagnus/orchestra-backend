@@ -39,7 +39,7 @@ class UserMysqlRepository(UserRepository):
         if not resultSet:
             return None
 
-        return self.__getUserFromResult(resultSet[0])
+        return self.__get_user_from_result(resultSet[0])
 
 
     def save_favorite(self, user_id: UserId, soundtrack_id: SoundtrackId):
@@ -58,10 +58,10 @@ class UserMysqlRepository(UserRepository):
         if not resultSet:
             return []
 
-        return self.__getFavoritesListFromResult(resultSet)
+        return self.__get_favorites_list_from_result(resultSet)
 
 
-    def __getUserFromResult(self, result: tuple) -> User:
+    def __get_user_from_result(self, result: tuple) -> User:
         return User(
             user_id=UserId.from_string(result[0]),
             username=Username.from_string(result[1]),
@@ -69,16 +69,18 @@ class UserMysqlRepository(UserRepository):
         )
 
 
-    def __getFavoritesListFromResult(self, resultSet: [tuple]) -> List[SoundtrackId]:
+    def __get_favorites_list_from_result(self, resultSet: [tuple]) -> List[SoundtrackId]:
         favorites_list: List[SoundtrackId] = []
 
         for result in resultSet:
-            favorite = SoundtrackId.from_string(result[0])
+            favorite = SoundtrackId.from_string(result[1])
             favorites_list.append(favorite)
 
         return favorites_list        
 
 
     def clean(self):
+        query = db.delete(self.__favorites)
+        self.__db_connection.execute(query)
         query = db.delete(self.__users)
         self.__db_connection.execute(query)

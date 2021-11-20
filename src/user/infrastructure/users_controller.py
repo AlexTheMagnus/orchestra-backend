@@ -91,7 +91,6 @@ def add_soundtrack_to_favorites():
         if isinstance(error, SoundtrackAlreadyAddedToFavoritesError):
             abort(409)
         else:
-            print(error)
             abort(500)
 
     return '200'

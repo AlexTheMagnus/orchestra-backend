@@ -28,10 +28,10 @@ class TestAddSoundtrackToFavorites():
         
         use_case.run(user.user_id, soundtrack.soundtrack_id)
 
-        found_favorites: List[UserId] = user_repository.get_favorites(user.user_id)
+        found_favorites: List[SoundtrackId] = user_repository.get_favorites(user.user_id)
         assert found_favorites != None
         assert len(found_favorites) == 1
-        assert found_favorites[0].value == user.user_id.value
+        assert found_favorites[0].value == soundtrack.soundtrack_id.value
 
     def test_add_soundtrack_to_unexisting_user_favorites_throws_an_error(self):
         user_id = UserId.from_string(str(uuid.uuid4()))

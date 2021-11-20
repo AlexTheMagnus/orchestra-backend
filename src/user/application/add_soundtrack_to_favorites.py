@@ -18,7 +18,6 @@ class AddSoundtrackToFavorites():
         if not self.__soundtrack_reporter.exist(soundtrack_id):
             raise(UnexistingSoundtrackError(soundtrack_id.value))
 
-        print(self.__user_repository.get_favorites(user_id))
         for favorite_soundtrack_id in self.__user_repository.get_favorites(user_id):
             if soundtrack_id.value == favorite_soundtrack_id.value:
                 raise(SoundtrackAlreadyAddedToFavoritesError(user_id.value, soundtrack_id.value))
