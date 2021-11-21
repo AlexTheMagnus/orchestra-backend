@@ -1,3 +1,4 @@
+from faker import Faker
 from typing import List
 import json
 import uuid
@@ -10,6 +11,7 @@ from src.soundtrack.infrastructure.soundtrack_mysql_repository import Soundtrack
 from src.user.domain.user_id import UserId
 from src.user.infrastructure.user_mysql_repository import UserMysqlRepository
 
+fake = Faker()
 user_repository = UserMysqlRepository()
 soundtrack_repository = SoundtrackMysqlRepository()
 
@@ -18,6 +20,7 @@ def teardown_module():
     soundtrack_repository.clean()
 
 class TestUsersFavoritePostController():
+
   def test_should_add_a_soundtrack_to_favorites(self):
         user = UserBuilder().build()
         user_repository.save(user)
@@ -41,6 +44,7 @@ class TestUsersFavoritePostController():
         assert len(saved_favorites) == 1
         assert saved_favorites[0].value == users_favorite_post_request_params["soundtrack_id"]
 
+
   def test_should_return_404_when_adding_a_soundtrack_to_unexisting_user_favorites(self):
         user_id = UserId.from_string(str(uuid.uuid4()))
         soundtrack = SoundtrackBuilder().build()
@@ -57,7 +61,6 @@ class TestUsersFavoritePostController():
             content_type='application/json'
         )
 
-        saved_favorites: List[SoundtrackId] = user_repository.get_favorites(user_id)
         assert response.status_code == 404
 
 
@@ -77,7 +80,6 @@ class TestUsersFavoritePostController():
             content_type='application/json'
         )
 
-        saved_favorites: List[SoundtrackId] = user_repository.get_favorites(user.user_id)
         assert response.status_code == 404
 
 
@@ -99,5 +101,31 @@ class TestUsersFavoritePostController():
             content_type='application/json'
         )
 
-        saved_favorites: List[SoundtrackId] = user_repository.get_favorites(user.user_id)
         assert response.status_code == 409
+
+
+class TestUsersFavoriteGetController():
+
+    def test_should_return_the_favorite_soundtracks(self):
+        user = UserBuilder().build()
+        user_repository.save(user)
+        favorites_list: List[SoundtrackId] = []
+
+        for x in range(fake.random_number(1)):
+            soundtrack: Soundtrack = SoundtrackBuilder().build()
+            soundtrack_repository.save(soundtrack)
+            user_repository.save_favorite(user.user_id, soundtrack.soundtrack_id)
+            favorites_list.append(soundtrack.soundtrack_id)
+
+        response = app.test_client().get(
+            '/users/{0}/favorites'.format(user.user_id.value),
+            content_type='application/json'
+        )
+
+        assert response.status_code == 200
+        data = json.loads(response.get_data(as_text=True))
+        assert data["favorite_soundtracks_list"] != None
+        print("Data", data)
+        assert len(data["favorite_soundtracks_list"]) == len(favorites_list)
+        str_favorites_list = [favorite.value for favorite in favorites_list]
+        assert set(data["favorite_soundtracks_list"]) == set(str_favorites_list)

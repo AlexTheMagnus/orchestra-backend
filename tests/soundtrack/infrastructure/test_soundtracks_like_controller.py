@@ -1,6 +1,7 @@
+from faker import Faker
+from typing import List
 import json
 import uuid
-from typing import List
 
 from orchestra import app
 from src.soundtrack.domain.soundtrack import Soundtrack
@@ -8,6 +9,7 @@ from src.soundtrack.domain.user_id import UserId
 from src.soundtrack.infrastructure.soundtrack_mysql_repository import SoundtrackMysqlRepository
 from ..builder.soundtrack_builder import SoundtrackBuilder
 
+fake = Faker()
 soundtrack_repository = SoundtrackMysqlRepository()
 
 def teardown_module():
@@ -79,7 +81,7 @@ class TestSoundtracksLikeGetController():
         soundtrack_repository.save(soundtrack)
         users: List[UserId] = []
 
-        for x in range(3):
+        for x in range(fake.random_number(1)):
             users.append(UserId.from_string(str(uuid.uuid4())))
             soundtrack_repository.save_like(users[x], soundtrack.soundtrack_id)
 
@@ -88,13 +90,12 @@ class TestSoundtracksLikeGetController():
             content_type='application/json'
         )
 
-        saved_likes: List[UserId] = soundtrack_repository.get_likes(soundtrack.soundtrack_id)
+        data = json.loads(response.get_data(as_text=True))
         assert response.status_code == 200
-        assert saved_likes != None
-        assert len(saved_likes) == 3
+        assert data['likes_list'] != None
+        assert len(data['likes_list']) == len(users)
         str_users = [user.value for user in users]
-        str_saved_likes = [like.value for like in saved_likes]
-        assert set(str_users) == set(str_saved_likes)
+        assert set(str_users) == set(data['likes_list'])
 
 
 class TestSoundtracksLikeDeleteController():

@@ -1,5 +1,5 @@
 from ..domain.soundtrack_repository import SoundtrackRepository
-from ..domain.soundtrack import SoundtrackId
+from ..domain.soundtrack_id import SoundtrackId
 
 class GetSoundtrackLikes():
     def __init__(self, soundtrack_repository: SoundtrackRepository):

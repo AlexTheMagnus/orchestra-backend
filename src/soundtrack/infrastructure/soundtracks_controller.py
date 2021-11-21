@@ -167,9 +167,7 @@ def get_soundtrack_likes(str_soundtrack_id: str):
     except Exception as error:
         abort(500)
 
-    likes_list_dict = { "likes_list": [] }
-    for like in likes_list:
-        likes_list_dict["likes_list"].append(like.value)
+    likes_list_dict = { "likes_list": [like.value for like in likes_list] }
 
     return jsonify(likes_list_dict), '200'
 

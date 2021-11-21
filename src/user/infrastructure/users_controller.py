@@ -4,6 +4,7 @@ import os
 import spotipy
 
 from ..application.add_soundtrack_to_favorites import AddSoundtrackToFavorites
+from ..application.get_user_favorites import GetUserFavorites
 from ..application.get_user_info import GetUserInfo
 from ..application.register_user import RegisterUser
 from ..domain.exceptions.already_existing_user_error import AlreadyExistingUserError
@@ -94,3 +95,21 @@ def add_soundtrack_to_favorites():
             abort(500)
 
     return '200'
+
+
+@users.route('/<string:str_user_id>/favorites', methods=["GET"])
+def get_user_favorites(str_user_id: str):
+    user_repository = UserMysqlRepository()
+    user_id = UserId.from_string(str_user_id)
+
+    try:
+        favorites_list = GetUserFavorites(user_repository).run(user_id)
+    except Exception as error:
+        abort(500)
+
+    print("favorites_list", favorites_list)
+    favorites_list_dict = { 
+        "favorite_soundtracks_list": [favorite_soundtrack.value for favorite_soundtrack in favorites_list]
+    }
+
+    return jsonify(favorites_list_dict), '200'
