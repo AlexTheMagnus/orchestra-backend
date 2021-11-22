@@ -7,8 +7,10 @@ from ..application.add_soundtrack_to_favorites import AddSoundtrackToFavorites
 from ..application.get_user_favorites import GetUserFavorites
 from ..application.get_user_info import GetUserInfo
 from ..application.register_user import RegisterUser
+from ..application.remove_soundtrack_from_favorites import RemoveSoundtrackFromFavorites
 from ..domain.exceptions.already_existing_user_error import AlreadyExistingUserError
 from ..domain.exceptions.soundtrack_already_added_to_favorites_error import SoundtrackAlreadyAddedToFavoritesError
+from ..domain.exceptions.unexisting_favorite_error import UnexistingFavoriteError
 from ..domain.exceptions.unexisting_soundtrack_error import UnexistingSoundtrackError
 from ..domain.exceptions.unexisting_user_error import UnexistingUserError
 from ..domain.soundtrack_id import SoundtrackId
@@ -107,9 +109,26 @@ def get_user_favorites(str_user_id: str):
     except Exception as error:
         abort(500)
 
-    print("favorites_list", favorites_list)
     favorites_list_dict = { 
         "favorite_soundtracks_list": [favorite_soundtrack.value for favorite_soundtrack in favorites_list]
     }
 
     return jsonify(favorites_list_dict), '200'
+
+
+@users.route('/<string:str_user_id>/unfavorite/<string:str_soundtrack_id>', methods=["DELETE"])
+def remove_soundtrack_from_favorites(str_user_id: str, str_soundtrack_id: str):
+    user_repository = UserMysqlRepository()
+    user_id = UserId.from_string(str_user_id)
+    soundtrack_id = SoundtrackId.from_string(str_soundtrack_id)
+    
+    try:
+        RemoveSoundtrackFromFavorites(user_repository).run(user_id, soundtrack_id)
+    except Exception as error:
+        if isinstance(error, UnexistingFavoriteError):
+            abort(404)
+        else:
+            print(error)
+            abort(500)
+
+    return ('', 204)

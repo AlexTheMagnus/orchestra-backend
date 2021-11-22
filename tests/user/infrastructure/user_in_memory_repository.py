@@ -50,3 +50,7 @@ class UserInMemoryRepository(UserRepository):
                 found_favorites.append(favorite.soundtrack_id)
                 
         return found_favorites
+
+
+    def remove_favorite(self, user_id: UserId, soundtrack_id: SoundtrackId):
+        self.__favorites = [favorite for favorite in self.__favorites if ((favorite.soundtrack_id.value != soundtrack_id.value) or (favorite.user_id.value != user_id.value))]

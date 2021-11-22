@@ -61,6 +61,12 @@ class UserMysqlRepository(UserRepository):
         return self.__get_favorites_list_from_result(resultSet)
 
 
+    def remove_favorite(self, user_id: UserId, soundtrack_id: SoundtrackId):
+        query = db.delete(self.__favorites
+        ).where(self.__favorites.columns.soundtrack_id == soundtrack_id.value and self.__favorites.columns.user_id == user_id.value)
+        self.__db_connection.execute(query)        
+
+
     def __get_user_from_result(self, result: tuple) -> User:
         return User(
             user_id=UserId.from_string(result[0]),

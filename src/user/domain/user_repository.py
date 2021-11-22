@@ -22,3 +22,7 @@ class UserRepository(ABC):
     @abstractmethod
     def get_favorites(self, user_id: UserId) -> List[SoundtrackId]:
         pass
+
+    @abstractmethod
+    def remove_favorite(self, user_id: UserId, soundtrack_id: SoundtrackId):
+        pass

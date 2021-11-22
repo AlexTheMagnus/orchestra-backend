@@ -125,7 +125,36 @@ class TestUsersFavoriteGetController():
         assert response.status_code == 200
         data = json.loads(response.get_data(as_text=True))
         assert data["favorite_soundtracks_list"] != None
-        print("Data", data)
         assert len(data["favorite_soundtracks_list"]) == len(favorites_list)
         str_favorites_list = [favorite.value for favorite in favorites_list]
         assert set(data["favorite_soundtracks_list"]) == set(str_favorites_list)
+
+
+class TestUsersFavoriteDeleteController():
+    def test_should_remove_from_favorites_a_soundtrack(self):
+        user: User = UserBuilder().build()
+        user_repository.save(user)
+        soundtrack: Soundtrack = SoundtrackBuilder().build()
+        soundtrack_repository.save(soundtrack)
+        user_repository.save_favorite(user.user_id, soundtrack.soundtrack_id)
+
+        response = app.test_client().delete(
+            '/users/{0}/unfavorite/{1}'.format(user.user_id.value, soundtrack.soundtrack_id.value),
+            content_type='application/json'
+        )
+
+        assert response.status_code == 204
+
+        saved_favorites: List[SoundtrackId] = user_repository.get_favorites(user.user_id)
+        assert saved_favorites == []
+
+    def test_should_return_404_when_removing_from_favorites_an_unexisting_favorite(self):
+        user_id = UserId.from_string(str(uuid.uuid4()))
+        soundtrack_id= SoundtrackId.from_string(str(uuid.uuid4()))
+
+        response = app.test_client().delete(
+            '/users/{0}/unfavorite/{1}'.format(soundtrack_id.value, user_id.value),
+            content_type='application/json'
+        )
+
+        assert response.status_code == 404
