@@ -1,5 +1,5 @@
 from uuid import UUID
-from src.user.domain.exceptions.not_a_valid_soundtrack_id_error import NotAValidSoundtrackIdError
+from .exceptions.not_a_valid_soundtrack_id_error import NotAValidSoundtrackIdError
 
 
 class SoundtrackId():
