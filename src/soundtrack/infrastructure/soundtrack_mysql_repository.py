@@ -2,13 +2,14 @@ import os
 import sqlalchemy as db
 from typing import List, Optional
 
-from ..domain.soundtrack_repository import SoundtrackRepository
+from ..domain.chapter.chapter import Chapter
+from ..domain.isbn_13 import Isbn13
+from ..domain.search_options import SearchOptions
 from ..domain.soundtrack import Soundtrack
 from ..domain.soundtrack_id import SoundtrackId
-from ..domain.isbn_13 import Isbn13
+from ..domain.soundtrack_repository import SoundtrackRepository
 from ..domain.soundtrack_title import SoundtrackTitle
 from ..domain.user_id import UserId
-from ..domain.chapter.chapter import Chapter
 
 
 class SoundtrackMysqlRepository(SoundtrackRepository):
@@ -55,6 +56,10 @@ class SoundtrackMysqlRepository(SoundtrackRepository):
             return []
 
         return self.__get_soundtracks_list_from_result(resultSet)
+
+
+    def search(self, search_options: SearchOptions) -> List[Soundtrack]:
+        pass
 
 
     def update(self, soundtrack_to_update: Soundtrack):

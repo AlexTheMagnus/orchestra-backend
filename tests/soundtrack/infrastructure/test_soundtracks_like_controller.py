@@ -90,8 +90,8 @@ class TestSoundtracksLikeGetController():
             content_type='application/json'
         )
 
-        data = json.loads(response.get_data(as_text=True))
         assert response.status_code == 200
+        data = json.loads(response.get_data(as_text=True))
         assert data['likes_list'] != None
         assert len(data['likes_list']) == len(users)
         str_users = [user.value for user in users]

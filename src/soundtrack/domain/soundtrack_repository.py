@@ -1,10 +1,10 @@
 from abc import ABC, abstractmethod
 from typing import List, Optional
 
+from .search_options import SearchOptions
 from .soundtrack import Soundtrack
 from .soundtrack_id import SoundtrackId
 from .user_id import UserId
-
 
 class SoundtrackRepository(ABC):
     @abstractmethod
@@ -17,6 +17,10 @@ class SoundtrackRepository(ABC):
 
     @abstractmethod
     def find_by_author(self, author: UserId) -> List[Soundtrack]:
+        pass
+
+    @abstractmethod
+    def search(self, search_options: SearchOptions) -> List[Soundtrack]:
         pass
 
     @abstractmethod

@@ -1,11 +1,11 @@
-import uuid
 from typing import List
+import uuid
 
-from ..infrastructure.soundtrack_in_memory_repository import SoundtrackInMemoryRepository
-from src.soundtrack.domain.user_id import UserId
-from src.soundtrack.domain.soundtrack import Soundtrack
 from ..builder.soundtrack_builder import SoundtrackBuilder
+from ..infrastructure.soundtrack_in_memory_repository import SoundtrackInMemoryRepository
 from src.soundtrack.application.get_user_soundtracks import GetUserSoundtracks
+from src.soundtrack.domain.soundtrack import Soundtrack
+from src.soundtrack.domain.user_id import UserId
 
 
 soundtrack_repository = SoundtrackInMemoryRepository()
