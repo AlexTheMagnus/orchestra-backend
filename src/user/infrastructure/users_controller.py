@@ -128,7 +128,6 @@ def remove_soundtrack_from_favorites(str_user_id: str, str_soundtrack_id: str):
         if isinstance(error, UnexistingFavoriteError):
             abort(404)
         else:
-            print(error)
             abort(500)
 
     return ('', 204)

@@ -6,9 +6,11 @@ from src.soundtrack.domain.soundtrack_id import SoundtrackId
 from src.soundtrack.domain.soundtrack_repository import SoundtrackRepository
 from src.soundtrack.domain.user_id import UserId
 
+
 class SoundtracksWithLikes(TypedDict):
     soundtrack: Soundtrack
     likes: int
+
 
 class Like:
     def __init__(self, user_id: UserId, soundtrack_id: SoundtrackId):
@@ -57,10 +59,11 @@ class SoundtrackInMemoryRepository(SoundtrackRepository):
 
         for soundtrack in self.__soundtracks:
             if soundtrack.book.value == search_options["book"].value:
-                likes = sum(like.soundtrack_id == soundtrack.soundtrack_id.value for like in self.__likes)
+                likes = sum([like.soundtrack_id.value == soundtrack.soundtrack_id.value for like in self.__likes])
+                print("likes", sum([like.soundtrack_id.value == soundtrack.soundtrack_id.value for like in self.__likes]))
                 found_soundtracks_with_likes.append({"soundtrack": soundtrack, "likes": likes})
                 
-        found_soundtracks_with_likes = sorted(found_soundtracks_with_likes, key=lambda d: d['likes'])
+        found_soundtracks_with_likes = sorted(found_soundtracks_with_likes, key=lambda d: d['likes'], reverse=True)
         return [soundtrack_with_likes["soundtrack"] for soundtrack_with_likes in found_soundtracks_with_likes]
 
 

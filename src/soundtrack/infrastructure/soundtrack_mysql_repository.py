@@ -1,6 +1,6 @@
 import os
 import sqlalchemy as db
-from typing import List, Optional
+from typing import List, Optional, TypedDict
 
 from ..domain.chapter.chapter import Chapter
 from ..domain.isbn_13 import Isbn13
@@ -10,6 +10,11 @@ from ..domain.soundtrack_id import SoundtrackId
 from ..domain.soundtrack_repository import SoundtrackRepository
 from ..domain.soundtrack_title import SoundtrackTitle
 from ..domain.user_id import UserId
+
+
+class SoundtracksWithLikes(TypedDict):
+    soundtrack: Soundtrack
+    likes: int
 
 
 class SoundtrackMysqlRepository(SoundtrackRepository):
@@ -59,8 +64,22 @@ class SoundtrackMysqlRepository(SoundtrackRepository):
 
 
     def search(self, search_options: SearchOptions) -> List[Soundtrack]:
-        pass
+        found_soundtracks_with_likes: List[SoundtracksWithLikes] = []
 
+        query = db.select([self.__soundtrack]).where(
+            self.__soundtrack.columns.book == search_options['book'].value)
+        resultProxy = self.__db_connection.execute(query)
+        resultSet = resultProxy.fetchall()
+
+        if not resultSet:
+            return []
+
+        for soundtrack in self.__get_soundtracks_list_from_result(resultSet):
+            found_soundtracks_with_likes.append({"soundtrack": soundtrack, "likes": len(self.get_likes(soundtrack.soundtrack_id))})
+
+        found_soundtracks_with_likes = sorted(found_soundtracks_with_likes, key=lambda d: d['likes'], reverse=True)
+        return [soundtrack_with_likes["soundtrack"] for soundtrack_with_likes in found_soundtracks_with_likes]
+        
 
     def update(self, soundtrack_to_update: Soundtrack):
         query = db.update(self.__soundtrack).values(

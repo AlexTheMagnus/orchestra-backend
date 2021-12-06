@@ -25,7 +25,7 @@ class TestSearchSoundtracks():
         liked_soundtrack = SoundtrackBuilder().with_book(isbn13).build()
         soundtrack_repository.save(liked_soundtrack)
         user_id = UserId.from_string(str(uuid.uuid4()))
-        soundtrack_repository.save_like(user_id, most_liked_soundtrack.soundtrack_id)
+        soundtrack_repository.save_like(user_id, liked_soundtrack.soundtrack_id)
 
         no_liked_soundtrack = SoundtrackBuilder().with_book(isbn13).build()
         soundtrack_repository.save(no_liked_soundtrack)

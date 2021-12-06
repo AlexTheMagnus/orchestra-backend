@@ -27,6 +27,9 @@ from .soundtrack_mysql_repository import SoundtrackMysqlRepository
 from .validators.soundtracks_like_post_validator import SoundtracksLikePostValidator
 from .validators.soundtracks_post_validator import SoundtracksPostValidator
 from .validators.soundtracks_put_validator import SoundtracksPutValidator
+from .validators.soundtracks_search_post_validator import SoundtracksSearchPostValidator
+from ..application.search_soundtracks import SearchSoundtracks
+from ..domain.search_options import SearchOptions
 
 soundtracks = Blueprint("soundtracks", __name__, url_prefix="/soundtracks")
 
@@ -85,6 +88,22 @@ def get_soundtrack_by_id(str_soundtrack_id: str):
             abort(500)
 
     return jsonify(FromSoundtrackToDict.with_soundtrack(soundtrack)), '200'
+
+
+@soundtracks.route('/search', methods=["POST"])
+def search_soundtracks():
+    if not SoundtracksSearchPostValidator().validate(request.json):
+        abort(400)
+
+    soundtrack_repository = SoundtrackMysqlRepository()
+    search_options: SearchOptions = {"book": Isbn13.from_string(request.json['book'])}
+
+    try:
+        search_results = SearchSoundtracks(soundtrack_repository).run(search_options)
+    except Exception as error:
+        abort(500)
+
+    return jsonify(FromSoundtrackToDict.with_soundtracks_list(search_results)), '200'
 
 
 @soundtracks.route('/update/<string:str_soundtrack_id>', methods=["PUT"])
@@ -187,3 +206,5 @@ def unlike_soundtrack(str_soundtrack_id: str, str_user_id: str):
             abort(500)
 
     return ('', 204)
+
+
