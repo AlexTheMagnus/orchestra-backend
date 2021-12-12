@@ -1,9 +1,16 @@
-from typing import List, Optional
+from typing import TypedDict, List, Optional
 
-from src.soundtrack.domain.soundtrack_repository import SoundtrackRepository
+from src.soundtrack.domain.search_options import SearchOptions
 from src.soundtrack.domain.soundtrack import Soundtrack
 from src.soundtrack.domain.soundtrack_id import SoundtrackId
+from src.soundtrack.domain.soundtrack_repository import SoundtrackRepository
 from src.soundtrack.domain.user_id import UserId
+
+
+class SoundtracksWithLikes(TypedDict):
+    soundtrack: Soundtrack
+    likes: int
+
 
 class Like:
     def __init__(self, user_id: UserId, soundtrack_id: SoundtrackId):
@@ -37,7 +44,7 @@ class SoundtrackInMemoryRepository(SoundtrackRepository):
         return None
 
 
-    def find_by_author(self, author: UserId) -> Optional[Soundtrack]:
+    def find_by_author(self, author: UserId) -> List[Soundtrack]:
         found_soundtracks: List[Soundtrack] = []
 
         for soundtrack in self.__soundtracks:
@@ -45,6 +52,19 @@ class SoundtrackInMemoryRepository(SoundtrackRepository):
                 found_soundtracks.append(soundtrack)
                 
         return found_soundtracks
+
+
+    def search(self, search_options: SearchOptions) -> List[Soundtrack]:
+        found_soundtracks_with_likes: List[SoundtracksWithLikes] = []
+
+        for soundtrack in self.__soundtracks:
+            if soundtrack.book.value == search_options["book"].value:
+                likes = sum([like.soundtrack_id.value == soundtrack.soundtrack_id.value for like in self.__likes])
+                print("likes", sum([like.soundtrack_id.value == soundtrack.soundtrack_id.value for like in self.__likes]))
+                found_soundtracks_with_likes.append({"soundtrack": soundtrack, "likes": likes})
+                
+        found_soundtracks_with_likes = sorted(found_soundtracks_with_likes, key=lambda d: d['likes'], reverse=True)
+        return [soundtrack_with_likes["soundtrack"] for soundtrack_with_likes in found_soundtracks_with_likes]
 
 
     def update(self, soundtrack_to_update: Soundtrack):
@@ -74,6 +94,4 @@ class SoundtrackInMemoryRepository(SoundtrackRepository):
 
 
     def delete_like(self, user_id: UserId, soundtrack_id: SoundtrackId):
-        print(self.__likes)
         self.__likes = [like for like in self.__likes if ((like.soundtrack_id.value != soundtrack_id.value) or (like.user_id.value != user_id.value))]
-        print(self.__likes)

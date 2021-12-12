@@ -21,11 +21,15 @@ from ..domain.soundtrack_id import SoundtrackId
 from ..domain.soundtrack_title import SoundtrackTitle
 from ..domain.user_id import UserId
 from .chapter.chapter_mysql_repository import ChapterMysqlRepository
+from .favorite_mysql_repository import FavoriteMysqlRepository
 from .from_soundtrack_to_dict import FromSoundtrackToDict
 from .soundtrack_mysql_repository import SoundtrackMysqlRepository
 from .validators.soundtracks_like_post_validator import SoundtracksLikePostValidator
 from .validators.soundtracks_post_validator import SoundtracksPostValidator
 from .validators.soundtracks_put_validator import SoundtracksPutValidator
+from .validators.soundtracks_search_post_validator import SoundtracksSearchPostValidator
+from ..application.search_soundtracks import SearchSoundtracks
+from ..domain.search_options import SearchOptions
 
 soundtracks = Blueprint("soundtracks", __name__, url_prefix="/soundtracks")
 
@@ -86,6 +90,22 @@ def get_soundtrack_by_id(str_soundtrack_id: str):
     return jsonify(FromSoundtrackToDict.with_soundtrack(soundtrack)), '200'
 
 
+@soundtracks.route('/search', methods=["POST"])
+def search_soundtracks():
+    if not SoundtracksSearchPostValidator().validate(request.json):
+        abort(400)
+
+    soundtrack_repository = SoundtrackMysqlRepository()
+    search_options: SearchOptions = {"book": Isbn13.from_string(request.json['book'])}
+
+    try:
+        search_results = SearchSoundtracks(soundtrack_repository).run(search_options)
+    except Exception as error:
+        abort(500)
+
+    return jsonify(FromSoundtrackToDict.with_soundtracks_list(search_results)), '200'
+
+
 @soundtracks.route('/update/<string:str_soundtrack_id>', methods=["PUT"])
 def update_soundtrack(str_soundtrack_id: str):
     if not SoundtracksPutValidator().validate(request.json):
@@ -119,10 +139,11 @@ def update_soundtrack(str_soundtrack_id: str):
 def delete_soundtrack(str_soundtrack_id: str):
     soundtrack_repository = SoundtrackMysqlRepository()
     chapter_repository = ChapterMysqlRepository()
+    favorite_repository = FavoriteMysqlRepository()
     soundtrack_id = SoundtrackId.from_string(str_soundtrack_id)
     
     try:
-        DeleteSoundtrack(soundtrack_repository, chapter_repository).run(soundtrack_id)
+        DeleteSoundtrack(soundtrack_repository, chapter_repository, favorite_repository).run(soundtrack_id)
     except Exception as error:
         if isinstance(error, UnexistingSoundtrackError):
             abort(404)
@@ -165,9 +186,7 @@ def get_soundtrack_likes(str_soundtrack_id: str):
     except Exception as error:
         abort(500)
 
-    likes_list_dict = { "likes_list": [] }
-    for like in likes_list:
-        likes_list_dict["likes_list"].append(like.value)
+    likes_list_dict = { "likes_list": [like.value for like in likes_list] }
 
     return jsonify(likes_list_dict), '200'
 
@@ -181,10 +200,11 @@ def unlike_soundtrack(str_soundtrack_id: str, str_user_id: str):
     try:
         UnlikeSoundtrack(soundtrack_repository).run(user_id, soundtrack_id)
     except Exception as error:
-        print(error)
         if isinstance(error, UnexistingLikeError):
             abort(404)
         else:
             abort(500)
 
     return ('', 204)
+
+

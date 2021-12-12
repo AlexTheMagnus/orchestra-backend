@@ -32,7 +32,7 @@ def teardown_module():
 #         assert response.data.username == user_post_request_params["username"]
 #         assert response.data.user_avatar == user_post_request_params["user_avatar"]
 
-class TestUserGetController():
+class TestUsersGetController():
     def test_should_return_the_user_info(self):
         user: User = UserBuilder().build()
         user_repository.save(user)

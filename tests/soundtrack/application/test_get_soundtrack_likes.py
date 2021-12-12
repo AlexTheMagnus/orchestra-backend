@@ -11,14 +11,14 @@ soundtrack_repository = SoundtrackInMemoryRepository()
 use_case = GetSoundtrackLikes(soundtrack_repository)
 
 
-class TestSoundtrackLikes():
+class TestGetSoundtrackLikes():
     def test_soundtrack_likes_are_getted(self):
         soundtrack: Soundtrack = SoundtrackBuilder().build()
         soundtrack_repository.save(soundtrack)
 
         for x in range(2):
-          user_id = UserId.from_string(str(uuid.uuid4()))
-          soundtrack_repository.save_like(user_id, soundtrack.soundtrack_id)
+            user_id = UserId.from_string(str(uuid.uuid4()))
+            soundtrack_repository.save_like(user_id, soundtrack.soundtrack_id)
 
         likes: List[UserId] = use_case.run(soundtrack.soundtrack_id)
         assert len(likes) == 2
