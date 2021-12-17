@@ -19,6 +19,8 @@ class UserMysqlRepository(UserRepository):
             "user", self.__db_metadata, autoload=True, autoload_with=self.__db_engine)
         self.__favorites = db.Table(
             "favorite", self.__db_metadata, autoload=True, autoload_with=self.__db_engine)
+        self.__follows = db.Table(
+            "follow", self.__db_metadata, autoload=True, autoload_with=self.__db_engine)
 
 
     def save(self, user: User):
@@ -58,13 +60,32 @@ class UserMysqlRepository(UserRepository):
         if not resultSet:
             return []
 
-        return self.__get_favorites_list_from_result(resultSet)
+        return self.__get_favorite_list_from_result(resultSet)
 
 
     def remove_favorite(self, user_id: UserId, soundtrack_id: SoundtrackId):
         query = db.delete(self.__favorites
         ).where(self.__favorites.columns.soundtrack_id == soundtrack_id.value and self.__favorites.columns.user_id == user_id.value)
         self.__db_connection.execute(query)        
+
+
+    def save_follow(self, follower_id: UserId, followed_id: UserId):
+        query = db.insert(self.__follows).values(
+            follower=follower_id.value, followed=followed_id.value
+        )
+        self.__db_connection.execute(query)
+
+
+    def get_followers(self, user_id: UserId) -> List[User]:
+        query = db.select([self.__follows.columns.follower]).where(
+            self.__follows.columns.followed == user_id.value)
+        resultProxy = self.__db_connection.execute(query)
+
+        followerIdsResultSet = resultProxy.fetchall()
+        if not followerIdsResultSet:
+            return []
+
+        return [self.find(UserId.from_string(followerIdResult[0])) for followerIdResult in followerIdsResultSet]
 
 
     def __get_user_from_result(self, result: tuple) -> User:
@@ -75,7 +96,7 @@ class UserMysqlRepository(UserRepository):
         )
 
 
-    def __get_favorites_list_from_result(self, resultSet: [tuple]) -> List[SoundtrackId]:
+    def __get_favorite_list_from_result(self, resultSet: [tuple]) -> List[SoundtrackId]:
         favorites_list: List[SoundtrackId] = []
 
         for result in resultSet:
@@ -86,7 +107,12 @@ class UserMysqlRepository(UserRepository):
 
 
     def clean(self):
+        query = db.delete(self.__follows)
+        self.__db_connection.execute(query)
+
         query = db.delete(self.__favorites)
         self.__db_connection.execute(query)
+
         query = db.delete(self.__users)
         self.__db_connection.execute(query)
+        

@@ -19,10 +19,25 @@ class Favorite:
         return self.__soundtrack_id
 
 
+class Follow:
+    def __init__(self, follower_id: UserId, followed_id: UserId):
+        self.__follower_id: UserId = follower_id
+        self.__followed_id: UserId = followed_id
+
+    @property
+    def follower_id(self):
+        return self.__follower_id
+
+    @property
+    def followed_id(self):
+        return self.__followed_id
+
+
 class UserInMemoryRepository(UserRepository):
     def __init__(self):
         self.__users: List[User] = []
         self.__favorites: List[Favorite] = []
+        self.__follows: List[Follow] = []
 
 
     def save(self, user: User):
@@ -54,3 +69,26 @@ class UserInMemoryRepository(UserRepository):
 
     def remove_favorite(self, user_id: UserId, soundtrack_id: SoundtrackId):
         self.__favorites = [favorite for favorite in self.__favorites if ((favorite.soundtrack_id.value != soundtrack_id.value) or (favorite.user_id.value != user_id.value))]
+
+
+    def save_follow(self, follower_id: UserId, followed_id: UserId):
+        follow = Follow(follower_id, followed_id)
+        self.__follows.append(follow)
+
+
+    def get_followers(self, user_id: UserId) -> List[User]:
+        found_follower_ids: List[UserId] = []
+        found_followers: List[User] = []
+
+
+
+        for follow in self.__follows:
+            if follow.followed_id.value == user_id.value:
+                found_follower_ids.append(follow.follower_id)
+                
+        for follower_id in found_follower_ids:
+            for user in self.__users:
+                if user.user_id.value == follower_id.value:
+                    found_followers.append(user)
+
+        return found_followers

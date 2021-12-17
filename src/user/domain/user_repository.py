@@ -26,3 +26,11 @@ class UserRepository(ABC):
     @abstractmethod
     def remove_favorite(self, user_id: UserId, soundtrack_id: SoundtrackId):
         pass
+
+    @abstractmethod
+    def save_follow(self, follower_id: UserId, followed_id: UserId):
+        pass
+
+    @abstractmethod
+    def get_followers(self, user_id: UserId) -> List[User]:
+        pass

@@ -29,7 +29,7 @@ def create_follow_table():
     db.Table('follow', metadata,
              db.Column('follower', db.String(36), db.ForeignKey("user.user_id"), 
                        nullable=False, primary_key=True),
-             db.Column('following', db.String(36), db.ForeignKey("user.user_id"), 
+             db.Column('followed', db.String(36), db.ForeignKey("user.user_id"), 
                        nullable=False, primary_key=True)
              )
 

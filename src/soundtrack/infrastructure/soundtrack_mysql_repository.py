@@ -60,7 +60,7 @@ class SoundtrackMysqlRepository(SoundtrackRepository):
         if not resultSet:
             return []
 
-        return self.__get_soundtracks_list_from_result(resultSet)
+        return self.__get_soundtrack_list_from_result(resultSet)
 
 
     def search(self, search_options: SearchOptions) -> List[Soundtrack]:
@@ -74,7 +74,7 @@ class SoundtrackMysqlRepository(SoundtrackRepository):
         if not resultSet:
             return []
 
-        for soundtrack in self.__get_soundtracks_list_from_result(resultSet):
+        for soundtrack in self.__get_soundtrack_list_from_result(resultSet):
             found_soundtracks_with_likes.append({"soundtrack": soundtrack, "likes": len(self.get_likes(soundtrack.soundtrack_id))})
 
         found_soundtracks_with_likes = sorted(found_soundtracks_with_likes, key=lambda d: d['likes'], reverse=True)
@@ -115,7 +115,7 @@ class SoundtrackMysqlRepository(SoundtrackRepository):
         if not resultSet:
             return []
 
-        return self.__get_likes_list_from_result(resultSet)
+        return self.__get_like_list_from_result(resultSet)
 
 
     def delete_like(self, user_id: UserId, soundtrack_id: SoundtrackId):
@@ -141,21 +141,21 @@ class SoundtrackMysqlRepository(SoundtrackRepository):
         )
 
 
-    def __get_soundtracks_list_from_result(self, resultSet: [tuple]) -> List[Soundtrack]:
-        soundtracks_list: List[Soundtrack] = []
+    def __get_soundtrack_list_from_result(self, resultSet: [tuple]) -> List[Soundtrack]:
+        soundtrack_list: List[Soundtrack] = []
 
         for result in resultSet:
             soundtrack = self.__get_soundtrack_from_result(result)
-            soundtracks_list.append(soundtrack)
+            soundtrack_list.append(soundtrack)
 
-        return soundtracks_list
+        return soundtrack_list
 
     
-    def __get_likes_list_from_result(self, resultSet: [tuple]) -> List[UserId]:
-        likes_list: List[UserId] = []
+    def __get_like_list_from_result(self, resultSet: [tuple]) -> List[UserId]:
+        like_list: List[UserId] = []
 
         for result in resultSet:
             like = UserId.from_string(result[0])
-            likes_list.append(like)
+            like_list.append(like)
 
-        return likes_list
+        return like_list

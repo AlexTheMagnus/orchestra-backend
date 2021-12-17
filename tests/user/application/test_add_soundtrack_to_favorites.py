@@ -1,17 +1,17 @@
 import pytest
 import uuid
 
-from ..builder.user_builder import UserBuilder
 from ...soundtrack.builder.soundtrack_builder import SoundtrackBuilder
-from ..infrastructure.user_in_memory_repository import UserInMemoryRepository
 from ...soundtrack.infrastructure.soundtrack_in_memory_repository import SoundtrackInMemoryRepository
+from ..builder.user_builder import UserBuilder
+from ..infrastructure.soundtrack_in_memory_reporter import SoundtrackInMemoryReporter
+from ..infrastructure.user_in_memory_repository import UserInMemoryRepository
 from src.user.application.add_soundtrack_to_favorites import AddSoundtrackToFavorites
 from src.user.domain.exceptions.soundtrack_already_added_to_favorites_error import SoundtrackAlreadyAddedToFavoritesError
-from src.user.domain.exceptions.unexisting_user_error import UnexistingUserError
 from src.user.domain.exceptions.unexisting_soundtrack_error import UnexistingSoundtrackError
-from src.user.domain.user_id import UserId
+from src.user.domain.exceptions.unexisting_user_error import UnexistingUserError
 from src.user.domain.soundtrack_id import SoundtrackId
-from ..infrastructure.soundtrack_in_memory_reporter import SoundtrackInMemoryReporter
+from src.user.domain.user_id import UserId
 
 user_repository = UserInMemoryRepository()
 soundtrack_repository = SoundtrackInMemoryRepository()

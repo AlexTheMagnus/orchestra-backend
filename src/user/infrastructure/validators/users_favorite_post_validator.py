@@ -9,5 +9,5 @@ class UsersFavoritePostValidator:
         }
         self.__validator = Validator()
 
-    def validate(self, soundtrack: dict):
-        return self.__validator.validate(soundtrack, self.__schema)
+    def validate(self, favorite: dict):
+        return self.__validator.validate(favorite, self.__schema)

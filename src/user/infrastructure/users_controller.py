@@ -4,6 +4,7 @@ import os
 import spotipy
 
 from ..application.add_soundtrack_to_favorites import AddSoundtrackToFavorites
+from ..application.follow_user import FollowUser
 from ..application.get_user_favorites import GetUserFavorites
 from ..application.get_user_info import GetUserInfo
 from ..application.register_user import RegisterUser
@@ -13,6 +14,7 @@ from ..domain.exceptions.soundtrack_already_added_to_favorites_error import Soun
 from ..domain.exceptions.unexisting_favorite_error import UnexistingFavoriteError
 from ..domain.exceptions.unexisting_soundtrack_error import UnexistingSoundtrackError
 from ..domain.exceptions.unexisting_user_error import UnexistingUserError
+from ..domain.exceptions.user_already_followed_error import UserAlreadyFollowedError
 from ..domain.soundtrack_id import SoundtrackId
 from ..domain.user import User
 from ..domain.user_avatar import UserAvatar
@@ -22,6 +24,7 @@ from .from_user_to_dict import FromUserToDict
 from .soundtrack_mysql_reporter import SoundtrackMysqlReporter
 from .user_mysql_repository import UserMysqlRepository
 from .validators.users_favorite_post_validator import UsersFavoritePostValidator
+from .validators.users_follow_post_validator import UsersFollowPostValidator
 from .validators.users_post_validator import UsersPostValidator
 
 users = Blueprint("users", __name__, url_prefix="/users")
@@ -131,3 +134,27 @@ def remove_soundtrack_from_favorites(str_user_id: str, str_soundtrack_id: str):
             abort(500)
 
     return ('', 204)
+
+
+@users.route('/follow', methods=["POST"])
+def follow_user():
+    user_repository = UserMysqlRepository()
+
+    if not UsersFollowPostValidator().validate(request.json):
+        abort(400)
+    
+    follower_id = UserId.from_string(request.json['follower_id'])
+    followed_id = UserId.from_string(request.json['followed_id'])
+
+    try:
+        FollowUser(user_repository).run(follower_id, followed_id)
+    except Exception as error:
+        if isinstance(error, UnexistingUserError):
+            abort(404)
+        if isinstance(error, UserAlreadyFollowedError):
+            abort(409)
+        else:
+            print(error)
+            abort(500)
+
+    return '200'
