@@ -1,3 +1,5 @@
+from typing import List
+
 from ..domain.user import User
 
 
@@ -15,3 +17,8 @@ class FromUserToDict:
         }
 
         return user_dict
+
+    
+    @staticmethod
+    def with_user_list(user_list: List[User]):
+        return [FromUserToDict.with_user(user) for user in user_list]

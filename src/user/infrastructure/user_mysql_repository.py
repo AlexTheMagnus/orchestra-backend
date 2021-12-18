@@ -88,6 +88,18 @@ class UserMysqlRepository(UserRepository):
         return [self.find(UserId.from_string(followerIdResult[0])) for followerIdResult in followerIdsResultSet]
 
 
+    def get_followed_users(self, user_id: UserId) -> List[User]:
+        query = db.select([self.__follows.columns.followed]).where(
+            self.__follows.columns.follower == user_id.value)
+        resultProxy = self.__db_connection.execute(query)
+
+        followedUserIdsResultSet = resultProxy.fetchall()
+        if not followedUserIdsResultSet:
+            return []
+
+        return [self.find(UserId.from_string(followedUserIdResult[0])) for followedUserIdResult in followedUserIdsResultSet]
+
+
     def __get_user_from_result(self, result: tuple) -> User:
         return User(
             user_id=UserId.from_string(result[0]),

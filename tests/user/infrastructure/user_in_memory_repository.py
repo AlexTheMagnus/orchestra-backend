@@ -80,8 +80,6 @@ class UserInMemoryRepository(UserRepository):
         found_follower_ids: List[UserId] = []
         found_followers: List[User] = []
 
-
-
         for follow in self.__follows:
             if follow.followed_id.value == user_id.value:
                 found_follower_ids.append(follow.follower_id)
@@ -92,3 +90,19 @@ class UserInMemoryRepository(UserRepository):
                     found_followers.append(user)
 
         return found_followers
+
+
+    def get_followed_users(self, user_id: UserId) -> List[User]:
+        found_followed_user_ids: List[UserId] = []
+        found_followed_users: List[User] = []
+
+        for follow in self.__follows:
+            if follow.follower_id.value == user_id.value:
+                found_followed_user_ids.append(follow.followed_id)
+                
+        for followed_user_id in found_followed_user_ids:
+            for user in self.__users:
+                if user.user_id.value == followed_user_id.value:
+                    found_followed_users.append(user)
+
+        return found_followed_users

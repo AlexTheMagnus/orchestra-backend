@@ -44,7 +44,7 @@ class TestGetUserFavorites():
         favorite_soundtracks: List[SoundtrackId] = use_case.run(user.user_id)
         assert len(favorite_soundtracks) == 0
 
-    def test_unexisting_user_returns_no_likes(self):
+    def test_unexisting_user_returns_no_favorites(self):
         user: User = UserBuilder().build()
 
         favorite_soundtracks: List[SoundtrackId] = use_case.run(user.user_id)

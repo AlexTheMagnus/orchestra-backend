@@ -1,3 +1,4 @@
+from faker import Faker
 from typing import List
 import json
 
@@ -5,7 +6,9 @@ from ..builder.user_builder import UserBuilder
 from orchestra import app
 from src.user.domain.user import User
 from src.user.infrastructure.user_mysql_repository import UserMysqlRepository
+from src.user.infrastructure.from_user_to_dict import FromUserToDict
 
+fake = Faker()
 user_repository = UserMysqlRepository()
 
 def teardown_module():
@@ -95,3 +98,55 @@ class TestUsersFollowPostController():
         )
 
         assert response.status_code == 409
+
+
+class TestUsersFollowGetController():
+
+    def test_should_return_the_followers(self):
+        user = UserBuilder().build()
+        user_repository.save(user)
+        follower_list: List[User] = []
+
+        for x in range(fake.random_number(1)):
+            follower: User = UserBuilder().build()
+            user_repository.save(follower)
+            user_repository.save_follow(follower.user_id, user.user_id)
+            follower_list.append(follower)
+
+        response = app.test_client().get(
+            '/users/{0}/followers'.format(user.user_id.value),
+            content_type='application/json'
+        )
+
+        assert response.status_code == 200
+        data = json.loads(response.get_data(as_text=True))
+        assert len(data["followers"]) == len(follower_list)
+
+        dict_follower_list = FromUserToDict.with_user_list(follower_list)
+        for follower in data["followers"]:
+            assert follower in dict_follower_list
+
+
+    def test_should_return_the_followed_users(self):
+        user = UserBuilder().build()
+        user_repository.save(user)
+        followed_user_list: List[User] = []
+
+        for x in range(fake.random_number(1)):
+            followed_user: User = UserBuilder().build()
+            user_repository.save(followed_user)
+            user_repository.save_follow(user.user_id, followed_user.user_id)
+            followed_user_list.append(followed_user)
+
+        response = app.test_client().get(
+            '/users/{0}/followed-users'.format(user.user_id.value),
+            content_type='application/json'
+        )
+
+        assert response.status_code == 200
+        data = json.loads(response.get_data(as_text=True))
+        assert len(data["followed_users"]) == len(followed_user_list)
+
+        dict_followed_user_list = FromUserToDict.with_user_list(followed_user_list)
+        for follower in data["followed_users"]:
+            assert follower in dict_followed_user_list

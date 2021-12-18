@@ -5,6 +5,8 @@ import spotipy
 
 from ..application.add_soundtrack_to_favorites import AddSoundtrackToFavorites
 from ..application.follow_user import FollowUser
+from ..application.get_followed_users import GetFollowedUsers
+from ..application.get_followers import GetFollowers
 from ..application.get_user_favorites import GetUserFavorites
 from ..application.get_user_info import GetUserInfo
 from ..application.register_user import RegisterUser
@@ -154,7 +156,42 @@ def follow_user():
         if isinstance(error, UserAlreadyFollowedError):
             abort(409)
         else:
-            print(error)
             abort(500)
 
     return '200'
+
+
+@users.route('/<string:str_user_id>/followers', methods=["GET"])
+def get_followers(str_user_id: str):
+    user_repository = UserMysqlRepository()
+
+    user_id = UserId.from_string(str_user_id)
+
+    try:
+        follower_list = GetFollowers(user_repository).run(user_id)
+    except Exception as error:
+        abort(500)
+
+    follower_list_dict = { 
+        "followers": FromUserToDict.with_user_list(follower_list)
+    }
+
+    return jsonify(follower_list_dict), '200'
+
+
+@users.route('/<string:str_user_id>/followed-users', methods=["GET"])
+def get_followed_users(str_user_id: str):
+    user_repository = UserMysqlRepository()
+
+    user_id = UserId.from_string(str_user_id)
+
+    try:
+        followed_user_list = GetFollowedUsers(user_repository).run(user_id)
+    except Exception as error:
+        abort(500)
+
+    followed_user_list_dict = { 
+        "followed_users": FromUserToDict.with_user_list(followed_user_list)
+    }
+
+    return jsonify(followed_user_list_dict), '200'
