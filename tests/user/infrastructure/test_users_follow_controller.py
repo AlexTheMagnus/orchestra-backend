@@ -5,8 +5,8 @@ import json
 from ..builder.user_builder import UserBuilder
 from orchestra import app
 from src.user.domain.user import User
-from src.user.infrastructure.user_mysql_repository import UserMysqlRepository
 from src.user.infrastructure.from_user_to_dict import FromUserToDict
+from src.user.infrastructure.user_mysql_repository import UserMysqlRepository
 
 fake = Faker()
 user_repository = UserMysqlRepository()
@@ -150,3 +150,36 @@ class TestUsersFollowGetController():
         dict_followed_user_list = FromUserToDict.with_user_list(followed_user_list)
         for follower in data["followed_users"]:
             assert follower in dict_followed_user_list
+
+
+class TestUsersFollowDeleteController():
+    def test_should_unfollow_a_user(self):
+        follower: User = UserBuilder().build()
+        user_repository.save(follower)
+        followed_user: User = UserBuilder().build()
+        user_repository.save(followed_user)
+        user_repository.save_follow(follower.user_id, followed_user.user_id)
+
+        response = app.test_client().delete(
+            '/users/{0}/unfollow/{1}'.format(follower.user_id.value, followed_user.user_id.value),
+            content_type='application/json'
+        )
+
+        assert response.status_code == 204
+
+        found_follows: List[SoundtrackId] = user_repository.get_followed_users(follower.user_id)
+        assert found_follows == []
+
+
+    def test_should_return_404_when_unfollowing_a_non_followed_user(self):
+        follower: User = UserBuilder().build()
+        user_repository.save(follower)
+        followed_user: User = UserBuilder().build()
+        user_repository.save(followed_user)
+
+        response = app.test_client().delete(
+            '/users/{0}/unfollow/{1}'.format(follower.user_id.value, followed_user.user_id.value),
+            content_type='application/json'
+        )
+
+        assert response.status_code == 404

@@ -11,9 +11,11 @@ from ..application.get_user_favorites import GetUserFavorites
 from ..application.get_user_info import GetUserInfo
 from ..application.register_user import RegisterUser
 from ..application.remove_soundtrack_from_favorites import RemoveSoundtrackFromFavorites
+from ..application.unfollow_user import UnfollowUser
 from ..domain.exceptions.already_existing_user_error import AlreadyExistingUserError
 from ..domain.exceptions.soundtrack_already_added_to_favorites_error import SoundtrackAlreadyAddedToFavoritesError
 from ..domain.exceptions.unexisting_favorite_error import UnexistingFavoriteError
+from ..domain.exceptions.unexisting_follow_error import UnexistingFollowError
 from ..domain.exceptions.unexisting_soundtrack_error import UnexistingSoundtrackError
 from ..domain.exceptions.unexisting_user_error import UnexistingUserError
 from ..domain.exceptions.user_already_followed_error import UserAlreadyFollowedError
@@ -195,3 +197,21 @@ def get_followed_users(str_user_id: str):
     }
 
     return jsonify(followed_user_list_dict), '200'
+
+
+@users.route('/<string:str_follower_id>/unfollow/<string:str_followed_user_id>', methods=["DELETE"])
+def unfollow_user(str_follower_id: str, str_followed_user_id: str):
+    user_repository = UserMysqlRepository()
+    follower_id = UserId.from_string(str_follower_id)
+    followed_user_id = UserId.from_string(str_followed_user_id)
+    
+    try:
+        UnfollowUser(user_repository).run(follower_id, followed_user_id)
+    except Exception as error:
+        print(error)
+        if isinstance(error, UnexistingFollowError):
+            abort(404)
+        else:
+            abort(500)
+
+    return ('', 204)

@@ -100,6 +100,12 @@ class UserMysqlRepository(UserRepository):
         return [self.find(UserId.from_string(followedUserIdResult[0])) for followedUserIdResult in followedUserIdsResultSet]
 
 
+    def unfollow_user(self, follower_id: UserId, followed_id: UserId):
+        query = db.delete(self.__follows
+        ).where(self.__follows.columns.follower == follower_id.value and self.__follows.columns.followed == followed_id.value)
+        self.__db_connection.execute(query)
+
+
     def __get_user_from_result(self, result: tuple) -> User:
         return User(
             user_id=UserId.from_string(result[0]),

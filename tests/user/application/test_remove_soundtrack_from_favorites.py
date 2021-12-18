@@ -1,7 +1,6 @@
 import pytest
 import uuid
 
-from ...soundtrack.builder import soundtrack_builder
 from ...soundtrack.builder.soundtrack_builder import SoundtrackBuilder
 from ...soundtrack.infrastructure.soundtrack_in_memory_repository import SoundtrackInMemoryRepository
 from ..builder.user_builder import UserBuilder
@@ -17,6 +16,7 @@ soundtrack_repository = SoundtrackInMemoryRepository()
 use_case: RemoveSoundtrackFromFavorites = RemoveSoundtrackFromFavorites(user_repository)
 
 class TestRemoveSoundtrackFromFavorites():
+
     def test_soundtrack_is_removed_from_favorites(self):
         user = UserBuilder().build()
         user_repository.save(user)
@@ -31,7 +31,8 @@ class TestRemoveSoundtrackFromFavorites():
 
         saved_favorites: List[SoundtrackId] = user_repository.get_favorites(user.user_id)
         assert len(saved_favorites) == 1
-        assert saved_favorites[0].value ==soundtrack_to_be_kept.soundtrack_id.value
+        assert saved_favorites[0].value == soundtrack_to_be_kept.soundtrack_id.value
+
 
     def test_removing_an_unexisting_favorite_raises_an_error(self):
         user_id = UserId.from_string(str(uuid.uuid4()))

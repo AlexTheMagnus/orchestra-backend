@@ -106,3 +106,7 @@ class UserInMemoryRepository(UserRepository):
                     found_followed_users.append(user)
 
         return found_followed_users
+
+
+    def unfollow_user(self, follower_id: UserId, followed_id: UserId):
+        self.__follows = [follow for follow in self.__follows if ((follow.follower_id.value != follower_id.value) or (follow.followed_id.value != followed_id.value))]

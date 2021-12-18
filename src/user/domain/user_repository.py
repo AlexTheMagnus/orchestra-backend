@@ -38,3 +38,7 @@ class UserRepository(ABC):
     @abstractmethod
     def get_followed_users(self, user_id: UserId) -> List[User]:
         pass
+
+    @abstractmethod
+    def unfollow_user(self, follower_id: UserId, followed_id: UserId):
+        pass

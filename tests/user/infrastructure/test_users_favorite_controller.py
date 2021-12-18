@@ -131,6 +131,7 @@ class TestUsersFavoriteGetController():
 
 
 class TestUsersFavoriteDeleteController():
+    
     def test_should_remove_from_favorites_a_soundtrack(self):
         user: User = UserBuilder().build()
         user_repository.save(user)
@@ -147,6 +148,7 @@ class TestUsersFavoriteDeleteController():
 
         saved_favorites: List[SoundtrackId] = user_repository.get_favorites(user.user_id)
         assert saved_favorites == []
+
 
     def test_should_return_404_when_removing_from_favorites_an_unexisting_favorite(self):
         user_id = UserId.from_string(str(uuid.uuid4()))
