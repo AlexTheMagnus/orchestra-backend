@@ -17,6 +17,10 @@ class DeleteSoundtrack():
     def run(self, soundtrack_id: SoundtrackId):
         self.__favorite_repository.delete_all_with_soundtrack(soundtrack_id)
 
+        soundtrack_likes: List[UserId] = self.__soundtrack_repository.get_likes(soundtrack_id)
+        for user_id in soundtrack_likes:
+            self.__soundtrack_repository.delete_like(user_id, soundtrack_id)
+
         soundtrack_chapters: List[Chapter] = self.__chapter_repository.find_by_soundtrack(soundtrack_id)
         for chapter in soundtrack_chapters:
             self.__chapter_repository.delete(chapter.chapter_id)
