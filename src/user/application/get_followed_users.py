@@ -6,7 +6,5 @@ class GetFollowedUsers():
         self.__user_repository = user_repository
 
     def run(self, user_id: UserId):
-        thing = self.__user_repository.get_followed_users(user_id)
-        print("thing", thing)
-        return thing
+        return self.__user_repository.get_followed_users(user_id)
         

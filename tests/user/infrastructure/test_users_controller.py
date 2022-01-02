@@ -17,7 +17,7 @@ def teardown_module():
 # class TestUsersPostController():
 #     def test_should_grant_access_and_save_a_user_with_the_passed_parameters(self):
 #         user_id: UserId = UserId.from_string(fake.pystr())
-#         user_post_request_params = get_user_post_request_params_with_id(user_id)
+#         user_post_request_params = {'access_code': 'BsdsdsdsdPdGueqr-FYTGgAxBSM4kyjVlgnjENJ6z2rCcBX5yWbAOY3VNcYyMoY_KLEzptyZtx-zRnClNvmLgt2BBCFc9EqVYX3sENBBAcuVHjlmgTM8ASnVC62F19gvcHvb-L_zRvHg3y2MRCqZlNEYhYnNiDJSFv7JPPF4eLfXaQmiOQNoy12cc5UVJSpUiQssSA'}
 
 #         response = app.test_client().post(
 #             '/users',
@@ -27,10 +27,11 @@ def teardown_module():
 
 #         found_user = user_repository.find(user_id)
 #         assert response.status_code == 200
-#         assert response.data.access_token != None
-#         assert response.data.user_id == user_post_request_params["user_id"]
-#         assert response.data.username == user_post_request_params["username"]
-#         assert response.data.user_avatar == user_post_request_params["user_avatar"]
+#         data = json.loads(response.get_data(as_text=True))
+#         assert data["access_token"] != None
+#         assert data["user_id"] != None
+#         assert data["username"] != None
+#         assert data["user_avatar"] != None
 
 class TestUsersGetController():
     def test_should_return_the_user_info(self):

@@ -16,5 +16,7 @@ class UserAvatar():
         return self.__value
 
     def __validate_url_format(self, user_avatar_url: str):
-        if not user_avatar_url.startswith("https://") and not user_avatar_url.startswith("http://"):
-            raise(NotAValidUrlError(user_avatar_url))
+        if not user_avatar_url.startswith("https://") and \
+            not user_avatar_url.startswith("http://") and \
+            not user_avatar_url == "":
+                raise(NotAValidUrlError(user_avatar_url))

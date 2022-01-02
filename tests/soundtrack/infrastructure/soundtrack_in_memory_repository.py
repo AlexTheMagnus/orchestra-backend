@@ -60,7 +60,6 @@ class SoundtrackInMemoryRepository(SoundtrackRepository):
         for soundtrack in self.__soundtracks:
             if soundtrack.book.value == search_options["book"].value:
                 likes = sum([like.soundtrack_id.value == soundtrack.soundtrack_id.value for like in self.__likes])
-                print("likes", sum([like.soundtrack_id.value == soundtrack.soundtrack_id.value for like in self.__likes]))
                 found_soundtracks_with_likes.append({"soundtrack": soundtrack, "likes": likes})
                 
         found_soundtracks_with_likes = sorted(found_soundtracks_with_likes, key=lambda d: d['likes'], reverse=True)

@@ -37,19 +37,19 @@ users = Blueprint("users", __name__, url_prefix="/users")
 @users.route('', methods=["POST"])
 def user_access():
     user_repository = UserMysqlRepository()
-    spotify_oauth = oauth2.SpotifyOAuth( os.getenv('CLIENT_ID'), os.getenv('CLIENT_SECRET'), os.getenv('SPOTIPY_REDIRECT_URI'))
+    spotify_oauth = oauth2.SpotifyOAuth(os.getenv('CLIENT_ID'), os.getenv('CLIENT_SECRET'), os.getenv('SPOTIPY_REDIRECT_URI'))
 
     if not UsersPostValidator().validate(request.json):
         abort(400)
 
-    token_info = spotify_oauth.get_access_token(request.json['access_code'])
+    token_info = spotify_oauth.get_access_token(code=request.json['access_code'])
     access_token = token_info['access_token']
     spotipy_client = client.Spotify(auth=access_token)
     spotify_user = spotipy_client.me()
 
     user_id = UserId.from_string(spotify_user['id'])
     username = Username.from_string(spotify_user['display_name'])
-    user_avatar = UserId.from_string(spotify_user['images'][0]['url'])
+    user_avatar = UserAvatar.from_url(spotify_user['images'][0]['url'] if len(spotify_user['images']) >= 1 else "")
     user = User(user_id, username, user_avatar)
 
     if(user_repository.find(user_id) == None):
@@ -63,7 +63,7 @@ def user_access():
 
     dictResponse = FromUserToDict.with_user(user)
     dictResponse['access_token'] = access_token
-    
+
     return jsonify(dictResponse), '200'
 
 
@@ -208,7 +208,6 @@ def unfollow_user(str_follower_id: str, str_followed_user_id: str):
     try:
         UnfollowUser(user_repository).run(follower_id, followed_user_id)
     except Exception as error:
-        print(error)
         if isinstance(error, UnexistingFollowError):
             abort(404)
         else:
