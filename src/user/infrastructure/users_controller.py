@@ -33,14 +33,16 @@ from .validators.users_post_validator import UsersPostValidator
 
 users = Blueprint("users", __name__, url_prefix="/users")
 
-
 @users.route('', methods=["POST"])
 def user_access():
-    user_repository = UserMysqlRepository()
-    spotify_oauth = oauth2.SpotifyOAuth(os.getenv('CLIENT_ID'), os.getenv('CLIENT_SECRET'), os.getenv('SPOTIPY_REDIRECT_URI'))
-
     if not UsersPostValidator().validate(request.json):
         abort(400)
+
+    user_repository = UserMysqlRepository()
+    spotify_oauth = oauth2.SpotifyOAuth(
+        client_id=os.getenv('CLIENT_ID'), client_secret=os.getenv('CLIENT_SECRET'),
+        redirect_uri=os.getenv('SPOTIPY_REDIRECT_URI')
+    )
 
     token_info = spotify_oauth.get_access_token(code=request.json['access_code'])
     access_token = token_info['access_token']
@@ -64,8 +66,12 @@ def user_access():
     dictResponse = FromUserToDict.with_user(user)
     dictResponse['access_token'] = access_token
 
+    cleanCache()
+
     return jsonify(dictResponse), '200'
 
+def cleanCache():
+    os.remove('.cache')
 
 @users.route('/<string:str_user_id>', methods=["GET"])
 def get_user_info(str_user_id: str):
