@@ -1,6 +1,7 @@
 from flask import Blueprint, abort, jsonify, request
 
 from ...application.chapter.add_chapter import AddChapter
+from ...application.chapter.delete_chapter import DeleteChapter
 from ...application.chapter.get_soundtrack_chapters import GetSoundtrackChapters
 from ...application.chapter.update_chapter import UpdateChapter
 from ...domain.chapter.chapter import Chapter
@@ -89,10 +90,25 @@ def update_chapter(str_chapter_id: str):
         UpdateChapter(chapter_repository).run(chapter_id,
             {'chapter_number': chapter_number,  'theme': theme, 'chapter_title': chapter_title})
     except Exception as error:
-        print(error)
         if isinstance(error, UnexistingChapterError):
             abort(404)
         else:
             abort(500)
 
     return '200'
+
+
+@chapters.route('/delete/<string:str_chapter_id>', methods=["DELETE"])
+def delete_soundtrack(str_chapter_id: str):
+    chapter_repository = ChapterMysqlRepository()
+    chapter_id = ChapterId.from_string(str_chapter_id)
+    
+    try:
+        DeleteChapter(chapter_repository).run(chapter_id)
+    except Exception as error:
+        if isinstance(error, UnexistingChapterError):
+            abort(404)
+        else:
+            abort(500)
+
+    return ('', 204)

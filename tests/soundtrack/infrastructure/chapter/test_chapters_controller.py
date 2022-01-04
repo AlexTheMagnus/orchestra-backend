@@ -219,3 +219,35 @@ def get_chapters_put_request_params():
         "theme": fake.pystr(),
         "chapter_title": fake.pystr()
     }
+
+
+class TestChaptersDeleteController():
+    def test_should_delete_a_chapter_by_id(self):
+            soundtrack = SoundtrackBuilder().build()
+            soundtrack_repository.save(soundtrack)
+            chapter_to_be_deleted = ChapterBuilder().with_soundtrack_id(soundtrack.soundtrack_id).build()
+            chapter_repository.save(chapter_to_be_deleted)
+            chapter_to_be_kept = ChapterBuilder().with_soundtrack_id(soundtrack.soundtrack_id).build()
+            chapter_repository.save(chapter_to_be_kept)
+
+            response = app.test_client().delete(
+                '/chapters/delete/{0}'.format(chapter_to_be_deleted.chapter_id.value),
+                content_type='application/json'
+            )
+            
+            assert response.status_code == 204
+
+            saved_chapter_to_be_deleted = chapter_repository.find(chapter_to_be_deleted.chapter_id)
+            assert saved_chapter_to_be_deleted == None
+            saved_chapter_to_be_kept = chapter_repository.find(chapter_to_be_kept.chapter_id)
+            assert saved_chapter_to_be_kept != None
+
+    def test_should_return_404_when_deleting_an_unexisting_chapter(self):
+            non_existing_chapter_id = ChapterId.from_string(str(uuid.uuid4()))
+
+            response = app.test_client().delete(
+                '/chapters/delete/{0}'.format(non_existing_chapter_id.value),
+                content_type='application/json'
+            )
+            
+            assert response.status_code == 404

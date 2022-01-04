@@ -27,7 +27,7 @@ class TestDeleteSoundtrackById():
         assert found_soundtrack == None
 
     def test_unexisting_soundtrack_id_raises_an_error(self):
-        unregistered_soundtrack_id: SoundtrackId = SoundtrackId(str(uuid.uuid4()))
+        unregistered_soundtrack_id: SoundtrackId = SoundtrackId.from_string(str(uuid.uuid4()))
 
         with pytest.raises(UnexistingSoundtrackError):
             use_case.run(unregistered_soundtrack_id)
