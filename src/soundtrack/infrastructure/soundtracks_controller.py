@@ -113,6 +113,7 @@ def update_soundtrack(str_soundtrack_id: str):
 
     soundtrack_repository = SoundtrackMysqlRepository()
     soundtrack_id = SoundtrackId.from_string(str_soundtrack_id)
+    
     if ('book' in request.json):
         book = Isbn13.from_string(request.json['book'])
     else:

@@ -57,6 +57,18 @@ class ChapterMysqlRepository(ChapterRepository):
         return self.__getChaptersListFromResult(resultSet)
 
 
+    def update(self, chapter_to_update: Chapter):
+        query = db.update(self.__chapter).values(
+            chapter_id=chapter_to_update.chapter_id.value,
+            soundtrack_id=chapter_to_update.soundtrack_id.value,
+            chapter_number=chapter_to_update.chapter_number.value,
+            theme=chapter_to_update.theme.value,
+            chapter_title=chapter_to_update.chapter_title.value
+        ).where(self.__chapter.columns.chapter_id == chapter_to_update.chapter_id.value)
+
+        self.__db_connection.execute(query)
+
+
     def delete(self, chapter_id: ChapterId):
         query = db.delete(self.__chapter
         ).where(self.__chapter.columns.chapter_id == chapter_id.value)

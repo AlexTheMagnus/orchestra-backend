@@ -60,7 +60,6 @@ class TestSoundtracksPostController():
 
         assert response.status_code == 409
 
-
 def get_soundtracks_post_request_params_with_id(soundtrack_id: str):
     return {
         "soundtrack_id": soundtrack_id,
@@ -119,7 +118,7 @@ class TestSoundtracksPutController():
     def test_should_update_a_soundtrack_with_the_passed_parameters(self):
             soundtrack: Soundtrack = SoundtrackBuilder().build()
             soundtrack_repository.save(soundtrack)
-            soundtracks_put_request_params = get_soundtracks_put_request_params_with_id()
+            soundtracks_put_request_params = get_soundtracks_put_request_params()
 
             response = app.test_client().put(
                 '/soundtracks/update/{0}'.format(soundtrack.soundtrack_id.value),
@@ -177,7 +176,7 @@ class TestSoundtracksPutController():
 
     def test_should_return_404_when_updating_an_unexisting_soundtrack(self):
         non_existing_soundtrack_id = SoundtrackId.from_string(str(uuid.uuid4()))
-        soundtracks_put_request_params = get_soundtracks_put_request_params_with_id()
+        soundtracks_put_request_params = get_soundtracks_put_request_params()
 
         response = app.test_client().put(
             '/soundtracks/update/{0}'.format(non_existing_soundtrack_id.value),
@@ -187,7 +186,7 @@ class TestSoundtracksPutController():
 
         assert response.status_code == 404
 
-def get_soundtracks_put_request_params_with_id():
+def get_soundtracks_put_request_params():
     return {
         "book": "0-6103-1972-8",
         "soundtrack_title": fake.pystr()

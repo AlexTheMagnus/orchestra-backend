@@ -14,7 +14,8 @@ chapter_repository = ChapterMysqlRepository()
 soundtrack_repository = SoundtrackMysqlRepository()
 
 def teardown_module():
-    ChapterMysqlRepository().clean()
+    chapter_repository.clean()
+    soundtrack_repository.clean()
 
 class TestChaptersPostController():
     def test_should_add_a_new_chapter_with_the_passed_parameters(self):
@@ -98,3 +99,123 @@ class TestChaptersGetController():
         assert response.status_code == 200
         data = json.loads(response.get_data(as_text=True))
         assert len(data["chapters_list"]) == 2
+
+
+class TestChaptersPutController():
+    def test_should_update_a_chapter_with_the_passed_parameters(self):
+            soundtrack = SoundtrackBuilder().build()
+            soundtrack_repository.save(soundtrack)
+            chapter = ChapterBuilder().with_soundtrack_id(soundtrack.soundtrack_id).build()
+            chapter_repository.save(chapter)
+            chapters_put_request_params = get_chapters_put_request_params()
+
+            response = app.test_client().put(
+                '/chapters/update/{0}'.format(chapter.chapter_id.value),
+                data=json.dumps(chapters_put_request_params),
+                content_type='application/json'
+            )
+            
+            saved_chapter = chapter_repository.find(chapter.chapter_id)
+            assert response.status_code == 200
+            assert saved_chapter.chapter_id.value == chapter.chapter_id.value
+            assert saved_chapter.soundtrack_id.value == chapter.soundtrack_id.value
+            assert saved_chapter.chapter_number.value == chapters_put_request_params["chapter_number"]
+            assert saved_chapter.theme.value == chapters_put_request_params["theme"]
+            assert saved_chapter.chapter_title.value == chapters_put_request_params["chapter_title"]
+
+    def test_should_update_a_chapter_number(self):
+            soundtrack = SoundtrackBuilder().build()
+            soundtrack_repository.save(soundtrack)
+            chapter = ChapterBuilder().with_soundtrack_id(soundtrack.soundtrack_id).build()
+            chapter_repository.save(chapter)
+            chapters_put_request_params = {"chapter_number": fake.random_number(2)}
+
+            response = app.test_client().put(
+                '/chapters/update/{0}'.format(chapter.chapter_id.value),
+                data=json.dumps(chapters_put_request_params),
+                content_type='application/json'
+            )
+            
+            saved_chapter = chapter_repository.find(chapter.chapter_id)
+            assert response.status_code == 200
+            assert saved_chapter.chapter_id.value == chapter.chapter_id.value
+            assert saved_chapter.soundtrack_id.value == chapter.soundtrack_id.value
+            assert saved_chapter.chapter_number.value == chapters_put_request_params["chapter_number"]
+            assert saved_chapter.theme.value == chapter.theme.value
+            assert saved_chapter.chapter_title.value == chapter.chapter_title.value
+
+    def test_should_update_a_chapter_theme(self):
+            soundtrack = SoundtrackBuilder().build()
+            soundtrack_repository.save(soundtrack)
+            chapter = ChapterBuilder().with_soundtrack_id(soundtrack.soundtrack_id).build()
+            chapter_repository.save(chapter)
+            chapters_put_request_params = {"theme": fake.pystr()}
+
+            response = app.test_client().put(
+                '/chapters/update/{0}'.format(chapter.chapter_id.value),
+                data=json.dumps(chapters_put_request_params),
+                content_type='application/json'
+            )
+            
+            saved_chapter = chapter_repository.find(chapter.chapter_id)
+            assert response.status_code == 200
+            assert saved_chapter.chapter_id.value == chapter.chapter_id.value
+            assert saved_chapter.soundtrack_id.value == chapter.soundtrack_id.value
+            assert saved_chapter.chapter_number.value == chapter.chapter_number.value
+            assert saved_chapter.theme.value == chapters_put_request_params["theme"]
+            assert saved_chapter.chapter_title.value == chapter.chapter_title.value
+
+    def test_should_update_a_chapter_title(self):
+            soundtrack = SoundtrackBuilder().build()
+            soundtrack_repository.save(soundtrack)
+            chapter = ChapterBuilder().with_soundtrack_id(soundtrack.soundtrack_id).build()
+            chapter_repository.save(chapter)
+            chapters_put_request_params = {"chapter_title": fake.pystr()}
+
+            response = app.test_client().put(
+                '/chapters/update/{0}'.format(chapter.chapter_id.value),
+                data=json.dumps(chapters_put_request_params),
+                content_type='application/json'
+            )
+            
+            saved_chapter = chapter_repository.find(chapter.chapter_id)
+            assert response.status_code == 200
+            assert saved_chapter.chapter_id.value == chapter.chapter_id.value
+            assert saved_chapter.soundtrack_id.value == chapter.soundtrack_id.value
+            assert saved_chapter.chapter_number.value == chapter.chapter_number.value
+            assert saved_chapter.theme.value == chapter.theme.value
+            assert saved_chapter.chapter_title.value == chapters_put_request_params["chapter_title"]
+
+    def test_should_return_404_when_updating_an_unexisting_chapter(self):
+        non_existing_chapter_id = ChapterId.from_string(str(uuid.uuid4()))
+        chapters_put_request_params = get_chapters_put_request_params()
+
+        response = app.test_client().put(
+            '/chapters/update/{0}'.format(non_existing_chapter_id.value),
+            data=json.dumps(chapters_put_request_params),
+            content_type='application/json'
+        )
+
+        assert response.status_code == 404
+
+    def test_should_return_400_when_updating_an_unexisting_chapter_property(self):
+        soundtrack = SoundtrackBuilder().build()
+        soundtrack_repository.save(soundtrack)
+        chapter = ChapterBuilder().with_soundtrack_id(soundtrack.soundtrack_id).build()
+        chapter_repository.save(chapter)
+        chapters_put_request_params = {"chapter_unexisting_property": fake.pystr()}
+
+        response = app.test_client().put(
+            '/chapters/update/{0}'.format(chapter.chapter_id.value),
+            data=json.dumps(chapters_put_request_params),
+            content_type='application/json'
+        )
+
+        assert response.status_code == 400
+
+def get_chapters_put_request_params():
+    return {
+        "chapter_number": fake.random_number(2),
+        "theme": fake.pystr(),
+        "chapter_title": fake.pystr()
+    }

@@ -5,7 +5,7 @@ class SoundtracksPutValidator:
     def __init__(self):
         self.__schema = {
             'book': {'type': 'string', 'required': False},
-            'soundtrack_title': {'type': 'string', 'required': False},
+            'soundtrack_title': {'type': 'string', 'required': False}
         }
         self.__validator = Validator()
 

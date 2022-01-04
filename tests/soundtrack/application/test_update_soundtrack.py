@@ -20,8 +20,7 @@ class TestUpdateSoundtrack():
         new_soundtrack_title: SoundtrackTitle = SoundtrackTitle.from_string(fake.pystr())
         use_case.run(soundtrack.soundtrack_id, {'book': None, 'soundtrack_title': new_soundtrack_title})
 
-        found_soundtrack: Soundtrack = soundtrack_repository.find(
-        soundtrack.soundtrack_id)
+        found_soundtrack: Soundtrack = soundtrack_repository.find(soundtrack.soundtrack_id)
         assert found_soundtrack != None
         assert found_soundtrack.soundtrack_id.value == soundtrack.soundtrack_id.value
         assert found_soundtrack.book.value == soundtrack.book.value
@@ -35,8 +34,7 @@ class TestUpdateSoundtrack():
         new_soundtrack_book: Isbn13 = Isbn13.from_string('0-2045-5150-1')
         use_case.run(soundtrack.soundtrack_id, {'book': new_soundtrack_book, 'soundtrack_title': None})
 
-        found_soundtrack: Soundtrack = soundtrack_repository.find(
-        soundtrack.soundtrack_id)
+        found_soundtrack: Soundtrack = soundtrack_repository.find(soundtrack.soundtrack_id)
         assert found_soundtrack != None
         assert found_soundtrack.soundtrack_id.value == soundtrack.soundtrack_id.value
         assert found_soundtrack.book.value == new_soundtrack_book.value

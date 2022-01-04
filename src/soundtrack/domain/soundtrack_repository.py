@@ -24,7 +24,7 @@ class SoundtrackRepository(ABC):
         pass
 
     @abstractmethod
-    def update(self, soundtrack: Soundtrack):
+    def update(self, soundtrack_to_update: Soundtrack):
         pass
 
     @abstractmethod
