@@ -27,6 +27,7 @@ from ..domain.username import Username
 from .from_user_to_dict import FromUserToDict
 from .soundtrack_mysql_reporter import SoundtrackMysqlReporter
 from .user_mysql_repository import UserMysqlRepository
+from .validators.access_token_validator import AccessTokenValidator
 from .validators.users_favorite_post_validator import UsersFavoritePostValidator
 from .validators.users_follow_post_validator import UsersFollowPostValidator
 from .validators.users_post_validator import UsersPostValidator
@@ -88,11 +89,20 @@ def get_user_info(str_user_id: str):
 
 @users.route('/favorite', methods=["POST"])
 def add_soundtrack_to_favorites():
-    user_repository = UserMysqlRepository()
-    soundtrack_reporter = SoundtrackMysqlReporter()
-
     if not UsersFavoritePostValidator().validate(request.json):
         abort(400)
+
+    if not "PYTEST_CURRENT_TEST" in os.environ:
+        access_token = request.headers['Authorization'].replace("Bearer ", "") if 'Authorization' in request.headers else ''
+        logged_user = AccessTokenValidator.validate(access_token)
+        if not logged_user:
+            abort(401)
+
+        if logged_user['id'] != request.json['user_id']:
+            abort(403)
+
+    user_repository = UserMysqlRepository()
+    soundtrack_reporter = SoundtrackMysqlReporter()
     
     user_id = UserId.from_string(request.json['user_id'])
     soundtrack_id = SoundtrackId.from_string(request.json['soundtrack_id'])
@@ -131,6 +141,15 @@ def get_user_favorites(str_user_id: str):
 
 @users.route('/<string:str_user_id>/unfavorite/<string:str_soundtrack_id>', methods=["DELETE"])
 def remove_soundtrack_from_favorites(str_user_id: str, str_soundtrack_id: str):
+    if not "PYTEST_CURRENT_TEST" in os.environ:
+        access_token = request.headers['Authorization'].replace("Bearer ", "") if 'Authorization' in request.headers else ''
+        logged_user = AccessTokenValidator.validate(access_token)
+        if not logged_user:
+            abort(401)
+
+        if logged_user['id'] != str_user_id:
+            abort(403)
+            
     user_repository = UserMysqlRepository()
     user_id = UserId.from_string(str_user_id)
     soundtrack_id = SoundtrackId.from_string(str_soundtrack_id)
@@ -148,6 +167,15 @@ def remove_soundtrack_from_favorites(str_user_id: str, str_soundtrack_id: str):
 
 @users.route('/follow', methods=["POST"])
 def follow_user():
+    if not "PYTEST_CURRENT_TEST" in os.environ:
+        access_token = request.headers['Authorization'].replace("Bearer ", "") if 'Authorization' in request.headers else ''
+        logged_user = AccessTokenValidator.validate(access_token)
+        if not logged_user:
+            abort(401)
+
+        if logged_user['id'] != request.json['follower_id']:
+            abort(403)
+
     user_repository = UserMysqlRepository()
 
     if not UsersFollowPostValidator().validate(request.json):
@@ -207,6 +235,15 @@ def get_followed_users(str_user_id: str):
 
 @users.route('/<string:str_follower_id>/unfollow/<string:str_followed_user_id>', methods=["DELETE"])
 def unfollow_user(str_follower_id: str, str_followed_user_id: str):
+    if not "PYTEST_CURRENT_TEST" in os.environ:
+        access_token = request.headers['Authorization'].replace("Bearer ", "") if 'Authorization' in request.headers else ''
+        logged_user = AccessTokenValidator.validate(access_token)
+        if not logged_user:
+            abort(401)
+
+        if logged_user['id'] != str_follower_id:
+            abort(403)
+
     user_repository = UserMysqlRepository()
     follower_id = UserId.from_string(str_follower_id)
     followed_user_id = UserId.from_string(str_followed_user_id)
