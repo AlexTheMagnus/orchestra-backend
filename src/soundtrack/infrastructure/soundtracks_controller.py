@@ -1,5 +1,6 @@
 from flask import Blueprint, abort, jsonify, request
 from typing import List
+import os
 
 from ..application.create_soundtrack import CreateSoundtrack
 from ..application.delete_soundtrack import DeleteSoundtrack
@@ -7,6 +8,7 @@ from ..application.get_soundtrack_by_id import GetSoundtrackById
 from ..application.get_soundtrack_likes import GetSoundtrackLikes
 from ..application.get_user_soundtracks import GetUserSoundtracks
 from ..application.like_soundtrack import LikeSoundtrack
+from ..application.search_soundtracks import SearchSoundtracks
 from ..application.unlike_soundtrack import UnlikeSoundtrack
 from ..application.update_soundtrack import UpdateSoundtrack
 from ..domain.chapter.chapter import Chapter
@@ -16,6 +18,7 @@ from ..domain.exceptions.unexisting_like_error import UnexistingLikeError
 from ..domain.exceptions.unexisting_soundtrack_error import UnexistingSoundtrackError
 from ..domain.exceptions.unexisting_soundtrack_error import UnexistingSoundtrackError
 from ..domain.isbn_13 import Isbn13
+from ..domain.search_options import SearchOptions
 from ..domain.soundtrack import Soundtrack
 from ..domain.soundtrack_id import SoundtrackId
 from ..domain.soundtrack_title import SoundtrackTitle
@@ -24,22 +27,30 @@ from .chapter.chapter_mysql_repository import ChapterMysqlRepository
 from .favorite_mysql_repository import FavoriteMysqlRepository
 from .from_soundtrack_to_dict import FromSoundtrackToDict
 from .soundtrack_mysql_repository import SoundtrackMysqlRepository
+from .validators.access_token_validator import AccessTokenValidator
 from .validators.soundtracks_like_post_validator import SoundtracksLikePostValidator
 from .validators.soundtracks_post_validator import SoundtracksPostValidator
 from .validators.soundtracks_put_validator import SoundtracksPutValidator
 from .validators.soundtracks_search_post_validator import SoundtracksSearchPostValidator
-from ..application.search_soundtracks import SearchSoundtracks
-from ..domain.search_options import SearchOptions
 
 soundtracks = Blueprint("soundtracks", __name__, url_prefix="/soundtracks")
 
 
 @soundtracks.route('', methods=["POST"])
 def create_soundtrack():
-    soundtrack_repository = SoundtrackMysqlRepository()
-
     if not SoundtracksPostValidator().validate(request.json):
         abort(400)
+
+    if not "PYTEST_CURRENT_TEST" in os.environ:
+        access_token = request.headers['Authorization'].replace("Bearer ", "") if 'Authorization' in request.headers else ''
+        logged_user = AccessTokenValidator.validate(access_token)
+        if not logged_user:
+            abort(401)
+
+        if logged_user['id'] != request.json['author']:
+            abort(403)
+
+    soundtrack_repository = SoundtrackMysqlRepository()
 
     soundtrack = Soundtrack(
         soundtrack_id=SoundtrackId.from_string(request.json['soundtrack_id']),
@@ -113,7 +124,17 @@ def update_soundtrack(str_soundtrack_id: str):
 
     soundtrack_repository = SoundtrackMysqlRepository()
     soundtrack_id = SoundtrackId.from_string(str_soundtrack_id)
-    
+
+    if not "PYTEST_CURRENT_TEST" in os.environ:
+        access_token = request.headers['Authorization'].replace("Bearer ", "") if 'Authorization' in request.headers else ''
+        logged_user = AccessTokenValidator.validate(access_token)
+        if not logged_user:
+            abort(401)
+
+        soundtrack_to_be_updated = soundtrack_repository.find(soundtrack_id)
+        if soundtrack_to_be_updated != None and logged_user['id'] != soundtrack_to_be_updated.author.value:
+            abort(403)
+
     if ('book' in request.json):
         book = Isbn13.from_string(request.json['book'])
     else:
@@ -139,9 +160,20 @@ def update_soundtrack(str_soundtrack_id: str):
 @soundtracks.route('/delete/<string:str_soundtrack_id>', methods=["DELETE"])
 def delete_soundtrack(str_soundtrack_id: str):
     soundtrack_repository = SoundtrackMysqlRepository()
+    soundtrack_id = SoundtrackId.from_string(str_soundtrack_id)
+    
+    if not "PYTEST_CURRENT_TEST" in os.environ:
+        access_token = request.headers['Authorization'].replace("Bearer ", "") if 'Authorization' in request.headers else ''
+        logged_user = AccessTokenValidator.validate(access_token)
+        if not logged_user:
+            abort(401)
+
+        soundtrack_to_be_deleted = soundtrack_repository.find(soundtrack_id)
+        if soundtrack_to_be_deleted != None and logged_user['id'] != soundtrack_to_be_deleted.author.value:
+            abort(403)
+
     chapter_repository = ChapterMysqlRepository()
     favorite_repository = FavoriteMysqlRepository()
-    soundtrack_id = SoundtrackId.from_string(str_soundtrack_id)
     
     try:
         DeleteSoundtrack(soundtrack_repository, chapter_repository, favorite_repository).run(soundtrack_id)
@@ -156,10 +188,19 @@ def delete_soundtrack(str_soundtrack_id: str):
 
 @soundtracks.route('/like', methods=["POST"])
 def like_soundtrack():
-    soundtrack_repository = SoundtrackMysqlRepository()
-
     if not SoundtracksLikePostValidator().validate(request.json):
         abort(400)
+
+    if not "PYTEST_CURRENT_TEST" in os.environ:
+        access_token = request.headers['Authorization'].replace("Bearer ", "") if 'Authorization' in request.headers else ''
+        logged_user = AccessTokenValidator.validate(access_token)
+        if not logged_user:
+            abort(401)
+
+        if logged_user['id'] != request.json['user_id']:
+            abort(403)
+
+    soundtrack_repository = SoundtrackMysqlRepository()
     
     user_id = UserId.from_string(request.json['user_id'])
     soundtrack_id = SoundtrackId.from_string(request.json['soundtrack_id'])
@@ -194,6 +235,15 @@ def get_soundtrack_likes(str_soundtrack_id: str):
 
 @soundtracks.route('/<string:str_soundtrack_id>/unlike/<string:str_user_id>', methods=["DELETE"])
 def unlike_soundtrack(str_soundtrack_id: str, str_user_id: str):
+    if not "PYTEST_CURRENT_TEST" in os.environ:
+        access_token = request.headers['Authorization'].replace("Bearer ", "") if 'Authorization' in request.headers else ''
+        logged_user = AccessTokenValidator.validate(access_token)
+        if not logged_user:
+            abort(401)
+
+        if logged_user['id'] != str_user_id:
+            abort(403)
+
     soundtrack_repository = SoundtrackMysqlRepository()
     user_id = UserId.from_string(str_user_id)
     soundtrack_id = SoundtrackId.from_string(str_soundtrack_id)
