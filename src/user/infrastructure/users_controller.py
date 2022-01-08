@@ -55,7 +55,7 @@ def user_access():
     user_avatar = UserAvatar.from_url(spotify_user['images'][0]['url'] if len(spotify_user['images']) >= 1 else "")
     user = User(user_id, username, user_avatar)
 
-    if(user_repository.find(user_id) == None):
+    if user_repository.find(user_id) == None:
         try:
             RegisterUser(user_repository).run(user)
         except Exception as error:

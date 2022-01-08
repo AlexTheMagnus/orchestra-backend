@@ -132,7 +132,7 @@ def update_soundtrack(str_soundtrack_id: str):
             abort(401)
 
         soundtrack_to_be_updated = soundtrack_repository.find(soundtrack_id)
-        if logged_user['id'] != soundtrack_to_be_updated.author.value:
+        if soundtrack_to_be_updated != None and logged_user['id'] != soundtrack_to_be_updated.author.value:
             abort(403)
 
     if ('book' in request.json):
@@ -160,6 +160,7 @@ def update_soundtrack(str_soundtrack_id: str):
 @soundtracks.route('/delete/<string:str_soundtrack_id>', methods=["DELETE"])
 def delete_soundtrack(str_soundtrack_id: str):
     soundtrack_repository = SoundtrackMysqlRepository()
+    soundtrack_id = SoundtrackId.from_string(str_soundtrack_id)
     
     if not "PYTEST_CURRENT_TEST" in os.environ:
         access_token = request.headers['Authorization'].replace("Bearer ", "") if 'Authorization' in request.headers else ''
@@ -168,12 +169,11 @@ def delete_soundtrack(str_soundtrack_id: str):
             abort(401)
 
         soundtrack_to_be_deleted = soundtrack_repository.find(soundtrack_id)
-        if logged_user['id'] != soundtrack_to_be_deleted.author.value:
+        if soundtrack_to_be_deleted != None and logged_user['id'] != soundtrack_to_be_deleted.author.value:
             abort(403)
 
     chapter_repository = ChapterMysqlRepository()
     favorite_repository = FavoriteMysqlRepository()
-    soundtrack_id = SoundtrackId.from_string(str_soundtrack_id)
     
     try:
         DeleteSoundtrack(soundtrack_repository, chapter_repository, favorite_repository).run(soundtrack_id)
