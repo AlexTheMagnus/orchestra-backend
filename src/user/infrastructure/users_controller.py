@@ -1,7 +1,6 @@
 from flask import Blueprint, abort, jsonify, request
 from spotipy import oauth2, client
 import os
-import spotipy
 
 from ..application.add_soundtrack_to_favorites import AddSoundtrackToFavorites
 from ..application.follow_user import FollowUser

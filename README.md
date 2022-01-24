@@ -4,10 +4,11 @@
 
 1. Install all the dependencies running `sudo apt install python3.8 python3.8-dev virtualenv build-essential mysql-server mysql-client libmysqlclient-dev libsqlclient-dev libssl-dev -y`
 2. Run `docker-compose up -d`. If it fails, check that mysql.service isn't already running (in linux, run `systemctl stop mysql.service` to stop it).
-3. Create a Python 3.8 virtual environment (virtualenv -p python3.8 venv). This step is only needed the first time you run the project.
-4. Activate the python env running `source venv/bin/activate`.
+3. Create a Python 3.8 virtual environment (virtualenv -p python3.8 .venv). This step is only needed the first time you run the project.
+4. Activate the python env running `source .venv/bin/activate`.
 5. Inside the python environment, run `pipenv install`.
-6. Inside the python environment, run `flask run`.
+6. Reboot the virtual environment, run `deactivate` and then `source .venv/bin/activate` again.
+7. Inside the python environment, run `flask run`.
 
 ## Test
 
