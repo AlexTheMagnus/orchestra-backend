@@ -1,17 +1,11 @@
+import os
 from flask import Flask
 from flask_cors import CORS
 from flask_swagger_ui import get_swaggerui_blueprint
-import os
 
-if "PYTEST_CURRENT_TEST" in os.environ:
-    from .src.soundtrack.infrastructure.soundtracks_controller import soundtracks
-    from .src.soundtrack.infrastructure.chapter.chapters_controller import chapters
-    from .src.user.infrastructure.users_controller import users
-else:
-    from src.soundtrack.infrastructure.soundtracks_controller import soundtracks
-    from src.soundtrack.infrastructure.chapter.chapters_controller import chapters
-    from src.user.infrastructure.users_controller import users
-
+from src.soundtrack.infrastructure.chapter.chapters_controller import chapters
+from src.soundtrack.infrastructure.soundtracks_controller import soundtracks
+from src.user.infrastructure.users_controller import users
 
 app = Flask(__name__)
 CORS(app)
