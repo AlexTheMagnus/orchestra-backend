@@ -10,12 +10,11 @@ from .chapter.chapter import Chapter
 class Soundtrack():
 
     def __init__(self, soundtrack_id: SoundtrackId, book: Isbn13, soundtrack_title: SoundtrackTitle,
-                 author: UserId, chapters: List[Chapter]):
+                 author: UserId):
         self.__soundtrack_id: SoundtrackId = soundtrack_id
         self.__book: Isbn13 = book
         self.__soundtrack_title = soundtrack_title
         self.__author: UserId = author
-        self.__chapters: List[Chapter] = chapters
 
     @property
     def soundtrack_id(self):
@@ -32,7 +31,3 @@ class Soundtrack():
     @property
     def author(self):
         return self.__author
-
-    @property
-    def chapters(self):
-        return self.__chapters

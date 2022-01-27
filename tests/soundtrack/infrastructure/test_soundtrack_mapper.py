@@ -17,7 +17,6 @@ class TestSoundtrackMapper:
         assert soundtrack_dto['book'] == soundtrack.book.value
         assert soundtrack_dto['soundtrack_title'] == soundtrack.soundtrack_title.value
         assert soundtrack_dto['author'] == soundtrack.author.value
-        assert soundtrack_dto['chapters'] == soundtrack.chapters
 
     def test_soundtrack_dto_from_soundtrack_aggregate_has_same_attributes(self):
         soundtrack: Soundtrack = SoundtrackBuilder().build()
@@ -28,4 +27,3 @@ class TestSoundtrackMapper:
         assert soundtrack_dto['book'] == soundtrack.book.value
         assert soundtrack_dto['soundtrack_title'] == soundtrack.soundtrack_title.value
         assert soundtrack_dto['author'] == soundtrack.author.value
-        assert soundtrack_dto['chapters'] == soundtrack.chapters

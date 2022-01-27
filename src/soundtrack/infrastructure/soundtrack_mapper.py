@@ -18,7 +18,6 @@ class SoundtrackMapper:
             soundtrack_title=SoundtrackTitle.from_string(
                 soundtrack_dto['soundtrack_title']),
             author=UserId.from_string(soundtrack_dto['author']),
-            chapters=soundtrack_dto['chapters']
         )
 
     @staticmethod
@@ -28,5 +27,4 @@ class SoundtrackMapper:
             book=soundtrack.book.value,
             soundtrack_title=soundtrack.soundtrack_title.value,
             author=soundtrack.author.value,
-            chapters=soundtrack.chapters
         )

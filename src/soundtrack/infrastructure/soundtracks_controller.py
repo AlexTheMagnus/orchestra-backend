@@ -58,7 +58,6 @@ def create_soundtrack():
         soundtrack_title=SoundtrackTitle.from_string(
             request.json['soundtrack_title']),
         author=UserId.from_string(request.json['author']),
-        chapters=[]
     )
 
     try:

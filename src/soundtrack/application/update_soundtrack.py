@@ -31,6 +31,6 @@ class UpdateSoundtrack():
             soundtrack_title = found_soundtrack.soundtrack_title
 
         updated_soundtrack: Soundtrack = Soundtrack(found_soundtrack.soundtrack_id, 
-            book, soundtrack_title, found_soundtrack.author, [])
+            book, soundtrack_title, found_soundtrack.author)
 
         self.__soundtrack_repository.update(updated_soundtrack)

@@ -21,17 +21,10 @@ class TestSoundtrack():
         soundtrack_title: SoundtrackTitle = SoundtrackTitle.from_string(
             fake.pystr())
         author: UserId = UserId.from_string(fake.pystr())
-        chapter1: Chapter = Chapter(
-            str(uuid.uuid4()), str(uuid.uuid4()), 1, fake.pystr(), "")
-        chapter2: Chapter = Chapter(
-            str(uuid.uuid4()), str(uuid.uuid4()), 2, fake.pystr(), "")
-        chapters: list[Chapter] = [chapter1, chapter2]
 
-        soundtrack = Soundtrack(soundtrack_id, book,
-                                soundtrack_title, author, chapters)
+        soundtrack = Soundtrack(soundtrack_id, book, soundtrack_title, author)
 
         assert soundtrack.soundtrack_id.value == soundtrack_id.value
         assert soundtrack.book.value == book.value
         assert soundtrack.soundtrack_title.value == soundtrack_title.value
         assert soundtrack.author.value == author.value
-        assert soundtrack.chapters == chapters

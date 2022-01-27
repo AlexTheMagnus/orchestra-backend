@@ -137,7 +137,6 @@ class SoundtrackMysqlRepository(SoundtrackRepository):
             book=Isbn13.from_string(result[1]),
             soundtrack_title=SoundtrackTitle.from_string(result[2]),
             author=UserId.from_string(result[3]),
-            chapters=[]
         )
 
 

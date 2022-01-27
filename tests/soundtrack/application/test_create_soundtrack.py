@@ -4,7 +4,6 @@ import pytest
 import uuid
 
 from src.soundtrack.application.create_soundtrack import CreateSoundtrack
-from src.soundtrack.domain.chapter.chapter import Chapter
 from src.soundtrack.domain.exceptions.already_existing_soundtrack_error import AlreadyExistingSoundtrackError
 from src.soundtrack.domain.isbn_13 import Isbn13
 from src.soundtrack.domain.soundtrack import Soundtrack
@@ -22,7 +21,6 @@ soundtrack_id: SoundtrackId = SoundtrackId.from_string(str(uuid.uuid4()))
 book: Isbn13 = Isbn13.from_string("978-2-1550-9533-9")
 soundtrack_title = SoundtrackTitle.from_string(fake.pystr())
 author: UserId = UserId.from_string(fake.pystr())
-chapters: List[Chapter] = []
 
 
 class TestCreateSoundtrack():
@@ -30,7 +28,7 @@ class TestCreateSoundtrack():
     def test_new_soundtrack_is_created(self):
         soundtrack: Soundtrack = SoundtrackBuilder().with_soundtrack_id(
             soundtrack_id).with_book(book).with_soundtrack_title(soundtrack_title).with_author(
-                author).with_chapters(chapters).build()
+                author).build()
 
         use_case.run(soundtrack)
 
@@ -41,7 +39,6 @@ class TestCreateSoundtrack():
         assert found_soundtrack.book.value == book.value
         assert found_soundtrack.soundtrack_title.value == soundtrack_title.value
         assert found_soundtrack.author.value == author.value
-        assert found_soundtrack.chapters == chapters
 
     def test_already_existing_soundtrack_throws_an_error(self):
         soundtrack: Soundtrack = SoundtrackBuilder(
