@@ -44,8 +44,8 @@ The all can be easily installed running `sudo apt install python3.8 python3.8-de
 Clone the `.env.example` file and rename it as `.env`. Then set up the following parameters:
 
 - **DB_ENGINE**: DB container location.
-- **CLIENT_ID**: Spotify app client ID (Can be obtained from [Spotify for Developers](https://developer.spotify.com/dashboard/applications))
-- **CLIENT_SECRET**: Spotify app client secret (Can be obtained from [Spotify for Developers](https://developer.spotify.com/dashboard/applications))
+- **CLIENT_ID**: Spotify app client ID (Can be obtained from [Spotify for Developers](https://developer.spotify.com/dashboard/applications)).
+- **CLIENT_SECRET**: Spotify app client secret (Can be obtained from [Spotify for Developers](https://developer.spotify.com/dashboard/applications)).
 - **SPOTIPY_REDIRECT_URI**: Orchestra frontend location.
 
 
