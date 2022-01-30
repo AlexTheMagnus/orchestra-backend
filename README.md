@@ -1,5 +1,14 @@
-# Orchestra Backend API
 ![image](https://user-images.githubusercontent.com/37160608/151696467-8359a550-8f7b-47b5-a0d3-e6dfb0fffc68.png)
+# 🎶📖🎶 Orchestra Backend API 🎶📖🎶
+
+## Table of contents
+
+- [Pre-installation requirements](#pre-installation-requirements)
+- [Installation](#installation)
+- [Configuration](#configuration)
+- [Usage](#usage)
+- [Test](#test)
+- [Uninstall](#uninstall)
 
 ## Pre-installation requirements
 - python3.8
@@ -58,4 +67,4 @@ Once the project is installed and configured, make sure to have up and running t
 
 ## Uninstall
 
-The whole project is installed inside a virtual env. So, it's just needed to remove the project folder and the virtual env folder to uninstalled it completely. If you have followed the [Installation section](#installation), your virtual environment will be inside the project folder in a folder named `.venv`.
+The whole project is installed inside a virtual env. So, it's just needed to remove the project folder and the virtual env folder to uninstalled it completely. If you have followed the [Installation](#installation) section, your virtual environment will be inside the project folder in a folder named `.venv`.
