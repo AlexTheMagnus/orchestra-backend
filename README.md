@@ -1,4 +1,5 @@
-![image](https://user-images.githubusercontent.com/37160608/151696467-8359a550-8f7b-47b5-a0d3-e6dfb0fffc68.png)
+![OrchestraBanner](https://user-images.githubusercontent.com/37160608/151791586-b018382e-eca5-4e3e-9293-96d34fed2831.png)
+
 # 🎶📖🎶 Orchestra Backend API 🎶📖🎶
 
 ## Table of contents
