@@ -32,11 +32,12 @@ The all can be easily installed running `sudo apt install python3.8 python3.8-de
 
 ## Installation
 
-1. Run `docker-compose up -d` to launch the DB container. If it fails, check that mysql.service isn't already running (in Linux, run `systemctl stop mysql.service` to stop it).
-2. Create a Python 3.8 virtual environment (`virtualenv -p python3.8 .venv`). This step is only needed the first time you run the project.
-3. Activate the python env running `source .venv/bin/activate`.
-4. Inside the python environment, run `pyhton3 init_dbs.py` to create all the DB tables and `pipenv install` to install all the project dependencies inside the virtualenv.
-5. Reboot the virtual environment, run `deactivate` and then `source .venv/bin/activate` again.
+1. Clone this repo and open a terminal inside the project folder.
+2. Run `docker-compose up -d` to launch the DB container. If it fails, check that mysql.service isn't already running (in Linux, run `systemctl stop mysql.service` to stop it).
+3. Create a Python 3.8 virtual environment (`virtualenv -p python3.8 .venv`). This step is only needed the first time you run the project.
+4. Activate the python env running `source .venv/bin/activate`.
+5. Inside the python environment, run `pyhton3 init_dbs.py` to create all the DB tables and `pipenv install` to install all the project dependencies inside the virtualenv.
+6. Reboot the virtual environment, run `deactivate` and then `source .venv/bin/activate` again.
 
 
 
