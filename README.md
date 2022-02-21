@@ -36,7 +36,7 @@ The all can be easily installed running `sudo apt install python3.8 python3.8-de
 2. Run `docker-compose up -d` to launch the DB container. If it fails, check that mysql.service isn't already running (in Linux, run `systemctl stop mysql.service` to stop it).
 3. Create a Python 3.8 virtual environment (`virtualenv -p python3.8 .venv`). This step is only needed the first time you run the project.
 4. Activate the python env running `source .venv/bin/activate`.
-5. Inside the python environment, run `pyhton3 init_dbs.py` to create all the DB tables and `pipenv install` to install all the project dependencies inside the virtualenv.
+5. Inside the python environment, `pipenv install` to install all the project dependencies and run `python3 init_dbs.py` to create all the DB tables.
 6. Reboot the virtual environment, run `deactivate` and then `source .venv/bin/activate` again.
 
 
@@ -46,6 +46,7 @@ The all can be easily installed running `sudo apt install python3.8 python3.8-de
 Clone the `.env.example` file and rename it as `.env`. Then set up the following parameters:
 
 - **DB_ENGINE**: DB container location.
+- **DB_ENGINE_TEST**: Testing DB container location.
 - **CLIENT_ID**: Spotify app client ID (Can be obtained from [Spotify for Developers](https://developer.spotify.com/dashboard/applications)).
 - **CLIENT_SECRET**: Spotify app client secret (Can be obtained from [Spotify for Developers](https://developer.spotify.com/dashboard/applications)).
 - **SPOTIPY_REDIRECT_URI**: Orchestra frontend location.
