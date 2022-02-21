@@ -61,9 +61,9 @@ Once the project is installed and configured, make sure to have up and running t
 ## Test
 
 > ⚠️ Docker DB container must be up.  
-> ⚠️ Instalation and configuration steps are needed to run the tests. 
+> ⚠️ Installation and configuration steps are needed to run the tests.
 
-1. In the `.env` file, change the `DB_ENGINE` env variable to match the testing DB.
+1. In the `.env` file, change the `DB_ENGINE` env variable to match `DB_ENGINE_TEST` to use the testing DB.
 2. To execute the tests run `pipenv run test` from the orchestra-backend root folder.
 3. To use the production database, change back the DB_ENGINE value.
 
